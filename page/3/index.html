@@ -191,173 +191,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://wu_zhiyong.gitee.io/myblog/API%E7%BD%91%E5%85%B3%E4%B9%8BZuul/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/myblog/images/avatar.gif">
-      <meta itemprop="name" content="wuzhiyong">
-      <meta itemprop="description" content="吴志勇的博客">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="吴志勇的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/myblog/API%E7%BD%91%E5%85%B3%E4%B9%8BZuul/" class="post-title-link" itemprop="url">API网关之Zuul</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-05-10 13:05:32" itemprop="dateCreated datePublished" datetime="2020-05-10T13:05:32+08:00">2020-05-10</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-05-11 16:56:22" itemprop="dateModified" datetime="2020-05-11T16:56:22+08:00">2020-05-11</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">后端</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/myblog/API%E7%BD%91%E5%85%B3%E4%B9%8BZuul/" class="post-meta-item leancloud_visitors" data-flag-title="API网关之Zuul" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/myblog/API%E7%BD%91%E5%85%B3%E4%B9%8BZuul/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/myblog/API%E7%BD%91%E5%85%B3%E4%B9%8BZuul/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>19k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>17 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><blockquote>
-<p>Zuul is the front door for all requests from devices and web sites to the backend of the Netflix streaming application. As an edge service application, Zuul is built to enable dynamic routing, monitoring, resiliency and security. It also has the ability to route requests to multiple Amazon Auto Scaling Groups as appropriate.</p>
-<p align="right">—— <a href="https://github.com/Netflix/zuul/wiki" target="_blank" rel="noopener">Zuul 官方wiki</a><p>
-</blockquote>
-<h3 id="Zuul-简介"><a href="#Zuul-简介" class="headerlink" title="Zuul 简介"></a>Zuul 简介</h3><blockquote>
-<p>Zuul 是 Netflix OOS 中的一员，是一个基于 JVM 路由和服务端的负载均衡。提供路由、监控、弹性、安全等方面的服务框架。Zuul 能够与 Eureka 、Ribbon 、Hystrix 等组件配合使用。</p>
-<p>Zuul 的核心是过滤器，通过这些过滤器我们可以扩展出很多功能，比如：</p>
-<ul>
-<li>动态路由：动态的将客户端的请求路由到后端的不同服务，做一些逻辑处理，比如聚合多个服务的数据返回。</li>
-<li>请求监控：可以对整个系统的请求进行监控，记录详细的请求响应日志，可以实时统计出当前系统的访问量以及监控状态。</li>
-<li>认证鉴权：对每一个访问的请求做认证，拒绝非法请求，保护好后端的服务。</li>
-<li>压力测试：压力测试是一项很重要的工作，像电商公司需要模拟更多的真实的用户并发量来保证重大活动时系统的稳定。通过 Zuul 可以动态地将请求转发到后端服务的集群中，还可以识别测试流量和真实流量，从而做一些特殊处理。</li>
-<li>灰度发布：灰度发布可以保证系统的稳定，在初始灰度的时候就可以发现、调整问题、以保证其影响度。</li>
-</ul>
-<p align="right">——《spring cloud 微服务 入门、进阶与实战》第103页<p>
-</blockquote>
-<h3 id="使用-Zuul-构建微服务网关"><a href="#使用-Zuul-构建微服务网关" class="headerlink" title="使用 Zuul 构建微服务网关"></a>使用 Zuul 构建微服务网关</h3><h4 id="简单使用"><a href="#简单使用" class="headerlink" title="简单使用"></a>简单使用</h4><p>建立一个 spring cloud 项目。配置如下：</p>
-<ul>
-<li>pom添加依赖</li>
-</ul>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-netflix-zuul<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>properties 配置：</li>
-</ul>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">spring.application.name</span>=<span class="string">zuul-demo</span></span><br><span class="line"><span class="meta">server.port</span>=<span class="string">2103</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#拦截匹配了 /demo1/** 规则的url  转发到  https://blog.wu-zy.com/</span></span><br><span class="line"><span class="comment">#这里 routes.demo1 的 demo1 是自定义的</span></span><br><span class="line"><span class="meta">zuul.routes.demo1.path</span>=<span class="string">/demo1/**</span></span><br><span class="line"><span class="meta">zuul.routes.demo1.url</span>=<span class="string">https://blog.wu-zy.com/</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>启动类加上 @EnableZuulProxy 注解</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@EnableZuulProxy</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ZuulDemoApplication</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SpringApplication.run(ZuulDemoApplication<span class="class">.<span class="keyword">class</span>, <span class="title">args</span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>启动项目我们访问：<a href="http://localhost:2103/demo1/myblog" target="_blank" rel="noopener">http://localhost:2103/demo1/myblog</a></p>
-<p>结果跳转到了我的博客：<a href="https://blog.wu-zy.com/myblog/" target="_blank" rel="noopener">https://blog.wu-zy.com/myblog/</a></p>
-<h4 id="集成-Eurekas"><a href="#集成-Eurekas" class="headerlink" title="集成 Eurekas"></a>集成 Eurekas</h4><p>结合 Eureka 实现动态路由</p>
-<ul>
-<li>加入 Eureka 的依赖</li>
-</ul>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-netflix-eureka-client<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>配置注册中心</li>
-</ul>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#注册中心集群</span></span><br><span class="line"><span class="meta">eureka.client.serviceUrl.defaultZone</span>=<span class="string">http://WuZhiYong:123456@localhost:8761/eureka/,http://WuZhiYong:123456@localhost:8762/eureka/</span></span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/myblog/API%E7%BD%91%E5%85%B3%E4%B9%8BZuul/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://wu_zhiyong.gitee.io/myblog/Hystrix%E6%9C%8D%E5%8A%A1%E5%AE%B9%E9%94%99/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -651,6 +484,146 @@
   
   
 
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://wu_zhiyong.gitee.io/myblog/%E5%A3%B0%E6%98%8E%E5%BC%8FREST%E5%AE%A2%E6%88%B7%E7%AB%AFFeign/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/myblog/images/avatar.gif">
+      <meta itemprop="name" content="wuzhiyong">
+      <meta itemprop="description" content="吴志勇的博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴志勇的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/myblog/%E5%A3%B0%E6%98%8E%E5%BC%8FREST%E5%AE%A2%E6%88%B7%E7%AB%AFFeign/" class="post-title-link" itemprop="url">声明式REST客户端Feign</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-05-02 23:00:37" itemprop="dateCreated datePublished" datetime="2020-05-02T23:00:37+08:00">2020-05-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-05-09 16:33:54" itemprop="dateModified" datetime="2020-05-09T16:33:54+08:00">2020-05-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">后端</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/myblog/%E5%A3%B0%E6%98%8E%E5%BC%8FREST%E5%AE%A2%E6%88%B7%E7%AB%AFFeign/" class="post-meta-item leancloud_visitors" data-flag-title="声明式REST客户端Feign" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/myblog/%E5%A3%B0%E6%98%8E%E5%BC%8FREST%E5%AE%A2%E6%88%B7%E7%AB%AFFeign/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/myblog/%E5%A3%B0%E6%98%8E%E5%BC%8FREST%E5%AE%A2%E6%88%B7%E7%AB%AFFeign/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>11k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>10 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><blockquote>
+<p>​        Feign是一个声明式REST客户端，它能让REST调用更加简单。Feign提供了HTTP请求的模板，通过编写简单的接口和插入注解，就可以定义好HTTP请求的参数、格式、地址等信息。</p>
+<p>而Feign则会完全代理HTTP请求，我们只需要像调用方法一样调用它就可以完成服务请求及相关处理。 Spring Cloud对 Feign进行了封装，使其支持 Springmvc标准注解和Httpmessage Converters Feign可以与 Eureka和 Ribbon组合使用以支持负载均衡。</p>
+<p align="right">——《spring cloud 微服务 入门、进阶与实战》第70页<p>
+</blockquote>
+<h3 id="在spring-cloud-中集成Feign"><a href="#在spring-cloud-中集成Feign" class="headerlink" title="在spring cloud 中集成Feign"></a>在spring cloud 中集成Feign</h3><ul>
+<li>添加Feign starter</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-openfeign<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>定义Feign客户端</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.cloud.openfeign.FeignClient;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.GetMapping;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@ClassName</span> UserRemotClient</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span> wuzhiyong</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span> 2020/5/2 23:16</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Version</span> 1.0</span></span><br><span class="line"><span class="comment"> **/</span></span><br><span class="line"><span class="meta">@FeignClient</span>(value = <span class="string">"eureka-client-service"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">UserRemoteClient</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/user/hello"</span>)</span><br><span class="line">    <span class="function">String <span class="title">hello</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>启动类开启Feign客户端并扫包
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/myblog/%E5%A3%B0%E6%98%8E%E5%BC%8FREST%E5%AE%A2%E6%88%B7%E7%AB%AFFeign/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
 
   
   <nav class="pagination">
@@ -720,7 +693,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/myblog/archives/">
         
-          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-count">28</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -774,12 +747,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">139k</span>
+    <span title="站点总字数">137k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">2:07</span>
+    <span title="站点阅读时长">2:05</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
   </div>
