@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/myblog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/myblog/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/myblog/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/myblog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/myblog/css/main.css">
+
+
+<link rel="stylesheet" href="/myblog/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wu_zhiyong.gitee.io","root":"/myblog/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":false,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="引言 Hystrix is a latency and fault tolerance library designed to isolate points of access to remote systems, services and 3rd party libraries, stop cascading failure and enable resilience in complex di">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hystrix服务容错">
+<meta property="og:url" content="http://wu_zhiyong.gitee.io/myblog/Hystrix%E6%9C%8D%E5%8A%A1%E5%AE%B9%E9%94%99/index.html">
+<meta property="og:site_name" content="吴志勇的博客">
+<meta property="og:description" content="引言 Hystrix is a latency and fault tolerance library designed to isolate points of access to remote systems, services and 3rd party libraries, stop cascading failure and enable resilience in complex di">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200509173423944.png">
+<meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200509174332525.png">
+<meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200509174713800.png">
+<meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/hystrix%E7%9B%91%E6%8E%A7%E9%9D%A2%E6%9D%BF%E8%AF%B4%E6%98%8E.png">
+<meta property="article:published_time" content="2020-05-09T03:18:58.000Z">
+<meta property="article:modified_time" content="2020-05-10T08:00:38.640Z">
+<meta property="article:author" content="wuzhiyong">
+<meta property="article:tag" content="springboot">
+<meta property="article:tag" content="java">
+<meta property="article:tag" content="spring cloud">
+<meta property="article:tag" content="Hystrix">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200509173423944.png">
+
+<link rel="canonical" href="http://wu_zhiyong.gitee.io/myblog/Hystrix%E6%9C%8D%E5%8A%A1%E5%AE%B9%E9%94%99/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Hystrix服务容错 | 吴志勇的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/myblog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">吴志勇的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">学习、记录、总结、侃大山</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/myblog/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/myblog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/myblog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/myblog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://wu_zhiyong.gitee.io/myblog/Hystrix%E6%9C%8D%E5%8A%A1%E5%AE%B9%E9%94%99/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/myblog/images/avatar.gif">
+      <meta itemprop="name" content="wuzhiyong">
+      <meta itemprop="description" content="吴志勇的博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴志勇的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Hystrix服务容错
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-05-09 11:18:58" itemprop="dateCreated datePublished" datetime="2020-05-09T11:18:58+08:00">2020-05-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-05-10 16:00:38" itemprop="dateModified" datetime="2020-05-10T16:00:38+08:00">2020-05-10</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">后端</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/myblog/Hystrix%E6%9C%8D%E5%8A%A1%E5%AE%B9%E9%94%99/" class="post-meta-item leancloud_visitors" data-flag-title="Hystrix服务容错" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/myblog/Hystrix%E6%9C%8D%E5%8A%A1%E5%AE%B9%E9%94%99/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/myblog/Hystrix%E6%9C%8D%E5%8A%A1%E5%AE%B9%E9%94%99/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>11k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>10 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><blockquote>
+<p>Hystrix is a latency and fault tolerance library designed to isolate points of access to remote systems, services and 3rd party libraries, stop cascading failure and enable resilience in complex distributed systems where failure is inevitable.</p>
+<p>翻译：Hystrix是一个延迟和容错库，旨在隔离对远程系统，服务和第三方库的访问点，停止级联故障，并在不可避免发生故障的复杂分布式系统中实现弹性。</p>
+<p align="right">—— Hystrix GitHub官网 介绍<p>
+</blockquote>
+<h3 id="Hystrix介绍"><a href="#Hystrix介绍" class="headerlink" title="Hystrix介绍"></a>Hystrix介绍</h3><blockquote>
+<p>Hystrix [hɪst’rɪks]，中文含义是豪猪，因其背上长满棘刺，从而拥有了自我保护的能力。本文所说的Hystrix是Netflix开源的一款容错框架，同样具有自我保护能力。为了实现容错和自我保护，下面我们看看Hystrix如何设计和实现的。</p>
+<p>Hystrix设计目标：</p>
+<ul>
+<li>对来自依赖的延迟和故障进行防护和控制——这些依赖通常都是通过网络访问的</li>
+<li>阻止故障的连锁反应</li>
+<li>快速失败并迅速恢复</li>
+<li>回退并优雅降级</li>
+<li>提供近实时的监控与告警</li>
+</ul>
+<p>Hystrix遵循的设计原则：</p>
+<ul>
+<li>防止任何单独的依赖耗尽资源（线程）</li>
+<li>过载立即切断并快速失败，防止排队</li>
+<li>尽可能提供回退以保护用户免受故障</li>
+<li>使用隔离技术（例如隔板，泳道和断路器模式）来限制任何一个依赖的影响</li>
+<li>通过近实时的指标，监控和告警，确保故障被及时发现</li>
+<li>通过动态修改配置属性，确保故障及时恢复</li>
+<li>防止整个依赖客户端执行失败，而不仅仅是网络通信</li>
+</ul>
+<p>Hystrix如何实现这些设计目标？</p>
+<ul>
+<li>使用命令模式将所有对外部服务（或依赖关系）的调用包装在HystrixCommand或HystrixObservableCommand对象中，并将该对象放在单独的线程中执行；</li>
+<li>每个依赖都维护着一个线程池（或信号量），线程池被耗尽则拒绝请求（而不是让请求排队）。</li>
+<li>记录请求成功，失败，超时和线程拒绝。</li>
+<li>服务错误百分比超过了阈值，熔断器开关自动打开，一段时间内停止对该服务的所有请求。</li>
+<li>请求失败，被拒绝，超时或熔断时执行降级逻辑。</li>
+<li>近实时地监控指标和配置的修改。</li>
+</ul>
+<p align="right">—— <a href="https://my.oschina.net/7001/blog/1619842" target="_blank" rel="noopener">AbeJeffrey的个人空间 </a><p>
+</blockquote>
+<h3 id="在spring-cloud-中使用Hystrix"><a href="#在spring-cloud-中使用Hystrix" class="headerlink" title="在spring cloud 中使用Hystrix"></a>在spring cloud 中使用Hystrix</h3><ul>
+<li>添加 Hystrix 依赖</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-netflix-hystrix<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>启动类加上开启 Hystrix 注解 @EnableHystrix<a id="more"></a></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@EnableHystrix</span></span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SpringcloudHystrixApplication</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SpringApplication.run(SpringcloudHystrixApplication<span class="class">.<span class="keyword">class</span>, <span class="title">args</span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>测试 Hystrix</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GetMapping</span>(<span class="string">"/call/hello"</span>)</span><br><span class="line"><span class="meta">@HystrixCommand</span>(fallbackMethod = <span class="string">"defaultCallHello"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">callHello</span><span class="params">()</span></span>&#123;</span><br><span class="line">    String result = restTemplate.getForObject(<span class="string">"http://localhost:8081/hello"</span>,String<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">defaultCallHello</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"fail"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当我们没有启动 localhost:8081/hello 的服务时</p>
+<p>请求 /call/hello  返回了  “fail”。说明 Hystrix 的熔断机制试用成功了。</p>
+<h3 id="配置详解"><a href="#配置详解" class="headerlink" title="配置详解"></a>配置详解</h3><p>官网：<a href="https://github.com/Netflix/Hystrix/wiki/Configuration" target="_blank" rel="noopener">https://github.com/Netflix/Hystrix/wiki/Configuration</a></p>
+<p>如果我们想配置隔离策略为线程隔离</p>
+<p>可在 @HystrixComman注解中增加 commandProperties 来进行配置。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@HystrixCommand</span>(fallbackMethod = <span class="string">"defaultCallHello"</span>, commandProperties = &#123;</span><br><span class="line">        <span class="meta">@HystrixProperty</span>(name = <span class="string">"execution.isolation.strategy"</span>,value = <span class="string">"THREAD"</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>其他配置及说明如下：</p>
+<ul>
+<li>Command Properties<ul>
+<li>Execution<ul>
+<li>execution.isolation.strategy    指定隔离策略，具体策略有两种<ul>
+<li>THREAD    线程隔离，在单独的线程上执行，并发请求受线程池大小的控制。</li>
+<li>SEMAPHORE    信号量隔离，在调用线程上执行，并发请求受信号量计数器的限制。    </li>
+<li>execution.isolation.thread.timeoutInMilliseconds    配置执行超时时间设置。当Hystrix Command 执行的时间超过了设定值就会进入服务降级处理，单位是毫秒，默认值1000 </li>
+<li>execution.timeout.enabled    用于确定是否启用 execution.isolation.thread.timeoutInMilliseconds 的超时时间设置，默认值为 true。</li>
+<li>execution.isolation.thread.interruptOnTimeout    用于确定 Hystrix Command 执行超时后是否需要中断它，默认值为 true</li>
+<li>execution.isolation.thread.interruptOnCancel    用于确定 Hystrix Command 执行被取消时是否需要中断它，默认值为 false</li>
+<li>execution.isolation.semaphore.maxConcurrentRequests    用于确定 Hystrix 使用信号量策略时最大的请求并发数。<ul>
+<li>Fallback</li>
+<li>fallback.isolation.semaphore.maxConcurrentRequests    用于如果并发数达到该设定值，请求会被拒绝和抛出异常并且 fallback 不会被调用，默认值为 10</li>
+<li>fallback.enabled    用于确定当执行失败或者请求被拒绝时，是否会尝试调用 HystrixCommand.getFallback(),默认值为 ture</li>
+<li>CircuitBreaker</li>
+<li>circuitBreaker.enabled    用来跟踪 circuit 的健康性，如果未达标则让 request 短路，默认值为 true</li>
+<li>circuitBreaker.requestVolumeThreshold    用于设置一个 rolling window 内最小的请求数。如果设定为 20 ，那么当一个 rolling window 的时间内（比如一个 rolling window 是10秒）收到19个请求，即使19个请求都失败，也不会触发 circuit break,默认值为 20.</li>
+<li>circuitBreaker.sleepWindowInMilliseconds    用于设置一个触发短路的时间值，当该值设定为 5000 时，则当触发 circuit break 后的 5000 毫秒内都会拒绝 request ,也就是 5000 毫秒后才会关闭 circuit .默认值为 5000.</li>
+<li>circuitBreaker.errorThresholdPercentage    用于设置错误率阈值，当错误里超出此值时，所有请求都会触发 fallback ,默认值为 50 .</li>
+<li>circuitBreaker.forceOpen    如果配置为 true ,则强制打开熔断器，在这个状态下将拒绝所有请求，默认值为 false.</li>
+<li>circuitBreaker.forceClosed    如果配置为 true 则强制关闭熔断器，在这个状态下，不管错误率有多高，都允许请求，默认值为 false.</li>
+<li>Metrics</li>
+<li>metrics.rollingStats.timeInMilliseconds    设置统计时间窗口值，单位为毫秒。circuit break 的打开会根据 1 个 rolling window 的统计来计算。若 rolling window 被设定为 10000 毫秒，则 rolling window 会被分成多个 buckets,每个 bucket 包含 success、failure、timeout、rejection 的次数的统计信息。默认值为 10000 毫秒。</li>
+<li>metrics.rollingStats.numBuckets    设定一个 rolling window 被划分的数量，若 numBuckets=10、rolling window=10000,那么一个burket的时间即为1秒。必须符合 rolling window % numberBurkets==0 .默认值为 10 .</li>
+<li>metrics.rollingPercentile.enabled    是否开启指标的计算和跟踪，默认值为 true。</li>
+<li>metrics.rollingPercentile.timeInMilliseconds    设置 rolling percentile window 的时间，默认值为 60000 毫秒。</li>
+<li>metrics.rollingPercentile.numBuckets    设置 rolling percentile window numBuckets    默认值 6 。</li>
+<li>metrics.rollingPercentile.bucketSize    如果设置 bucketSize=100 ，window=10 秒，若这10 秒内有 500 次执行，只有最后 100 次执行会被统计到 bucket 里去。增加该值会增加内存开销。默认值为 100</li>
+<li>metrics.healthSnapshot.intervalInMilliseconds    用来计算影响断路器状态的健康快照的间隔等待时间，默认值为 500 毫秒。</li>
+<li>Request Context</li>
+<li>requestCache.enabled    是否开启请求缓存功能，默认值为 true</li>
+<li>requestLog.enabled    记录日志到 HystrixRequestLog,默认值为 true</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Collapser Properties<ul>
+<li>maxRequestsInBatch    单次批处理的最大请求数，达到该数量触发批处理，默认值为 Integer.MAX_VALUE。</li>
+<li>timerDelayInMilliseconds    触发批处理的延迟，延迟也可以为创建批处理的时间与该值的和，默认值为 10 毫秒</li>
+<li>requestCache.enabled    是否启用对 HytrixCollapser.execute() 和 HytrixCollapser.queue() 的请求缓存，默认值为 true</li>
+</ul>
+</li>
+<li>Thread Pool Properties<pre><code>- coreSize    并发请求核心线程数，默认值 10 
+- maximumSize    在1.5.9中添加。此属性设置最大线程池大小。这是在不开始拒绝HystrixCommands的情况下可以支持的最大并发量。请注意，只有同时设置了allowMaximumSizeToDivergeFromCoreSize，此设置才会生效。在1.5.9之前，核心和最大大小始终相等
+- maxQueueSize    BlockingQueue 的最大队列数，当设置为 -1 时，会使用 SynchronousQueue ; 值为正数时，会使用 LinkedBlockingQueue.该设置只会在初始化时有效，之后不能修改 threadpool 的 queue size。默认值为 -1.
+- queueSizeRejectionThreshold    即使没有达到 maxQueueSize 但若达到了 queueSizeRejectionThreshold 该值后，请求也会被拒绝。因为  maxQueueSize 不能被动态修改，而 queueSizeRejectionThreshold 参数将允许我们动态设置该值，如果 maxQueueSize=-1，该字段将不起作用。
+- keepAliveTimeMinutes    设置存活时间，单位为分钟，如果 coreSize 小于  maximumSize 那么该实例控制一个线程从使用完成到被释放的时间（闲置时间）。默认值为 1 分钟  
+- allowMaximumSizeToDivergeFromCoreSize    该属性允许 maximumSize 的配置生效。那么该值可以等于或高于 coreSize 。设置 coreSize 小于 maximumSize 会创建一个线程池，该线程池可以支持 maximumSize 并发，但在相对不活动期间将向系统返回线程。默认值为 false。
+- metrics.rollingStats.timeInMilliseconds    设置滚动时间窗的时间，单位为毫秒，默认值是 10000
+- metrics.rollingStats.numBuckets    设置滚动时间窗划分桶的数量。默认值为 10 </code></pre></li>
+</ul>
+<h3 id="Feign整合Hystrix服务容错"><a href="#Feign整合Hystrix服务容错" class="headerlink" title="Feign整合Hystrix服务容错"></a>Feign整合Hystrix服务容错</h3><p>需要EurekaClient,Feign,Hystrix的依赖</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-netflix-hystrix<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-openfeign<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-netflix-eureka-client<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>属性文件中开启 Feign 对 Hytrix 的支持</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#开启feign对Hystrix的支持</span></span><br><span class="line"><span class="meta">feign.hystrix.enabled</span>=<span class="string">true</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Fallback-方式"><a href="#Fallback-方式" class="headerlink" title="Fallback 方式"></a>Fallback 方式</h4><ul>
+<li>UserRemoteClient</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@FeignClient</span>(value = <span class="string">"eureka-client-service"</span> ,fallback = UserRemoteClientFallBack<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class"><span class="title">public</span> <span class="title">interface</span> <span class="title">UserRemoteClient</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/user/hello"</span>)</span><br><span class="line">    <span class="function">String <span class="title">hello</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>UserRemoteClientFallBack</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserRemoteClientFallBack</span> <span class="keyword">implements</span> <span class="title">UserRemoteClient</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">hello</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"null"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>启动类feign 扫包</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@EnableHystrix</span></span><br><span class="line"><span class="meta">@EnableFeignClients</span>(basePackages = <span class="string">"com.study.feignclient"</span>)</span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SpringcloudHystrixApplication</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SpringApplication.run(SpringcloudHystrixApplication<span class="class">.<span class="keyword">class</span>, <span class="title">args</span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>控制器调用</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Controller</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    UserRemoteClient userRemoteClient;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/call/hello"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">cellHello</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> userRemoteClient.hello();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当我们停掉所有 eureka-client-service 服务后调用 发现返回了  “null”  这正是我们所预见的，</p>
+<h4 id="FallbackFactory-方式"><a href="#FallbackFactory-方式" class="headerlink" title="FallbackFactory 方式"></a>FallbackFactory 方式</h4><ul>
+<li>UserRemoteClientFallbackFactory</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> feign.hystrix.FallbackFactory;</span><br><span class="line"><span class="keyword">import</span> org.slf4j.Logger;</span><br><span class="line"><span class="keyword">import</span> org.slf4j.LoggerFactory;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Component;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserRemoteClientFallbackFactory</span> <span class="keyword">implements</span> <span class="title">FallbackFactory</span>&lt;<span class="title">UserRemoteClient</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Logger logger = LoggerFactory.getLogger(UserRemoteClientFallbackFactory<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> UserRemoteClient <span class="title">create</span><span class="params">(Throwable cause)</span> </span>&#123;</span><br><span class="line">        logger.error(<span class="string">"UserRemoteClient回退："</span>, cause);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> UserRemoteClient() &#123;</span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> String <span class="title">hello</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="string">"fail"</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>修改 UserRemoteClient 的 @FeignClient 注解属性配置 </li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@FeignClient</span>(value = <span class="string">"eureka-client-service"</span> ,fallbackFactory = UserRemoteClientFallBack<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class"><span class="title">public</span> <span class="title">interface</span> <span class="title">UserRemoteClient</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/user/hello"</span>)</span><br><span class="line">    <span class="function">String <span class="title">hello</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注释掉前面  UserRemoteClientFallBack 类的代码 再次测试  发现得到相同的结果。</p>
+<h3 id="Feign-中禁用-Hystrix"><a href="#Feign-中禁用-Hystrix" class="headerlink" title="Feign 中禁用 Hystrix"></a>Feign 中禁用 Hystrix</h3><ul>
+<li>方式一</li>
+</ul>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">feign.hystrix.enabled</span>=<span class="string">false</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>方式二</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FeignConfiguration</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="meta">@Scope</span>(<span class="string">"prototype"</span>)</span><br><span class="line">    <span class="keyword">public</span> Feign.<span class="function">Builder <span class="title">feignBuilder</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Feign.builder();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Hystrix-监控"><a href="#Hystrix-监控" class="headerlink" title="Hystrix 监控"></a>Hystrix 监控</h3><p>在微服务架构中，Hystrix 除了提供容错外，还提供了实时监控功能。在服务调用时， Hystrix 会实时累积关于 HystrixCommand 的执行信息，比如每秒的请求数，成功数等。更多的指标信息请查看官方文档：<a href="https://github.com/Netflix/Hystrix/wiki/Metrics-and-Monitoring" target="_blank" rel="noopener">https://github.com/Netflix/Hystrix/wiki/Metrics-and-Monitoring</a></p>
+<p>除了 Hystrix 本身的 依赖还需 Actuator 的依赖</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-actuator<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>启动服务，访问地址：<a href="http://localhost:8087/actuator/hystrix.stream" target="_blank" rel="noopener">http://localhost:8087/actuator/hystrix.stream</a></p>
+<p>（注意：这里不要用接口测试工具访问。直接在浏览器中访问）</p>
+<p>如果浏览器 返回 404</p>
+<p>那就在配置文件中配置：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#暴露所有端点</span></span><br><span class="line"><span class="meta">management.endpoints.web.exposure.include</span>=<span class="string">*</span></span><br></pre></td></tr></table></figure>
+
+<p>如果浏览器页面一直显示</p>
+<blockquote>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ping: </span><br><span class="line"></span><br><span class="line">ping: </span><br><span class="line"></span><br><span class="line">ping: </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>说明成功了。只是没有检测到数据。这时我们访问下 控制器接口。就会发现已下类似的数据了</p>
+<p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200509173423944.png" alt="image-20200509173423944"></p>
+<p>为了方便阅读数据，我们可以借助 dashborad 来查看监控数据</p>
+<h3 id="整合-Dashboard-查看监控数据"><a href="#整合-Dashboard-查看监控数据" class="headerlink" title="整合 Dashboard 查看监控数据"></a>整合 Dashboard 查看监控数据</h3><ul>
+<li>添加 dashboard 依赖</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-netflix-hystrix-dashboard<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>启动类加上注解 @EnableHystrixDashboard</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@EnableHystrix</span></span><br><span class="line"><span class="meta">@EnableFeignClients</span>(basePackages = <span class="string">"com.study.feignclient"</span>)</span><br><span class="line"><span class="meta">@EnableHystrixDashboard</span></span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SpringcloudHystrixApplication</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SpringApplication.run(SpringcloudHystrixApplication<span class="class">.<span class="keyword">class</span>, <span class="title">args</span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>重启服务，浏览器访问：<a href="http://localhost:8087/hystrix" target="_blank" rel="noopener">http://localhost:8087/hystrix</a></p>
+<p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200509174332525.png" alt="image-20200509174332525"></p>
+<ul>
+<li>1 处填写监控地址：<a href="http://localhost:8087/actuator/hystrix.stream" target="_blank" rel="noopener">http://localhost:8087/actuator/hystrix.stream</a></li>
+<li>2 处填写监控同步的时间间隔</li>
+<li>标题（任意）</li>
+</ul>
+<p>填写完后 点击下方的按钮</p>
+<p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200509174713800.png" alt="image-20200509174713800"></p>
+<p>如果页面没有数据。同上面一样访问下 控制器的接口 再过来看就有数据了</p>
+<h3 id="Turbine-聚合集群数据"><a href="#Turbine-聚合集群数据" class="headerlink" title="Turbine 聚合集群数据"></a>Turbine 聚合集群数据</h3><p>集群监控数据流：<a href="http://localhost:8087/turbine.stream" target="_blank" rel="noopener">http://localhost:8087/turbine.stream</a></p>
+<p>监控面板：<a href="http://localhost:8087/hystrix/" target="_blank" rel="noopener">http://localhost:8087/hystrix/</a></p>
+<p>同前面一样，进入监控面板，填写监控数据流的地址，时间间隔，和标题。我看到类似如下界面。</p>
+<p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/hystrix%E7%9B%91%E6%8E%A7%E9%9D%A2%E6%9D%BF%E8%AF%B4%E6%98%8E.png" alt="hystrix监控面板说明"></p>
+<p>这里我简单说下我的几个服务。</p>
+<p>我这里发布的 8081 端口服务。实例名为 eureka-client-service 并提供了两个接口服务，/test  和 /call/hello</p>
+<p>8082、8084、8087 作为 spring-cloud-hystrix 集群消费  8081的服务  /call/hello 接口</p>
+<p>8085 作为 feign-provider 实例，消费 8081 服务的 /test  和 /call/hello 接口</p>
+<p>所以上图中可看到。#test() 下只有一个host。 #hello() 下有4个 host.</p>
+<p>（8087的服务是我们提供集群监控的服务。从我上面的访问地址就可以看出来。我这里同时把 8087 也作为消费者并加入集群。实际生产中我们的的监控服务可能会单独出来了并不会加入业务的消费中。我们只要配置好它单独的实例名称即可。 ）</p>
+<ul>
+<li>8087端口。我的监控服务的监控相关的配置。</li>
+</ul>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#监控的服务实例名，多个用逗号分隔</span></span><br><span class="line"><span class="meta">turbine.appConfig</span>=<span class="string">spring-cloud-hystrix,feign-provider</span></span><br><span class="line"><span class="meta">turbine.aggregator.clusterConfig</span>=<span class="string">default</span></span><br><span class="line"><span class="meta">turbine.clusterNameExpression</span>=<span class="string">new String("default")</span></span><br><span class="line"><span class="comment">#使用同一主机上的服务通过主机号与端口号组合进行区分</span></span><br><span class="line"><span class="meta">turbine.combine-host-port</span>=<span class="string">true</span></span><br></pre></td></tr></table></figure>
+
+<p>注意：</p>
+<p>所有希望被监控的 feign 客户端的集群实例 </p>
+<ul>
+<li>必须加入 hystrix、actuator 依赖。</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-actuator<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-netflix-hystrix<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>启动类必须加上 @EnableHystrix 注解</p>
+</li>
+<li><p>属性配置必须开启  feign 对 actuator 的支持</p>
+</li>
+</ul>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#开启feign对Hystrix的支持</span></span><br><span class="line"><span class="meta">feign.hystrix.enabled</span>=<span class="string">true</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>必须暴露相关端点</li>
+</ul>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#暴露所有端点   (根据自己的情况暴露端点)</span></span><br><span class="line"><span class="comment">#management.endpoints.web.exposure.include=*</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="context-path-导致监控失败"><a href="#context-path-导致监控失败" class="headerlink" title="context-path 导致监控失败"></a>context-path 导致监控失败</h3><p>在《spring cloud 微服务 入门、进阶与实战》书中描述了如果被监控的服务中设置了 context-path ,则会导致 Turbine 无法获取监控数据。</p>
+<p>这个时候要在 Turbine 中指定  turbine.instanceUrlSuffix 来解决这个问题：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">turbine.instanceUrlSuffix</span>=<span class="string">/sub/hystrix.stream</span></span><br></pre></td></tr></table></figure>
+
+<p>sub 用于监控服务的 context-path 上面这种方式是全局配置，会有一个问题，就是一般我们在使用中会用一个集群去监听多个服务，如果每个服务的 context-path 都不一样，这个时候有一些就会出问题，那么就需要对每一个服务做一个集群，然后配置集群对应的 context-path：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">turbine.instanceUrlSuffix.集群名称</span>=<span class="string">/sub/hystrix.stream</span></span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/微信图片_20200501220918.png" alt="wuzhiyong 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/微信图片_20200501220907.jpg" alt="wuzhiyong 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/myblog/tags/springboot/" rel="tag"># springboot</a>
+              <a href="/myblog/tags/java/" rel="tag"># java</a>
+              <a href="/myblog/tags/spring-cloud/" rel="tag"># spring cloud</a>
+              <a href="/myblog/tags/Hystrix/" rel="tag"># Hystrix</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/myblog/gitee-page%E9%85%8D%E7%BD%AE%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D/" rel="prev" title="gitee-page配置自定义域名">
+      <i class="fa fa-chevron-left"></i> gitee-page配置自定义域名
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/myblog/API%E7%BD%91%E5%85%B3%E4%B9%8BZuul/" rel="next" title="API网关之Zuul">
+      API网关之Zuul <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hystrix介绍"><span class="nav-number">2.</span> <span class="nav-text">Hystrix介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在spring-cloud-中使用Hystrix"><span class="nav-number">3.</span> <span class="nav-text">在spring cloud 中使用Hystrix</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置详解"><span class="nav-number">4.</span> <span class="nav-text">配置详解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Feign整合Hystrix服务容错"><span class="nav-number">5.</span> <span class="nav-text">Feign整合Hystrix服务容错</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Fallback-方式"><span class="nav-number">5.1.</span> <span class="nav-text">Fallback 方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#FallbackFactory-方式"><span class="nav-number">5.2.</span> <span class="nav-text">FallbackFactory 方式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Feign-中禁用-Hystrix"><span class="nav-number">6.</span> <span class="nav-text">Feign 中禁用 Hystrix</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hystrix-监控"><span class="nav-number">7.</span> <span class="nav-text">Hystrix 监控</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#整合-Dashboard-查看监控数据"><span class="nav-number">8.</span> <span class="nav-text">整合 Dashboard 查看监控数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Turbine-聚合集群数据"><span class="nav-number">9.</span> <span class="nav-text">Turbine 聚合集群数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#context-path-导致监控失败"><span class="nav-number">10.</span> <span class="nav-text">context-path 导致监控失败</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">wuzhiyong</p>
+  <div class="site-description" itemprop="description">吴志勇的博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/myblog/archives/">
+        
+          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/myblog/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/myblog/tags/">
+          
+        <span class="site-state-item-count">25</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="mailto:wzy563653092@gmail.com" title="E-Mail → mailto:wzy563653092@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wuzhiyong</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">139k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:07</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+  <div class="addthis_inline_share_toolbox">
+    <script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5eae29bdce1a511b" async="async"></script>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      // url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"jOjNqcMeMLL4ntoMdf13veTb-MdYXbMMI","app_key":"v50rUeYs7yeT6hECN7XAhYYM","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        // if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/myblog/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/myblog/lib/velocity/velocity.min.js"></script>
+  <script src="/myblog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/myblog/js/utils.js"></script>
+
+<script src="/myblog/js/motion.js"></script>
+
+
+<script src="/myblog/js/schemes/muse.js"></script>
+
+
+<script src="/myblog/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/myblog/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'jOjNqcMeMLL4ntoMdf13veTb-MdYXbMMI',
+      appKey     : 'v50rUeYs7yeT6hECN7XAhYYM',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

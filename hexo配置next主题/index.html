@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/myblog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/myblog/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/myblog/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/myblog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/myblog/css/main.css">
+
+
+<link rel="stylesheet" href="/myblog/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wu_zhiyong.gitee.io","root":"/myblog/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":false,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="next主页https:&#x2F;&#x2F;github.com&#x2F;theme-next&#x2F;hexo-theme-next   下载安装12$ cd hexo&#x2F;themes$ git clone https:&#x2F;&#x2F;github.com&#x2F;theme-next&#x2F;hexo-theme-next next  修改hexo项目根目录下的_config.yml文件 12# theme: landscapetheme: next">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hexo配置next主题">
+<meta property="og:url" content="http://wu_zhiyong.gitee.io/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/index.html">
+<meta property="og:site_name" content="吴志勇的博客">
+<meta property="og:description" content="next主页https:&#x2F;&#x2F;github.com&#x2F;theme-next&#x2F;hexo-theme-next   下载安装12$ cd hexo&#x2F;themes$ git clone https:&#x2F;&#x2F;github.com&#x2F;theme-next&#x2F;hexo-theme-next next  修改hexo项目根目录下的_config.yml文件 12# theme: landscapetheme: next">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://wu_zhiyong.gitee.io/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200424100945802.png">
+<meta property="og:image" content="http://wu_zhiyong.gitee.io/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200424102317862.png">
+<meta property="og:image" content="http://wu_zhiyong.gitee.io/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200424102336933.png">
+<meta property="og:image" content="http://wu_zhiyong.gitee.io/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200424103031055.png">
+<meta property="og:image" content="http://wu_zhiyong.gitee.io/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200424103153599.png">
+<meta property="og:image" content="http://wu_zhiyong.gitee.io/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200424103256162.png">
+<meta property="og:image" content="http://wu_zhiyong.gitee.io/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200424103640801.png">
+<meta property="og:image" content="http://wu_zhiyong.gitee.io/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200502164821552.png">
+<meta property="og:image" content="http://wu_zhiyong.gitee.io/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200502165309316.png">
+<meta property="og:image" content="http://wu_zhiyong.gitee.io/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200502165547221.png">
+<meta property="og:image" content="http://wu_zhiyong.gitee.io/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200515190437877.png">
+<meta property="og:image" content="http://wu_zhiyong.gitee.io/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200515190633339.png">
+<meta property="og:image" content="http://wu_zhiyong.gitee.io/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200515190848917.png">
+<meta property="og:image" content="http://wu_zhiyong.gitee.io/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200515191817312.png">
+<meta property="og:image" content="http://wu_zhiyong.gitee.io/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200515192302588.png">
+<meta property="og:image" content="http://wu_zhiyong.gitee.io/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200515192852917.png">
+<meta property="og:image" content="http://wu_zhiyong.gitee.io/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200502170353655.png">
+<meta property="og:image" content="http://wu_zhiyong.gitee.io/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200502170836777.png">
+<meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200503111330975.png">
+<meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200503111451300.png">
+<meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200503111709010.png">
+<meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200503112057114.png">
+<meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200506015947127.png">
+<meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200507102729827.png">
+<meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200507104409453.png">
+<meta property="og:image" content="http://wu_zhiyong.gitee.io/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200507204315434.png">
+<meta property="og:image" content="http://wu_zhiyong.gitee.io/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200507204524855.png">
+<meta property="og:image" content="http://wu_zhiyong.gitee.io/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200507204700445.png">
+<meta property="og:image" content="http://wu_zhiyong.gitee.io/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200507204919243.png">
+<meta property="og:image" content="http://wu_zhiyong.gitee.io/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200507205205010.png">
+<meta property="og:image" content="http://wu_zhiyong.gitee.io/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200507205401220.png">
+<meta property="og:image" content="http://wu_zhiyong.gitee.io/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200508144441101.png">
+<meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200511181259182.png">
+<meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200511183648884.png">
+<meta property="article:published_time" content="2020-04-24T01:58:48.000Z">
+<meta property="article:modified_time" content="2020-05-17T19:06:01.577Z">
+<meta property="article:author" content="wuzhiyong">
+<meta property="article:tag" content="博客">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://wu_zhiyong.gitee.io/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200424100945802.png">
+
+<link rel="canonical" href="http://wu_zhiyong.gitee.io/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>hexo配置next主题 | 吴志勇的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/myblog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">吴志勇的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">学习、记录、总结、侃大山</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/myblog/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/myblog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/myblog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/myblog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://wu_zhiyong.gitee.io/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/myblog/images/avatar.gif">
+      <meta itemprop="name" content="wuzhiyong">
+      <meta itemprop="description" content="吴志勇的博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴志勇的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          hexo配置next主题
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-04-24 09:58:48" itemprop="dateCreated datePublished" datetime="2020-04-24T09:58:48+08:00">2020-04-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-05-18 03:06:01" itemprop="dateModified" datetime="2020-05-18T03:06:01+08:00">2020-05-18</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/%E5%85%B6%E5%AE%83/" itemprop="url" rel="index"><span itemprop="name">其它</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/%E5%85%B6%E5%AE%83/%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">博客</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/" class="post-meta-item leancloud_visitors" data-flag-title="hexo配置next主题" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5.6k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="next主页"><a href="#next主页" class="headerlink" title="next主页"></a>next主页</h3><p><a href="https://github.com/theme-next/hexo-theme-next" target="_blank" rel="noopener">https://github.com/theme-next/hexo-theme-next</a></p>
+<img data-src="/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200424100945802.png" class="">
+
+<h3 id="下载安装"><a href="#下载安装" class="headerlink" title="下载安装"></a>下载安装</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> hexo/themes</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git <span class="built_in">clone</span> https://github.com/theme-next/hexo-theme-next next</span></span><br></pre></td></tr></table></figure>
+
+<p>修改hexo项目根目录下的_config.yml文件</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># theme: landscape</span></span><br><span class="line"><span class="attr">theme:</span> <span class="string">next</span></span><br></pre></td></tr></table></figure>
+
+<p>命令行执行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">D:\myblog&gt;hexo s</span><br><span class="line">INFO  Start processing</span><br><span class="line">INFO  Hexo is running at http://localhost:4000 . Press Ctrl+C to stop.</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置标签和分类"><a href="#配置标签和分类" class="headerlink" title="配置标签和分类"></a>配置标签和分类</h3><ol>
+<li><p>生成标签页<a id="more"></a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new page tags</span><br></pre></td></tr></table></figure>
+
+<p>打开目录  myblog-&gt;source-&gt;tage  下的index.md</p>
+<p>在title下面添加属性</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">type: tags</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>生成分类页</p>
+   <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new page categories</span><br></pre></td></tr></table></figure>
+
+<p>   打开目录  myblog-&gt;source-&gt;categories下的index.md</p>
+<p>   在title下面添加属性</p>
+   <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">type: categories</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置</p>
+<p>在next主题的配置文件 _config.yml 中修改</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">menu</span>:<span class="string"></span></span><br><span class="line">  <span class="attr">home</span>: <span class="string">/ || fa fa-home</span></span><br><span class="line"><span class="comment">  #about: /about/ || fa fa-user</span></span><br><span class="line">  <span class="attr">tags</span>: <span class="string">/tags/ || fa fa-tags</span></span><br><span class="line">  <span class="attr">categories</span>: <span class="string">/categories/ || fa fa-th</span></span><br><span class="line">  <span class="attr">archives</span>: <span class="string">/archives/ || fa fa-archive</span></span><br><span class="line"><span class="comment">  # schedule: /schedule/ || fa fa-calendar</span></span><br><span class="line"><span class="comment">  # sitemap: /sitemap.xml || fa fa-sitemap</span></span><br><span class="line"><span class="comment">  #commonweal: /404/ || fa fa-heartbeat</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>预览效果</p>
+<img data-src="/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200424102317862.png" class="">
+
+<hr>
+<img data-src="/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200424102336933.png" class="">
+
+</li>
+</ol>
+<h3 id="配置评论"><a href="#配置评论" class="headerlink" title="配置评论"></a>配置评论</h3><ol>
+<li><p>进入 <a href="https://www.leancloud.cn/" target="_blank" rel="noopener">https://www.leancloud.cn/</a> 网站注册一个账号（建议选国际版的开发版）</p>
+</li>
+<li><p>然后通过邮箱与手机验证</p>
+</li>
+<li><p>再创建一个应用（应用名称随便填写）</p>
+</li>
+<li><p>进入应用实例的控制界面配置下博客域名</p>
+<img data-src="/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200424103031055.png" class="">
+
+<p>然后在点击</p>
+<p>应用keys</p>
+<img data-src="/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200424103153599.png" class="">
+</li>
+<li><p>打开next的配置修改配置</p>
+</li>
+</ol>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">valine</span>:<span class="string"></span></span><br><span class="line">  <span class="attr">enable</span>: <span class="string">true</span></span><br></pre></td></tr></table></figure>
+
+<p>填写相应的  appid 和 appkey</p>
+<img data-src="/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200424103256162.png" class="">
+
+<ol start="6">
+<li><p>重新发布预览</p>
+<img data-src="/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200424103640801.png" class="">
+
+</li>
+</ol>
+<h3 id="配置文章访问统计"><a href="#配置文章访问统计" class="headerlink" title="配置文章访问统计"></a>配置文章访问统计</h3><p>在前面配置评论的基础上登录LeanCloud</p>
+<p>选择应用实例后-&gt;存储-&gt;结构化数据-&gt;创建class</p>
+<p>class 名填写 Counter</p>
+<img data-src="/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200502164821552.png" class="">
+
+<p>打开next主题的配置文件 找到 leancloud_visitors 节点</p>
+<img data-src="/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200502165309316.png" class="">
+
+<p>把enable 设置成true .</p>
+<p>appid 和 appkey  参照前面的 配置评论。填写LeanCloud里的 id 和 key 。</p>
+<p>效果：</p>
+<img data-src="/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200502165547221.png" class="">
+
+<hr>
+<p>过了很多天 更新：</p>
+<p>访问统计数全部为 0 了</p>
+<p><img data-src="hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200515190437877.png" alt="image-20200515190437877"></p>
+<p>创建函数-选择 hook</p>
+<p><img data-src="hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200515190633339.png" alt="image-20200515190633339"></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> query = <span class="keyword">new</span> AV.Query(<span class="string">"Counter"</span>);</span><br><span class="line"><span class="keyword">if</span> (request.object.updatedKeys.indexOf(<span class="string">'time'</span>) !== <span class="number">-1</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> query.get(request.object.id).then(<span class="function"><span class="keyword">function</span> (<span class="params">obj</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (obj.get(<span class="string">"time"</span>) + <span class="number">1</span> !== request.object.get(<span class="string">"time"</span>)) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> AV.Cloud.Error(<span class="string">'Invalid update!'</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>部署到生产环境：</p>
+<p><img data-src="hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200515190848917.png" alt="image-20200515190848917"></p>
+<p>在 next 主题配置文件中 把 security 设置成 true：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">leancloud_visitors:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">  <span class="comment"># Required for apps from CN region</span></span><br><span class="line">  <span class="attr">server_url:</span> <span class="comment"># &lt;your server url&gt;</span></span><br><span class="line">  <span class="comment"># Dependencies: https://github.com/theme-next/hexo-leancloud-counter-security</span></span><br><span class="line">  <span class="comment"># If you don't care about security in leancloud counter and just want to use it directly</span></span><br><span class="line">  <span class="comment"># (without hexo-leancloud-counter-security plugin), set `security` to `false`.</span></span><br><span class="line">  <span class="attr">security:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<p>在站点目录安装插件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-leancloud-counter-security --save</span><br><span class="line"><span class="meta">#</span><span class="bash"> 成功后</span></span><br><span class="line">hexo lc-counter register WuZhiYongBlog wzy95537551</span><br></pre></td></tr></table></figure>
+
+<p>hexo 站点配置文件：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">leancloud_counter_security:</span></span><br><span class="line">  <span class="attr">enable_sync:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">app_id:</span> <span class="string">jOjNqcMeMLL4ntoMdf13veTb-MdYXbMMI</span>   <span class="comment"># 同前文的id</span></span><br><span class="line">  <span class="attr">app_key:</span> <span class="string">v50rUeYs7yeT6hECN7XAhYYM</span>  <span class="comment"># 同前文的key</span></span><br><span class="line">  <span class="attr">username:</span> <span class="string">WuZhiYongBlog</span></span><br><span class="line">  <span class="attr">password:</span> <span class="string">wzy95537551</span></span><br></pre></td></tr></table></figure>
+
+<p><img data-src="hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200515191817312.png" alt="image-20200515191817312"></p>
+<p>复制 id</p>
+<p><img data-src="hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200515192302588.png" alt="image-20200515192302588"></p>
+<p>编辑 counter 的权限</p>
+<p><img data-src="hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200515192852917.png" alt="image-20200515192852917"></p>
+<p>依然没有效果！！！！！</p>
+<hr>
+<p>最后通过调试代码发现。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">leancloudSelector</span>(<span class="params">url</span>) </span>&#123;</span><br><span class="line">      url = <span class="built_in">encodeURI</span>(url);</span><br><span class="line">      <span class="keyword">return</span> <span class="built_in">document</span>.getElementById(url).querySelector(<span class="string">'.leancloud-visitors-count'</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>在渲染访问量的时候，会通过 encodeURI(url)  进行转码。中文的 url 。这里转过之后就变成 unicode 码了。实际上 节点里的 浏览器已经自动变成中文了。所以这里匹配不到，也就会提示 querySelector 为 null。那么就没办法赋值。 把这段转码的代码 找到后注释掉就可以了。</p>
+<p>代码位置在：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">D:\myblog\themes\next\layout\_third-party\statistics\lean-analytics.swig:</span><br><span class="line">    <span class="number">3</span>    (<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="number">4</span>      <span class="function"><span class="keyword">function</span> <span class="title">leancloudSelector</span>(<span class="params">url</span>) </span>&#123;</span><br><span class="line">    <span class="number">5</span>:       url = <span class="built_in">encodeURI</span>(url);</span><br><span class="line">    <span class="number">6</span>        <span class="keyword">return</span> <span class="built_in">document</span>.getElementById(url).querySelector(<span class="string">'.leancloud-visitors-count'</span>);</span><br><span class="line">    <span class="number">7</span>      &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="配置打赏"><a href="#配置打赏" class="headerlink" title="配置打赏"></a>配置打赏</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">reward:</span></span><br><span class="line">  <span class="attr">wechatpay:</span> <span class="string">https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/微信图片_20200501220918.png</span> <span class="comment">#/images/wechatpay.png</span></span><br><span class="line">  <span class="attr">alipay:</span> <span class="string">https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/微信图片_20200501220907.jpg</span> <span class="comment">#/images/alipay.png</span></span><br><span class="line">  <span class="comment">#paypal: /images/paypal.png</span></span><br><span class="line">  <span class="comment">#bitcoin: /images/bitcoin.png</span></span><br></pre></td></tr></table></figure>
+
+<p>找到reward 节点 配置上对应的支付二维码的图片即可</p>
+<h3 id="配置首页文章显示摘要"><a href="#配置首页文章显示摘要" class="headerlink" title="配置首页文章显示摘要"></a>配置首页文章显示摘要</h3><p>很多博客说是这样配置：（自动生成一定长度的摘要）</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Automatically Excerpt (Not recommend).</span></span><br><span class="line"><span class="comment"># Use &lt;!-- more --&gt; in the post to control excerpt accurately.</span></span><br><span class="line"><span class="attr">auto_excerpt:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">length:</span> <span class="number">150</span></span><br></pre></td></tr></table></figure>
+
+<p>找到auto_excerpt节点（没有就自己加上） 把 enable 设置成true 。 length表示文章摘要的长度。</p>
+<p><strong>但是！！！  我配置的没有效果</strong></p>
+<p>后来在其它的博客中说到得在文章中手动截取摘要就是在 文章中写上more标记</p>
+<img data-src="/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200502170353655.png" class="">
+
+<p>这中方式成功了！！！！</p>
+<p>效果：</p>
+<img data-src="/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200502170836777.png" class="">
+
+<h3 id="配置分享"><a href="#配置分享" class="headerlink" title="配置分享"></a>配置分享</h3><ul>
+<li>add_this 分享</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># AddThis Share. See: https://www.addthis.com</span></span><br><span class="line"><span class="comment"># Go to https://www.addthis.com/dashboard to customize your tools.</span></span><br><span class="line"><span class="attr">add_this_id:</span> <span class="string">your</span> <span class="string">id</span></span><br></pre></td></tr></table></figure>
+
+<p>打开 <a href="https://www.addthis.com" target="_blank" rel="noopener">https://www.addthis.com</a> 进行注册</p>
+<p>第一步：注册完后会有个界面让你选择工具类型  Select a Tool</p>
+<p>这里我选择的是分享按钮</p>
+<p>第二部：接下来会引导你配置（英文的没有关系，可用谷歌浏览器右键翻译网页）</p>
+<p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200503111330975.png" alt="image-20200503111330975"></p>
+<ol>
+<li>配置分享到哪些第三方</li>
+<li>配置分享按钮的颜色</li>
+<li>配置分享按钮的位置</li>
+<li>配置哪些页面显示，哪些页面不显示</li>
+<li>6 切换电脑端和手机端预览效果</li>
+</ol>
+<p>第三步：上面配置好后会到这里</p>
+<p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200503111451300.png" alt="image-20200503111451300"></p>
+<p>点击代码试图。看到下面的安装代码。可以看到代码中的 pubid  </p>
+<p>这个id 也可以在这里看到。</p>
+<p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200503111709010.png" alt="image-20200503111709010"></p>
+<p>然后把 自己的 id 填写到 上面的配置文件的  add_this_id 后面。</p>
+<p>hexo 重新生成并部署博客。（本地 localhost:4000 是看不到效果的）</p>
+<p>我的gitee 博客效果如下：</p>
+<p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200503112057114.png" alt="image-20200503112057114"></p>
+<p>参考：</p>
+<p><a href="http://tding.top/archives/7696c13f.html" target="_blank" rel="noopener">http://tding.top/archives/7696c13f.html</a></p>
+<hr>
+<h3 id="配置浏览进度"><a href="#配置浏览进度" class="headerlink" title="配置浏览进度"></a>配置浏览进度</h3><p>在主题配置文件中搜索 scrollpercent</p>
+<p>把 scrollpercent 的值改成 true</p>
+<img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200506015947127.png" alt="image-20200506015947127"  />
+
+<h3 id="给文章配置加密访问"><a href="#给文章配置加密访问" class="headerlink" title="给文章配置加密访问"></a>给文章配置加密访问</h3><h4 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h4><p>找到next主题下的文件head.swig：</p>
+<p>next\layout_partials\head\head.swig</p>
+<p>加入 script 代码保存</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;meta name=<span class="string">"generator"</span> content=<span class="string">"Hexo &#123;&#123; hexo_version &#125;&#125;"</span>&gt;</span><br><span class="line"><span class="comment">//省略。。。。  </span></span><br><span class="line">&lt;script&gt;</span><br><span class="line">    (<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="string">'&#123;&#123; page.password &#125;&#125;'</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span> (prompt(<span class="string">'请输入密码'</span>) !== <span class="string">'&#123;&#123; page.password &#125;&#125;'</span>)&#123;</span><br><span class="line">                alert(<span class="string">'密码错误'</span>);</span><br><span class="line">                history.back();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)();</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/省略。。。。</span></span><br></pre></td></tr></table></figure>
+
+<p>然后在typora 中的文章头部添加</p>
+<p>password: yourpassword</p>
+<p>保存后发布服务。再次访问该文章有</p>
+<p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200507102729827.png" alt="image-20200507102729827"></p>
+<p>缺点：界面不好看。本地效果正常，发布到gitee 后无效。</p>
+<h4 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h4><p>进入 hexo 根目录</p>
+<p>执行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save hexo-blog-encrypt</span><br></pre></td></tr></table></figure>
+
+<p>在hexo 配置文件中加入：encrypt</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">theme:</span> <span class="string">next</span></span><br><span class="line"><span class="attr">encrypt:</span> </span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<p>文章头部添加：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">password:</span> <span class="string">pwd</span></span><br><span class="line"><span class="attr">message:</span> <span class="string">输入密码界面提示说明</span></span><br><span class="line"><span class="attr">abstract:</span> <span class="string">文章界面介绍</span></span><br></pre></td></tr></table></figure>
+
+<p>访问文章提示：</p>
+<p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200507104409453.png" alt="image-20200507104409453"></p>
+<h3 id="配置验证"><a href="#配置验证" class="headerlink" title="配置验证"></a>配置验证</h3><h4 id="百度网站验证"><a href="#百度网站验证" class="headerlink" title="百度网站验证"></a>百度网站验证</h4><p>访问地址：<a href="https://ziyuan.baidu.com/site（没有百度账号就注册一个）" target="_blank" rel="noopener">https://ziyuan.baidu.com/site（没有百度账号就注册一个）</a></p>
+<p>填写自己的网站地址 点击下一步</p>
+<p><img data-src="hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200507204315434.png" alt="image-20200507204315434"></p>
+<p>选择三个标签 点击下一步</p>
+<p><img data-src="hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200507204524855.png" alt="image-20200507204524855"></p>
+<p>这里我选择的是   验证</p>
+<p><img data-src="hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200507204700445.png" alt="image-20200507204700445"></p>
+<p>把域名添加一条解析</p>
+<p><img data-src="hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200507204919243.png" alt="image-20200507204919243"></p>
+<p>点击百度页面的 完成验证：</p>
+<p><img data-src="hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200507205205010.png" alt="image-20200507205205010"></p>
+<p>失败了。我点了重新认证</p>
+<p><img data-src="hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200507205401220.png" alt="image-20200507205401220"></p>
+<p>what???  要一天！！！</p>
+<p>过了半小时 刷新页面  发现ok了.用了两天发现我通过域名访问很卡不好用，怀疑可能是这里的问题。就把百度的解析删除键了。用了下面的  htm 标签认证的方式。</p>
+<p><img data-src="hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200508144441101.png" alt="image-20200508144441101"></p>
+<h4 id="Bing网站验证"><a href="#Bing网站验证" class="headerlink" title="Bing网站验证"></a>Bing网站验证</h4><h3 id="博客图片点击放大"><a href="#博客图片点击放大" class="headerlink" title="博客图片点击放大"></a>博客图片点击放大</h3><p>在主题配置文件中找到：fancybox 并设置成 true  重新发布即可</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># FancyBox is a tool that offers a nice and elegant way to add zooming functionality for images.</span></span><br><span class="line"><span class="comment"># For more information: https://fancyapps.com/fancybox</span></span><br><span class="line"><span class="attr">fancybox:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<p>如果想要自定义 第三方 依赖的版本 请参考官方文档：</p>
+<p><a href="http://theme-next.iissnan.com/advanced-settings.html" target="_blank" rel="noopener">http://theme-next.iissnan.com/advanced-settings.html</a></p>
+<h3 id="配置文字统计和阅读时长"><a href="#配置文字统计和阅读时长" class="headerlink" title="配置文字统计和阅读时长"></a>配置文字统计和阅读时长</h3><p>安装插件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> npm install hexo-symbols-count-time</span></span><br></pre></td></tr></table></figure>
+
+<p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200511181259182.png" alt="image-20200511181259182"></p>
+<p>hexo 站点配置文件</p>
+<p>没有就添加：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#配置文章字数统计和时长 </span></span><br><span class="line"><span class="comment">#依赖于：https://github.com/theme-next/hexo-symbols-count-time</span></span><br><span class="line"><span class="attr">symbols_count_time:</span></span><br><span class="line">  <span class="attr">symbols:</span> <span class="literal">true</span> <span class="comment">#文章字数统计</span></span><br><span class="line">  <span class="attr">time:</span> <span class="literal">true</span> <span class="comment">#阅读时长</span></span><br><span class="line">  <span class="attr">total_symbols:</span> <span class="literal">true</span> <span class="comment">#站点总字数统计</span></span><br><span class="line">  <span class="attr">total_time:</span> <span class="literal">true</span> <span class="comment">#站点总阅读时长</span></span><br><span class="line">  <span class="attr">exclude_codeblock:</span> <span class="literal">false</span> <span class="comment">#排除代码字数统计</span></span><br><span class="line">  <span class="attr">awl:</span> <span class="number">4</span> <span class="comment">#平均字长 这里表示 以4个字符 作为一个字</span></span><br><span class="line">  <span class="attr">wpm:</span> <span class="number">275</span> <span class="comment">#设定每分钟阅读多少字</span></span><br><span class="line">  <span class="attr">suffix:</span> <span class="string">"mins."</span> <span class="comment">#如果读取时间少于60分钟，请添加后缀作为字符串参数。 如果未定义，则为分钟。将用作默认值。</span></span><br></pre></td></tr></table></figure>
+
+<p>next 主题配置文件找到该节点 默认的可以不用改</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Post wordcount display settings</span></span><br><span class="line"><span class="comment"># Dependencies: https://github.com/theme-next/hexo-symbols-count-time</span></span><br><span class="line"><span class="attr">symbols_count_time:</span></span><br><span class="line">  <span class="attr">separated_meta:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">item_text_post:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">item_text_total:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+
+<p>都改好后 保存</p>
+<p>执行  hexo clean   一定要 clean</p>
+<p>再 hexo g    hexo  s</p>
+<p>效果如下：</p>
+<p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200511183648884.png" alt="image-20200511183648884"></p>
+<p>参考：</p>
+<p><a href="https://www.himmy.cn/2019/07/06/hexo博客next主题下添加字数统计和阅读时长/" target="_blank" rel="noopener">野猿新一的博客</a></p>
+<p><a href="https://github.com/theme-next/hexo-symbols-count-time" target="_blank" rel="noopener">hexo-symbols-count-time官网</a></p>
+<p><a href="https://blog.tomandersen.cn/2020/03/06/Hexo之NexT主题中设置symbols-count-time统计单词/" target="_blank" rel="noopener">Eden的博客</a></p>
+<hr>
+<p>参考：<a href="http://theme-next.iissnan.com/" target="_blank" rel="noopener">next 官方文档</a></p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/微信图片_20200501220918.png" alt="wuzhiyong 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/微信图片_20200501220907.jpg" alt="wuzhiyong 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/myblog/tags/%E5%8D%9A%E5%AE%A2/" rel="tag"># 博客</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/myblog/%E4%B8%80%E6%96%87%E5%A4%9A%E5%8F%91ArtiPub/" rel="prev" title="一文多发ArtiPub">
+      <i class="fa fa-chevron-left"></i> 一文多发ArtiPub
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/myblog/hexo%E4%B8%BB%E9%A1%B5%E5%9B%BE%E7%89%87%E6%98%BE%E7%A4%BA%E9%97%AE%E9%A2%98/" rel="next" title="hexo主页图片显示问题">
+      hexo主页图片显示问题 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#next主页"><span class="nav-number">1.</span> <span class="nav-text">next主页</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#下载安装"><span class="nav-number">2.</span> <span class="nav-text">下载安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置标签和分类"><span class="nav-number">3.</span> <span class="nav-text">配置标签和分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置评论"><span class="nav-number">4.</span> <span class="nav-text">配置评论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置文章访问统计"><span class="nav-number">5.</span> <span class="nav-text">配置文章访问统计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置打赏"><span class="nav-number">6.</span> <span class="nav-text">配置打赏</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置首页文章显示摘要"><span class="nav-number">7.</span> <span class="nav-text">配置首页文章显示摘要</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置分享"><span class="nav-number">8.</span> <span class="nav-text">配置分享</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置浏览进度"><span class="nav-number">9.</span> <span class="nav-text">配置浏览进度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#给文章配置加密访问"><span class="nav-number">10.</span> <span class="nav-text">给文章配置加密访问</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#方法一"><span class="nav-number">10.1.</span> <span class="nav-text">方法一</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#方法二"><span class="nav-number">10.2.</span> <span class="nav-text">方法二</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置验证"><span class="nav-number">11.</span> <span class="nav-text">配置验证</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#百度网站验证"><span class="nav-number">11.1.</span> <span class="nav-text">百度网站验证</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Bing网站验证"><span class="nav-number">11.2.</span> <span class="nav-text">Bing网站验证</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#博客图片点击放大"><span class="nav-number">12.</span> <span class="nav-text">博客图片点击放大</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置文字统计和阅读时长"><span class="nav-number">13.</span> <span class="nav-text">配置文字统计和阅读时长</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">wuzhiyong</p>
+  <div class="site-description" itemprop="description">吴志勇的博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/myblog/archives/">
+        
+          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/myblog/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/myblog/tags/">
+          
+        <span class="site-state-item-count">25</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="mailto:wzy563653092@gmail.com" title="E-Mail → mailto:wzy563653092@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wuzhiyong</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">139k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:07</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+  <div class="addthis_inline_share_toolbox">
+    <script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5eae29bdce1a511b" async="async"></script>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      // url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"jOjNqcMeMLL4ntoMdf13veTb-MdYXbMMI","app_key":"v50rUeYs7yeT6hECN7XAhYYM","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        // if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/myblog/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/myblog/lib/velocity/velocity.min.js"></script>
+  <script src="/myblog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/myblog/js/utils.js"></script>
+
+<script src="/myblog/js/motion.js"></script>
+
+
+<script src="/myblog/js/schemes/muse.js"></script>
+
+
+<script src="/myblog/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/myblog/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'jOjNqcMeMLL4ntoMdf13veTb-MdYXbMMI',
+      appKey     : 'v50rUeYs7yeT6hECN7XAhYYM',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

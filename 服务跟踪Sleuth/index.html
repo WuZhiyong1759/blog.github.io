@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/myblog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/myblog/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/myblog/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/myblog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/myblog/css/main.css">
+
+
+<link rel="stylesheet" href="/myblog/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wu_zhiyong.gitee.io","root":"/myblog/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":false,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="引言 在微服务架构下，服务之间的调用关系越来越复杂，通过 Zuul 转发到具体的业务接 ，一个接口中会涉及多个微服务的交互，只要其中某个服务出现问题，整个请求都将失败。这个时候我们要想快速定位到问题所在，就需要用到链路跟踪了。每个请求都是一条完整的调用链，通过调用链我们可以清楚地知道这个请求经过了哪些服务，在哪个服务上耗时多长时间，进而达到快速定位问题的目的。 为了解决上面提到的问题， Sprin">
+<meta property="og:type" content="article">
+<meta property="og:title" content="服务跟踪Sleuth">
+<meta property="og:url" content="http://wu_zhiyong.gitee.io/myblog/%E6%9C%8D%E5%8A%A1%E8%B7%9F%E8%B8%AASleuth/index.html">
+<meta property="og:site_name" content="吴志勇的博客">
+<meta property="og:description" content="引言 在微服务架构下，服务之间的调用关系越来越复杂，通过 Zuul 转发到具体的业务接 ，一个接口中会涉及多个微服务的交互，只要其中某个服务出现问题，整个请求都将失败。这个时候我们要想快速定位到问题所在，就需要用到链路跟踪了。每个请求都是一条完整的调用链，通过调用链我们可以清楚地知道这个请求经过了哪些服务，在哪个服务上耗时多长时间，进而达到快速定位问题的目的。 为了解决上面提到的问题， Sprin">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200513205655908.png">
+<meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200513180017941.png">
+<meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200513180113059.png">
+<meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200513180142097.png">
+<meta property="og:image" content="http://wu_zhiyong.gitee.io/myblog/%E6%9C%8D%E5%8A%A1%E8%B7%9F%E8%B8%AASleuth/%E6%9C%8D%E5%8A%A1%E8%B7%9F%E8%B8%AASleuth/image-20200513213835958.png">
+<meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200513233208638.png">
+<meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200513233747139.png">
+<meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200513233407667.png">
+<meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200513234422669.png">
+<meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200514111125122.png">
+<meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200514110947974.png">
+<meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200514111811873.png">
+<meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200514144246611.png">
+<meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200514160521203.png">
+<meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200514160606857.png">
+<meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200514162719215.png">
+<meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200514163051852.png">
+<meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200514163858862.png">
+<meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200514164331054.png">
+<meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200514164652907.png">
+<meta property="article:published_time" content="2020-05-13T07:21:21.000Z">
+<meta property="article:modified_time" content="2020-05-15T08:52:47.208Z">
+<meta property="article:author" content="wuzhiyong">
+<meta property="article:tag" content="springboot">
+<meta property="article:tag" content="java">
+<meta property="article:tag" content="spring cloud">
+<meta property="article:tag" content="Sleuth">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200513205655908.png">
+
+<link rel="canonical" href="http://wu_zhiyong.gitee.io/myblog/%E6%9C%8D%E5%8A%A1%E8%B7%9F%E8%B8%AASleuth/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>服务跟踪Sleuth | 吴志勇的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/myblog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">吴志勇的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">学习、记录、总结、侃大山</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/myblog/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/myblog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/myblog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/myblog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://wu_zhiyong.gitee.io/myblog/%E6%9C%8D%E5%8A%A1%E8%B7%9F%E8%B8%AASleuth/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/myblog/images/avatar.gif">
+      <meta itemprop="name" content="wuzhiyong">
+      <meta itemprop="description" content="吴志勇的博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴志勇的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          服务跟踪Sleuth
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-05-13 15:21:21" itemprop="dateCreated datePublished" datetime="2020-05-13T15:21:21+08:00">2020-05-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-05-15 16:52:47" itemprop="dateModified" datetime="2020-05-15T16:52:47+08:00">2020-05-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">后端</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/myblog/%E6%9C%8D%E5%8A%A1%E8%B7%9F%E8%B8%AASleuth/" class="post-meta-item leancloud_visitors" data-flag-title="服务跟踪Sleuth" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/myblog/%E6%9C%8D%E5%8A%A1%E8%B7%9F%E8%B8%AASleuth/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/myblog/%E6%9C%8D%E5%8A%A1%E8%B7%9F%E8%B8%AASleuth/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>15k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>13 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><blockquote>
+<p>在微服务架构下，服务之间的调用关系越来越复杂，通过 Zuul 转发到具体的业务接 ，一个接口中会涉及多个微服务的交互，只要其中某个服务出现问题，整个请求都将失败。这个时候我们要想快速定位到问题所在，就需要用到链路跟踪了。每个请求都是一条完整的调用链，通过调用链我们可以清楚地知道这个请求经过了哪些服务，在哪个服务上耗时多长时间，进而达到快速定位问题的目的。</p>
+<p>为了解决上面提到的问题， Spring Cloud Sleuth为我们提供了完整的解决方案。本章我们将学习如何使用 Spring Cloud Sleuth来构建分布式链路跟踪功能。</p>
+<p align="right">——《spring cloud 微服务 入门、进阶与实战》第197页<p>
+</blockquote>
+<p>Sleuth 官网：<a href="https://spring.io/projects/spring-cloud-sleuth#overview" target="_blank" rel="noopener">https://spring.io/projects/spring-cloud-sleuth#overview</a></p>
+<h3 id="spring-cloud-集成-Sleuth"><a href="#spring-cloud-集成-Sleuth" class="headerlink" title="spring cloud 集成 Sleuth"></a>spring cloud 集成 Sleuth</h3><ul>
+<li>给调用链中所有服务加上依赖</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-sleuth<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>代码中打印日志：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">logger.info(<span class="string">"method call/hello be called....."</span>);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>调用接口：A 服务 调用 B 服务的接口<a id="more"></a></li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> A 服务日志 ：</span></span><br><span class="line">2020-05-13 15:33:04.439  INFO [spring-cloud-hystrix,f764aae854c0d690,f764aae854c0d690,false] 20316 --- [nio-8087-exec-1] com.study.controller.Controller          : method call/hello be called.....</span><br><span class="line"><span class="meta">#</span><span class="bash"> B 服务日志 :</span></span><br><span class="line">2020-05-13 15:33:04.704  INFO [eureka-client-service,f764aae854c0d690,6569e6c4685070be,false] 22164 --- [nio-8081-exec-1] c.s.s.controller.UserController          : method be called....</span><br></pre></td></tr></table></figure>
+
+<p>注意服务日志中的这段：</p>
+<p>[spring-cloud-hystrix,f764aae854c0d690,f764aae854c0d690,false] </p>
+<p>这里会记录每个服务的 名称 ，编号（trace），编号（span），是否导入数据到 Zipki 中，A 服务调用 B 服务，那么 A 服务的编号（span）就对应 B 服务的编号（trace）。以此来跟踪整个调用链路。</p>
+<h3 id="整合-LogStash"><a href="#整合-LogStash" class="headerlink" title="整合 LogStash"></a>整合 LogStash</h3><p>首先</p>
+<h4 id="格式化日志的输出格式为-json"><a href="#格式化日志的输出格式为-json" class="headerlink" title="格式化日志的输出格式为 json"></a>格式化日志的输出格式为 json</h4><p>pom 添加依赖：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 输出 Json 格式日志 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>net.logstash.logback<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>logstash-logback-encoder<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>5.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>在 resources 下建立 logback-spring.xml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">include</span> <span class="attr">resource</span>=<span class="string">"org/springframework/boot/logging/logback/defaults.xml"</span>/&gt;</span></span><br><span class="line">    ​</span><br><span class="line">    <span class="tag">&lt;<span class="name">springProperty</span> <span class="attr">scope</span>=<span class="string">"context"</span> <span class="attr">name</span>=<span class="string">"springAppName"</span> <span class="attr">source</span>=<span class="string">"spring.application.name"</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- Example for logging into the build folder of your project --&gt;</span></span><br><span class="line"><span class="comment">&lt;!--    &lt;property name="LOG_FILE" value="/Users/yinjihuan/Downloads/sleuth-user-service.log"/&gt;​--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"LOG_FILE"</span> <span class="attr">value</span>=<span class="string">"D:/IdeaProjects/spring-cloud-study/springcloud-hystrix/sleuth-user-service.log"</span> /&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- You can override this to have a custom pattern --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"CONSOLE_LOG_PATTERN"</span></span></span><br><span class="line"><span class="tag">              <span class="attr">value</span>=<span class="string">"%clr(%d&#123;yyyy-MM-dd HH:mm:ss.SSS&#125;)&#123;faint&#125; %clr($&#123;LOG_LEVEL_PATTERN:-%5p&#125;) %clr($&#123;PID:- &#125;)&#123;magenta&#125; %clr(---)&#123;faint&#125; %clr([%15.15t])&#123;faint&#125; %clr(%-40.40logger&#123;39&#125;)&#123;cyan&#125; %clr(:)&#123;faint&#125; %m%n$&#123;LOG_EXCEPTION_CONVERSION_WORD:-%wEx&#125;"</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- Appender to log to console --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">appender</span> <span class="attr">name</span>=<span class="string">"console"</span> <span class="attr">class</span>=<span class="string">"ch.qos.logback.core.ConsoleAppender"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">filter</span> <span class="attr">class</span>=<span class="string">"ch.qos.logback.classic.filter.ThresholdFilter"</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!-- Minimum logging level to be presented in the console logs--&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">level</span>&gt;</span>INFO<span class="tag">&lt;/<span class="name">level</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">filter</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">encoder</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">pattern</span>&gt;</span>$&#123;CONSOLE_LOG_PATTERN&#125;<span class="tag">&lt;/<span class="name">pattern</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">charset</span>&gt;</span>utf8<span class="tag">&lt;/<span class="name">charset</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">encoder</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">appender</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- Appender to log to file --&gt;</span>​</span><br><span class="line">    <span class="tag">&lt;<span class="name">appender</span> <span class="attr">name</span>=<span class="string">"flatfile"</span> <span class="attr">class</span>=<span class="string">"ch.qos.logback.core.rolling.RollingFileAppender"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">file</span>&gt;</span>$&#123;LOG_FILE&#125;<span class="tag">&lt;/<span class="name">file</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">rollingPolicy</span> <span class="attr">class</span>=<span class="string">"ch.qos.logback.core.rolling.TimeBasedRollingPolicy"</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">fileNamePattern</span>&gt;</span>$&#123;LOG_FILE&#125;.%d&#123;yyyy-MM-dd&#125;<span class="tag">&lt;/<span class="name">fileNamePattern</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">maxHistory</span>&gt;</span>7<span class="tag">&lt;/<span class="name">maxHistory</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">rollingPolicy</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">encoder</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">pattern</span>&gt;</span>$&#123;CONSOLE_LOG_PATTERN&#125;<span class="tag">&lt;/<span class="name">pattern</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">charset</span>&gt;</span>utf8<span class="tag">&lt;/<span class="name">charset</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">encoder</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">appender</span>&gt;</span></span><br><span class="line">    ​</span><br><span class="line">    <span class="comment">&lt;!-- Appender to log to file in a JSON format--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">appender</span> <span class="attr">name</span>=<span class="string">"logstash"</span> <span class="attr">class</span>=<span class="string">"ch.qos.logback.core.rolling.RollingFileAppender"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">file</span>&gt;</span>$&#123;LOG_FILE&#125;.json<span class="tag">&lt;/<span class="name">file</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">rollingPolicy</span> <span class="attr">class</span>=<span class="string">"ch.qos.logback.core.rolling.TimeBasedRollingPolicy"</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">fileNamePattern</span>&gt;</span>$&#123;LOG_FILE&#125;.json.%d&#123;yyyy-MM-dd&#125;.gz<span class="tag">&lt;/<span class="name">fileNamePattern</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">maxHistory</span>&gt;</span>7<span class="tag">&lt;/<span class="name">maxHistory</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">rollingPolicy</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">encoder</span> <span class="attr">class</span>=<span class="string">"net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder"</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">providers</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">timestamp</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">timeZone</span>&gt;</span>UTC<span class="tag">&lt;/<span class="name">timeZone</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">timestamp</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">pattern</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">pattern</span>&gt;</span></span><br><span class="line">                        &#123;</span><br><span class="line">                        "severity": "%level",</span><br><span class="line">                        "service": "$&#123;springAppName:-&#125;",</span><br><span class="line">                        "trace": "%X&#123;X-B3-TraceId:-&#125;",</span><br><span class="line">                        "span": "%X&#123;X-B3-SpanId:-&#125;",</span><br><span class="line">                        "parent": "%X&#123;X-B3-ParentSpanId:-&#125;",</span><br><span class="line">                        "exportable": "%X&#123;X-Span-Export:-&#125;",</span><br><span class="line">                        "pid": "$&#123;PID:-&#125;",</span><br><span class="line">                        "thread": "%thread",</span><br><span class="line">                        "class": "%logger&#123;40&#125;",</span><br><span class="line">                        "rest": "%message"</span><br><span class="line">                        &#125;</span><br><span class="line">                    <span class="tag">&lt;/<span class="name">pattern</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">pattern</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">providers</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">encoder</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">appender</span>&gt;</span></span><br><span class="line">    ​</span><br><span class="line">    <span class="tag">&lt;<span class="name">root</span> <span class="attr">level</span>=<span class="string">"INFO"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">appender-ref</span> <span class="attr">ref</span>=<span class="string">"console"</span>/&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- uncomment this to have also JSON logs--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">appender-ref</span> <span class="attr">ref</span>=<span class="string">"logstash"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">appender-ref</span> <span class="attr">ref</span>=<span class="string">"flatfile"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">root</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>请求接口让日志文件中记录下调用链的信息。</p>
+<h4 id="使用ELK查询服务调用链"><a href="#使用ELK查询服务调用链" class="headerlink" title="使用ELK查询服务调用链"></a>使用ELK查询服务调用链</h4><blockquote>
+<p>ELK是Elasticsearch、Logstash、Kibana三大开源框架首字母大写简称。市面上也被成为Elastic Stack。其中 Elasticsearch 是一个基于Lucene、分布式、通过 Restful 方式进行交互的近实时搜索平台框架。像类似百度、谷歌这种大数据全文搜索引擎的场景都可以使用 Elasticsearch 作为底层支持框架，可见Elasticsearch 提供的搜索能力确实强大,市面上很多时候我们简称 Elasticsearch 为 ES 。Logstash是 ELK的中央数据流引擎，用于从不同目标（文件/数据存储/MQ）收集的不同格式数据，经过过滤后支持输出到不同目的地（文件/MQ/redis/elasticsearch/kafka等）。Kibana可以将elasticsearch的数据通过友好的页面展示出来，提供实时分析的功能。</p>
+<p align="right">—— <a href="https://www.jianshu.com/p/d66bfe7e9127" target="_blank" rel="noopener">laizhiy的简书</a><p>
+</blockquote>
+<p>下载 elasticsearch 和 kibana  地址：<a href="https://www.elastic.co/cn/start" target="_blank" rel="noopener">https://www.elastic.co/cn/start</a></p>
+<p>下载 logstash 地址：<a href="https://www.elastic.co/cn/downloads/logstash" target="_blank" rel="noopener">https://www.elastic.co/cn/downloads/logstash</a></p>
+<p>下载后解压：注意不要放在中文目录下，不然 logstash 会启动报错</p>
+<p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200513205655908.png" alt="image-20200513205655908"></p>
+<ul>
+<li>在 elasticsearch 解压的 bin 目录下双击执行 elasticsearch.bat 。后在浏览器访问   <a href="http://localhost:9200/" target="_blank" rel="noopener">http://localhost:9200/</a>  出现类似如下内容 说明启动成功！</li>
+</ul>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"name"</span> : <span class="string">"DESKTOP-SAUA6M1"</span>,</span><br><span class="line">  <span class="attr">"cluster_name"</span> : <span class="string">"elasticsearch"</span>,</span><br><span class="line">  <span class="attr">"cluster_uuid"</span> : <span class="string">"M-ZSPWU8SZyFqB2DWvqX2g"</span>,</span><br><span class="line">  <span class="attr">"version"</span> : &#123;</span><br><span class="line">    <span class="attr">"number"</span> : <span class="string">"7.6.2"</span>,</span><br><span class="line">    <span class="attr">"build_flavor"</span> : <span class="string">"default"</span>,</span><br><span class="line">    <span class="attr">"build_type"</span> : <span class="string">"zip"</span>,</span><br><span class="line">    <span class="attr">"build_hash"</span> : <span class="string">"ef48eb35cf30adf4db14086e8aabd07ef6fb113f"</span>,</span><br><span class="line">    <span class="attr">"build_date"</span> : <span class="string">"2020-03-26T06:34:37.794943Z"</span>,</span><br><span class="line">    <span class="attr">"build_snapshot"</span> : <span class="literal">false</span>,</span><br><span class="line">    <span class="attr">"lucene_version"</span> : <span class="string">"8.4.0"</span>,</span><br><span class="line">    <span class="attr">"minimum_wire_compatibility_version"</span> : <span class="string">"6.8.0"</span>,</span><br><span class="line">    <span class="attr">"minimum_index_compatibility_version"</span> : <span class="string">"6.0.0-beta1"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"tagline"</span> : <span class="string">"You Know, for Search"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>编辑 logstash 目录 -&gt; config -&gt; logstash-sample.conf 文件</li>
+</ul>
+<p>意思就是 读取 input 的内容 通过 output 发送到  elasticsearch 。我这里 是把 springcloud-eureka-server-consumer，springcloud-eureka-server-provider 作为集群，提供给 springcloud-hystrix 来调用。所以我这里读取三个 json 日志文件。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">input &#123;</span><br><span class="line">	file &#123;</span><br><span class="line">		path =&gt; ["D:/IdeaProjects/spring-cloud-study/springcloud-eureka-server-consumer/sleuth-user-service.log.json",</span><br><span class="line">		"D:/IdeaProjects/spring-cloud-study/springcloud-eureka-server-provider/sleuth-user-service.log.json",</span><br><span class="line">		"D:/IdeaProjects/spring-cloud-study/springcloud-hystrix/sleuth-user-service.log.json"]</span><br><span class="line"></span><br><span class="line">	start_position =&gt; "beginning"</span><br><span class="line">    </span><br><span class="line">    #设置编码</span><br><span class="line">    codec =&gt; json &#123;charset =&gt; "UTF-8"&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">output &#123;</span><br><span class="line">  elasticsearch &#123;</span><br><span class="line">    hosts =&gt; ["http://localhost:9200"]</span><br><span class="line">    index =&gt; "sleuth"</span><br><span class="line">    #类型</span><br><span class="line">    document_type =&gt; "json_index"</span><br><span class="line"></span><br><span class="line">    #user =&gt; "elastic"</span><br><span class="line">    #password =&gt; "changeme"</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>启动 logstash 采集数据 发送到 elasticsearch </li>
+</ul>
+<p>在 logstash 目录 -&gt; bin  目录下 通过 gitbash (或者其它 bash 客户端 ) 执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wuzhiyong@DESKTOP-SAUA6M1 MINGW64 /d/ELK/logstash-7.6.2/bin</span><br><span class="line">$ ./logstash -f ../config/logstash-sample.conf</span><br></pre></td></tr></table></figure>
+
+<p>如果出现异常： invalid byte sequence in US-ASCII  ，请检查你路径中不能有中文。</p>
+<p>一切正常 会提示  Successfully started</p>
+<ul>
+<li>配置与启动 kibana  </li>
+</ul>
+<p>修改 kibana-7.6.2-windows-x86_64 -&gt; config 下的 kibana.yml 。解开下列属性的注释 使其生效并保存。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server.port:</span> <span class="number">5601</span></span><br><span class="line"><span class="attr">server.host:</span> <span class="string">"localhost"</span></span><br><span class="line"><span class="attr">server.name:</span> <span class="string">localhost</span></span><br><span class="line"><span class="attr">elasticsearch.hosts:</span> <span class="string">["http://localhost:9200"]</span></span><br><span class="line"><span class="attr">kibana.index:</span> <span class="string">".kibana"</span></span><br><span class="line"><span class="attr">kibana.defaultAppId:</span> <span class="string">"home"</span></span><br></pre></td></tr></table></figure>
+
+<p>双击 kibana-7.6.2-windows-x86_64   下 bin  目录下的 kibana.bat  </p>
+<p>如果成功会有类似提示：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">log</span>   [09:58:01.360] [info][listening] Server running at http://localhost:5601</span><br><span class="line"><span class="built_in">log</span>   [09:58:01.529] [info][server][Kibana][http] http server running at http://localhost:5601</span><br></pre></td></tr></table></figure>
+
+<h4 id="检索数据"><a href="#检索数据" class="headerlink" title="检索数据"></a>检索数据</h4><p>打开 <a href="http://localhost:5601/" target="_blank" rel="noopener">http://localhost:5601/</a></p>
+<p>填写个  sleuth   点击 next step</p>
+<p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200513180017941.png" alt="image-20200513180017941"></p>
+<p>选择 I don`t want  to ….  点击 create index pattern</p>
+<p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200513180113059.png" alt="image-20200513180113059"></p>
+<p>会出现下面这个界面</p>
+<p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200513180142097.png" alt="image-20200513180142097"></p>
+<p>看图：</p>
+<p><img data-src="%E6%9C%8D%E5%8A%A1%E8%B7%9F%E8%B8%AASleuth/image-20200513213835958.png" alt="image-20200513213835958"></p>
+<p>点击 1  就会来到这个 检索的界面。</p>
+<p>2 的输入框输入检索的内容</p>
+<p>3 添加需要展示的 列</p>
+<p>4 检索按钮</p>
+<p>5 展示框 展示数据</p>
+<p>通过检索就可以很清楚的知道，调用链什么时间经过了哪些服务，调用了什么接口。</p>
+<h3 id="整合-Zipkin"><a href="#整合-Zipkin" class="headerlink" title="整合 Zipkin"></a>整合 Zipkin</h3><p>Zipkin 是 twitter 开发的一个致力于收集所有服务的监控数据的分布式跟踪系统。</p>
+<p>gitHub 地址：<a href="https://github.com/openzipkin/zipkin" target="_blank" rel="noopener">https://github.com/openzipkin/zipkin</a></p>
+<h4 id="快速使用"><a href="#快速使用" class="headerlink" title="快速使用"></a>快速使用</h4><p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200513233208638.png" alt="image-20200513233208638"></p>
+<p>下到本地后执行 ：java -jar zipkin ….</p>
+<p>spring cloud 项目添加依赖</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-zipkin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>properties 中配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 配置 zipkin server 地址</span><br><span class="line">spring.zipkin.base-url&#x3D;http:&#x2F;&#x2F;127.0.0.1:9411</span><br><span class="line"># zipkin 抽样比例</span><br><span class="line">spring.sleuth.sampler.probability&#x3D;1.0</span><br></pre></td></tr></table></figure>
+
+<p>重启项目</p>
+<p>控制台中复制 trace id</p>
+<p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200513233747139.png" alt="image-20200513233747139"></p>
+<p>浏览器访问：<a href="http://localhost:9411/zipkin/" target="_blank" rel="noopener">http://localhost:9411/zipkin/</a></p>
+<p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200513233407667.png" alt="image-20200513233407667"></p>
+<p>把 trace id 复制到 图中 1 按回车</p>
+<p>即可查到调用链</p>
+<p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200513234422669.png" alt="image-20200513234422669"></p>
+<h4 id="异步任务线程池定义"><a href="#异步任务线程池定义" class="headerlink" title="异步任务线程池定义"></a>异步任务线程池定义</h4><p>在 《spring cloud 微服务 入门、进阶与实战》书中说。我们用 @Async 开启一个异步任务后，Sleuth 会为这个调用新创建一个 span. 如果你自定义了异步任务的线程池，会导致无法新创建一个 Span 。这需要使用 Sleuth 提供的 LazyTraceAsyncTaskExecutor 来包装：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//自定义线程池配置   部分代码		</span></span><br><span class="line"></span><br><span class="line">		<span class="meta">@Autowired</span></span><br><span class="line">    BeanFactory beanFactory;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Executor <span class="title">getAsyncExecutor</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ThreadPoolTaskExecutor executor = <span class="keyword">new</span> ThreadPoolTaskExecutor();</span><br><span class="line">        executor.setCorePoolSize(config.getCorePoolSize());</span><br><span class="line">        executor.setMaxPoolSize(config.getMaxPoolSize());</span><br><span class="line">        executor.setQueueCapacity(config.getQueueCapacity());</span><br><span class="line">        executor.setKeepAliveSeconds(config.getKeepAliveSeconds());</span><br><span class="line">        executor.setThreadNamePrefix(config.getThreadNamePrefix());</span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 线程池拒绝策略：如果不配置并超过了负荷会造成溢出</span></span><br><span class="line"><span class="comment">         * AbortPolicy:直接抛出异常  会丢弃任务</span></span><br><span class="line"><span class="comment">         * CallerRunsPolicy 先由主线程执行当前任务，下个任务继续交给线程池来执行</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        executor.setRejectedExecutionHandler(<span class="keyword">new</span> ThreadPoolExecutor.CallerRunsPolicy());</span><br><span class="line">        executor.initialize();</span><br><span class="line">      <span class="comment">//使用 LazyTraceAsyncTaskExecutor 进行包装。</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> LazyTraceAsyncTaskExecutor(<span class="keyword">this</span>.beanFactory,executor);</span><br><span class="line"><span class="comment">//        return executor;</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>测试用例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GetMapping</span>(<span class="string">"/call/hello"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">cellHello</span><span class="params">()</span></span>&#123;</span><br><span class="line">    logger.info(<span class="string">"method call/hello be called....."</span>);</span><br><span class="line">    myservice.saveLog();<span class="comment">//异步方法</span></span><br><span class="line">    myservice.saveLog2();<span class="comment">//</span></span><br><span class="line">    <span class="keyword">return</span> userRemoteClient.hello();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>已包装：</p>
+<p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200514111125122.png" alt="image-20200514111125122"></p>
+<p>未包装：</p>
+<p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200514110947974.png" alt="image-20200514110947974"></p>
+<h4 id="TracingFilter-自定义"><a href="#TracingFilter-自定义" class="headerlink" title="TracingFilter 自定义"></a>TracingFilter 自定义</h4><p>TracingFilter 是负责处理请求和响应的组件，我们可以通过注册自定义的 TracingFilter 实例来实现一些扩展性的需求。下例将演示如何给请求添加自定义的标记以及将请求 ID 添加到响应头返回给客户端。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="meta">@Order</span>(TraceWebServletAutoConfiguration.TRACING_FILTER_ORDER + <span class="number">1</span>)</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyFilter</span> <span class="keyword">extends</span> <span class="title">GenericFilterBean</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Tracer tracer;</span><br><span class="line"></span><br><span class="line">    MyFilter(Tracer tracer) &#123;</span><br><span class="line">        <span class="keyword">this</span>.tracer = tracer;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doFilter</span><span class="params">(ServletRequest request, ServletResponse response,</span></span></span><br><span class="line"><span class="function"><span class="params">                         FilterChain chain)</span> <span class="keyword">throws</span> IOException, ServletException </span>&#123;</span><br><span class="line">        Span currentSpan = <span class="keyword">this</span>.tracer.currentSpan();</span><br><span class="line">        <span class="keyword">if</span> (currentSpan == <span class="keyword">null</span>) &#123;</span><br><span class="line">            chain.doFilter(request, response);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ((HttpServletResponse) response).addHeader(<span class="string">"ZIPKIN-TRACE-ID"</span>,</span><br><span class="line">                currentSpan.context().traceIdString());</span><br><span class="line">        currentSpan.tag(<span class="string">"custom"</span>, <span class="string">"tag"</span>);</span><br><span class="line">        chain.doFilter(request, response);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>浏览器调试请求：</p>
+<p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200514111811873.png" alt="image-20200514111811873"></p>
+<p>可在响应头中看到 trace-id 这对调试问题非常有帮助。</p>
+<h4 id="监控本地方法"><a href="#监控本地方法" class="headerlink" title="监控本地方法"></a>监控本地方法</h4><p>异步和远程调用都会开启一个 span ,如果想监控本地方法，可采用埋点的方式监控本地方法，也就是开启一个新的 span</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    Tracer tracer;</span><br><span class="line">    <span class="meta">@Async</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">saveLog</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        logger.info(<span class="string">"异步线程执行"</span>);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"><span class="comment">//	  方法一  使用注解</span></span><br><span class="line"><span class="comment">//    @NewSpan(name = "saveLog2")</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">saveLog2</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="comment">//   方法二   使用 tracer 对象</span></span><br><span class="line">        ScopedSpan span = tracer.startScopedSpan(<span class="string">"saveLog2"</span>);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Thread.sleep(<span class="number">2000</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception | Error e) &#123;</span><br><span class="line">            span.error(e);</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            span.finish();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="用-RabbitMq-代替-http-发送调用链数据"><a href="#用-RabbitMq-代替-http-发送调用链数据" class="headerlink" title="用 RabbitMq 代替 http 发送调用链数据"></a>用 RabbitMq 代替 http 发送调用链数据</h4><p>虽然有基于采样的收集方式，但是数据的发送采用 Http 还是对性能有影响。如果 Zipkin 的服务端重启或挂掉了，那么将丢失部分采集数据。为了解决这个问题，我们将集成 RabbitMq 来发送采集数据，利用消息队列来提高发送性能，保证数据不会丢。</p>
+<h5 id="安装-RabbitMq-环境"><a href="#安装-RabbitMq-环境" class="headerlink" title="安装 RabbitMq 环境"></a>安装 RabbitMq 环境</h5><p>RabbitMq 依赖于 Erlang 所以先安装 Erlang</p>
+<ul>
+<li>安装 Erlang</li>
+</ul>
+<p>下载：<a href="https://www.erlang.org/downloads" target="_blank" rel="noopener">https://www.erlang.org/downloads</a></p>
+<ul>
+<li>安装 rabbitmq</li>
+</ul>
+<p>下载：<a href="https://www.rabbitmq.com/install-windows-manual.html" target="_blank" rel="noopener">https://www.rabbitmq.com/install-windows-manual.html</a></p>
+<p>安装与配置环境变量参考：<a href="https://www.cnblogs.com/nongzihong/p/11578255.html" target="_blank" rel="noopener">https://www.cnblogs.com/nongzihong/p/11578255.html</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看 rabbitmq 状态</span></span><br><span class="line">D:\Program Files\rabbitmq_server-3.8.3\sbin&gt;rabbitmqctl status</span><br><span class="line">Error: unable to perform an operation on node <span class="string">'rabbit@DESKTOP-SAUA6M1'</span>. Please see diagnostics information and suggestions below.</span><br><span class="line"></span><br><span class="line"><span class="comment"># enable rabbitmq_management</span></span><br><span class="line"><span class="comment">###</span></span><br><span class="line">D:\Program Files\rabbitmq_server-3.8.3\sbin&gt;rabbitmq-plugins.bat <span class="built_in">enable</span> rabbitmq_management</span><br><span class="line">Enabling plugins on node rabbit@DESKTOP-SAUA6M1:</span><br><span class="line">rabbitmq_management</span><br><span class="line">The following plugins have been configured:</span><br><span class="line">  rabbitmq_management</span><br><span class="line">  rabbitmq_management_agent</span><br><span class="line">  rabbitmq_web_dispatch</span><br><span class="line">Applying plugin configuration to rabbit@DESKTOP-SAUA6M1...</span><br><span class="line">The following plugins have been enabled:</span><br><span class="line">  rabbitmq_management</span><br><span class="line">  rabbitmq_management_agent</span><br><span class="line">  rabbitmq_web_dispatch</span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span> 3 plugins.</span><br><span class="line">Offline change; changes will take effect at broker restart.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 再启动 rabbitmq</span></span><br><span class="line">D:\Program Files\rabbitmq_server-3.8.3\sbin&gt;rabbitmq-server.bat</span><br><span class="line"></span><br><span class="line">  <span class="comment">##  ##      RabbitMQ 3.8.3</span></span><br><span class="line">  <span class="comment">##  ##</span></span><br><span class="line">  <span class="comment">##########  Copyright (c) 2007-2020 Pivotal Software, Inc.</span></span><br><span class="line">  <span class="comment">######  ##</span></span><br><span class="line">  <span class="comment">##########  Licensed under the MPL 1.1. Website: https://rabbitmq.com</span></span><br><span class="line"></span><br><span class="line">  Doc guides: https://rabbitmq.com/documentation.html</span><br><span class="line">  Support:    https://rabbitmq.com/contact.html</span><br><span class="line">  Tutorials:  https://rabbitmq.com/getstarted.html</span><br><span class="line">  Monitoring: https://rabbitmq.com/monitoring.html</span><br><span class="line"></span><br><span class="line">  Logs: C:/Users/wuzhiyong/AppData/Roaming/RabbitMQ/<span class="built_in">log</span>/rabbit@DESKTOP-SAUA6M1.log</span><br><span class="line">        C:/Users/wuzhiyong/AppData/Roaming/RabbitMQ/<span class="built_in">log</span>/rabbit@DESKTOP-SAUA6M1_upgrade.log</span><br><span class="line"></span><br><span class="line">  Config file(s): (none)</span><br><span class="line"></span><br><span class="line">  Starting broker... completed with 3 plugins.</span><br></pre></td></tr></table></figure>
+
+<p>访问：<a href="http://localhost:15672/" target="_blank" rel="noopener">http://localhost:15672/</a></p>
+<p>用户名：guest  密码：guest</p>
+<p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200514144246611.png" alt="image-20200514144246611"></p>
+<h5 id="spring-cloud-项目的配置"><a href="#spring-cloud-项目的配置" class="headerlink" title="spring cloud 项目的配置"></a>spring cloud 项目的配置</h5><p>把所有项目都配上：</p>
+<p>pom:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.amqp<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-rabbit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>properties</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 注释掉 </span></span><br><span class="line"><span class="comment">#spring.zipkin.base-url=http://127.0.0.1:9411</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 增加</span></span><br><span class="line"><span class="meta">spring.zipkin.sender.type</span>=<span class="string">RABBIT</span></span><br><span class="line"><span class="meta">spring.rabbitmq.addresses</span>=<span class="string">amqp:localhost:15672/</span></span><br><span class="line"><span class="meta">spring.rabbitmq.username</span>=<span class="string">guest</span></span><br><span class="line"><span class="meta">spring.rabbitmq.password</span>=<span class="string">guest</span></span><br></pre></td></tr></table></figure>
+
+<p>启动 zinkin : 带上 rabbit 的参数</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">wuzhiyong@DESKTOP-SAUA6M1 MINGW64 /d/Zipkin</span><br><span class="line"><span class="meta">$</span><span class="bash"> java -DRABBIT_ADDRESSES=127.0.0.1:5672 -DRABBIT_USER=guest -DRABBIT_PASSWORD=guest -jar zipkin-server-2.21.1-exec.jar</span></span><br><span class="line"></span><br><span class="line">                  oo</span><br><span class="line">                 oooo</span><br><span class="line">                oooooo</span><br><span class="line">               oooooooo</span><br><span class="line">              oooooooooo</span><br><span class="line">             oooooooooooo</span><br><span class="line">           ooooooo  ooooooo</span><br><span class="line">          oooooo     ooooooo</span><br><span class="line">         oooooo       ooooooo</span><br><span class="line">        oooooo   o  o   oooooo</span><br><span class="line">       oooooo   oo  oo   oooooo</span><br><span class="line">     ooooooo  oooo  oooo  ooooooo</span><br><span class="line">    oooooo   ooooo  ooooo  ooooooo</span><br><span class="line">   oooooo   oooooo  oooooo  ooooooo</span><br><span class="line">  oooooooo      oo  oo      oooooooo</span><br><span class="line">  ooooooooooooo oo  oo ooooooooooooo</span><br><span class="line">      oooooooooooo  oooooooooooo</span><br><span class="line">          oooooooo  oooooooo</span><br><span class="line">              oooo  oooo</span><br><span class="line"></span><br><span class="line">     ________ ____  _  _____ _   _</span><br><span class="line">    |__  /_ _|  _ \| |/ /_ _| \ | |</span><br><span class="line">      / / | || |_) | ' / | ||  \| |</span><br><span class="line">     / /_ | ||  __/| . \ | || |\  |</span><br><span class="line">    |____|___|_|   |_|\_\___|_| \_|</span><br><span class="line"></span><br><span class="line">:: version 2.21.1 :: commit c30ffc5 ::</span><br><span class="line"></span><br><span class="line">2020-05-14 15:51:16.549  INFO 416 --- [           main] z.s.ZipkinServer                         : Starting ZipkinServer on DESKTOP-SAUA6M1 with PID 416 (D:\Zipkin\zipkin-server-2.21.1-exec.jar started by wuzhiyong in D:\Zipkin)</span><br><span class="line">2020-05-14 15:51:16.552  INFO 416 --- [           main] z.s.ZipkinServer                         : The following profiles are active: shared</span><br><span class="line">2020-05-14 15:51:17.400  INFO 416 --- [           main] c.l.a.c.u.SystemInfo                     : Hostname: desktop-saua6m1 (from 'hostname' command)</span><br><span class="line">2020-05-14 15:51:18.100  INFO 416 --- [oss-http-*:9411] c.l.a.s.Server                           : Serving HTTP at /0:0:0:0:0:0:0:0:9411 - http://127.0.0.1:9411/</span><br><span class="line">2020-05-14 15:51:18.100  INFO 416 --- [           main] c.l.a.s.ArmeriaAutoConfiguration         : Armeria server started at ports: &#123;/0:0:0:0:0:0:0:0:9411=ServerPort(/0:0:0:0:0:0:0:0:9411, [http])&#125;</span><br><span class="line">2020-05-14 15:51:18.115  INFO 416 --- [           main] z.s.ZipkinServer                         : Started ZipkinServer in 2.126 seconds (JVM running for 3.133)</span><br></pre></td></tr></table></figure>
+
+<h5 id="查看"><a href="#查看" class="headerlink" title="查看"></a>查看</h5><p>rabbitMq</p>
+<p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200514160521203.png" alt="image-20200514160521203"></p>
+<p>请求接口后再从 zipkin 中查看某个调用链：</p>
+<p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200514160606857.png" alt="image-20200514160606857"></p>
+<h4 id="用-Elasticsearch-存储调用链数据"><a href="#用-Elasticsearch-存储调用链数据" class="headerlink" title="用 Elasticsearch 存储调用链数据"></a>用 Elasticsearch 存储调用链数据</h4><p>目前收集的数据都是存在 Zipkin 服务的内存中，服务一重启这些数据就没了，我们需要将这些数据持久化。实际使用中数据量可能会比较大，所以一般数据库并不是很好的选择，可以选择 ES 来存储数据，ES 在搜索方面有先天的优势</p>
+<p>启动 ES</p>
+<p>启动  zipkin ，带上 ES 的参数。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wuzhiyong@DESKTOP-SAUA6M1 MINGW64 /d/Zipkin</span><br><span class="line"><span class="meta">$</span><span class="bash"> java -DSTORAGE_TYPE=elasticsearch -DES_HOST=http://127.0.0.1:9200 -DRABBIT_ADDRESSES=127.0.0.1:5672 -DRABBIT_USER=guest -DRABBIT_PASSWORD=guest -jar zipkin-server-2.21.1-exec.jar</span></span><br></pre></td></tr></table></figure>
+
+<p>访问几次接口生成几条条用链数据：</p>
+<p>在 zipkin 中查看。</p>
+<p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200514162719215.png" alt="image-20200514162719215"></p>
+<p>重启 zipkin 用刚才的 trace id 查询。查到了说明数据被保存了。</p>
+<h5 id="验证数据是否存到了-ES"><a href="#验证数据是否存到了-ES" class="headerlink" title="验证数据是否存到了 ES"></a>验证数据是否存到了 ES</h5><p>我们再访问 ES 的接口  查找索引：<a href="http://localhost:9200/_cat/indices" target="_blank" rel="noopener">http://localhost:9200/_cat/indices</a></p>
+<p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200514163051852.png" alt="image-20200514163051852"></p>
+<p>有了 zipkin 前缀的索引。说明 zipkin 的数据保存到了ES里</p>
+<p>通过 kibana 也可以看到这条索引：</p>
+<p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200514163858862.png" alt="image-20200514163858862"></p>
+<p>在 kibana 中创建对应的 index pattern</p>
+<p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200514164331054.png" alt="image-20200514164331054"></p>
+<p>然后就可以通过 trace id 搜素到了：</p>
+<p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200514164652907.png" alt="image-20200514164652907"></p>
+<hr>
+<p>参考：《spring cloud 微服务 入门、进阶与实战》</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/微信图片_20200501220918.png" alt="wuzhiyong 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/微信图片_20200501220907.jpg" alt="wuzhiyong 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/myblog/tags/springboot/" rel="tag"># springboot</a>
+              <a href="/myblog/tags/java/" rel="tag"># java</a>
+              <a href="/myblog/tags/spring-cloud/" rel="tag"># spring cloud</a>
+              <a href="/myblog/tags/Sleuth/" rel="tag"># Sleuth</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/myblog/%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83%E4%B9%8BApollo/" rel="prev" title="配置中心之Apollo">
+      <i class="fa fa-chevron-left"></i> 配置中心之Apollo
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/myblog/spring-boot-admin/" rel="next" title="spring-boot-Admin">
+      spring-boot-Admin <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#spring-cloud-集成-Sleuth"><span class="nav-number">2.</span> <span class="nav-text">spring cloud 集成 Sleuth</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#整合-LogStash"><span class="nav-number">3.</span> <span class="nav-text">整合 LogStash</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#格式化日志的输出格式为-json"><span class="nav-number">3.1.</span> <span class="nav-text">格式化日志的输出格式为 json</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用ELK查询服务调用链"><span class="nav-number">3.2.</span> <span class="nav-text">使用ELK查询服务调用链</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#检索数据"><span class="nav-number">3.3.</span> <span class="nav-text">检索数据</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#整合-Zipkin"><span class="nav-number">4.</span> <span class="nav-text">整合 Zipkin</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#快速使用"><span class="nav-number">4.1.</span> <span class="nav-text">快速使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#异步任务线程池定义"><span class="nav-number">4.2.</span> <span class="nav-text">异步任务线程池定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TracingFilter-自定义"><span class="nav-number">4.3.</span> <span class="nav-text">TracingFilter 自定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#监控本地方法"><span class="nav-number">4.4.</span> <span class="nav-text">监控本地方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#用-RabbitMq-代替-http-发送调用链数据"><span class="nav-number">4.5.</span> <span class="nav-text">用 RabbitMq 代替 http 发送调用链数据</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#安装-RabbitMq-环境"><span class="nav-number">4.5.1.</span> <span class="nav-text">安装 RabbitMq 环境</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#spring-cloud-项目的配置"><span class="nav-number">4.5.2.</span> <span class="nav-text">spring cloud 项目的配置</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#查看"><span class="nav-number">4.5.3.</span> <span class="nav-text">查看</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#用-Elasticsearch-存储调用链数据"><span class="nav-number">4.6.</span> <span class="nav-text">用 Elasticsearch 存储调用链数据</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#验证数据是否存到了-ES"><span class="nav-number">4.6.1.</span> <span class="nav-text">验证数据是否存到了 ES</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">wuzhiyong</p>
+  <div class="site-description" itemprop="description">吴志勇的博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/myblog/archives/">
+        
+          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/myblog/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/myblog/tags/">
+          
+        <span class="site-state-item-count">25</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="mailto:wzy563653092@gmail.com" title="E-Mail → mailto:wzy563653092@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wuzhiyong</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">139k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:07</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+  <div class="addthis_inline_share_toolbox">
+    <script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5eae29bdce1a511b" async="async"></script>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      // url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"jOjNqcMeMLL4ntoMdf13veTb-MdYXbMMI","app_key":"v50rUeYs7yeT6hECN7XAhYYM","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        // if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/myblog/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/myblog/lib/velocity/velocity.min.js"></script>
+  <script src="/myblog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/myblog/js/utils.js"></script>
+
+<script src="/myblog/js/motion.js"></script>
+
+
+<script src="/myblog/js/schemes/muse.js"></script>
+
+
+<script src="/myblog/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/myblog/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'jOjNqcMeMLL4ntoMdf13veTb-MdYXbMMI',
+      appKey     : 'v50rUeYs7yeT6hECN7XAhYYM',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

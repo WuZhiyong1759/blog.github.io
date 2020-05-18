@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/myblog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/myblog/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/myblog/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/myblog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/myblog/css/main.css">
+
+
+<link rel="stylesheet" href="/myblog/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wu_zhiyong.gitee.io","root":"/myblog/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":false,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="引言 Zuul is the front door for all requests from devices and web sites to the backend of the Netflix streaming application. As an edge service application, Zuul is built to enable dynamic routing, moni">
+<meta property="og:type" content="article">
+<meta property="og:title" content="API网关之Zuul">
+<meta property="og:url" content="http://wu_zhiyong.gitee.io/myblog/API%E7%BD%91%E5%85%B3%E4%B9%8BZuul/index.html">
+<meta property="og:site_name" content="吴志勇的博客">
+<meta property="og:description" content="引言 Zuul is the front door for all requests from devices and web sites to the backend of the Netflix streaming application. As an edge service application, Zuul is built to enable dynamic routing, moni">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200511112353620.png">
+<meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/u=3158899300,220096942&fm=26&gp=0.jpg">
+<meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200511134331169.png">
+<meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200511160023555.png">
+<meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200511160405668.png">
+<meta property="article:published_time" content="2020-05-10T05:05:32.000Z">
+<meta property="article:modified_time" content="2020-05-11T08:56:22.727Z">
+<meta property="article:author" content="wuzhiyong">
+<meta property="article:tag" content="springboot">
+<meta property="article:tag" content="java">
+<meta property="article:tag" content="spring cloud">
+<meta property="article:tag" content="Zuul">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200511112353620.png">
+
+<link rel="canonical" href="http://wu_zhiyong.gitee.io/myblog/API%E7%BD%91%E5%85%B3%E4%B9%8BZuul/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>API网关之Zuul | 吴志勇的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/myblog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">吴志勇的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">学习、记录、总结、侃大山</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/myblog/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/myblog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/myblog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/myblog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://wu_zhiyong.gitee.io/myblog/API%E7%BD%91%E5%85%B3%E4%B9%8BZuul/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/myblog/images/avatar.gif">
+      <meta itemprop="name" content="wuzhiyong">
+      <meta itemprop="description" content="吴志勇的博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴志勇的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          API网关之Zuul
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-05-10 13:05:32" itemprop="dateCreated datePublished" datetime="2020-05-10T13:05:32+08:00">2020-05-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-05-11 16:56:22" itemprop="dateModified" datetime="2020-05-11T16:56:22+08:00">2020-05-11</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">后端</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/myblog/API%E7%BD%91%E5%85%B3%E4%B9%8BZuul/" class="post-meta-item leancloud_visitors" data-flag-title="API网关之Zuul" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/myblog/API%E7%BD%91%E5%85%B3%E4%B9%8BZuul/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/myblog/API%E7%BD%91%E5%85%B3%E4%B9%8BZuul/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>19k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>17 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><blockquote>
+<p>Zuul is the front door for all requests from devices and web sites to the backend of the Netflix streaming application. As an edge service application, Zuul is built to enable dynamic routing, monitoring, resiliency and security. It also has the ability to route requests to multiple Amazon Auto Scaling Groups as appropriate.</p>
+<p align="right">—— <a href="https://github.com/Netflix/zuul/wiki" target="_blank" rel="noopener">Zuul 官方wiki</a><p>
+</blockquote>
+<h3 id="Zuul-简介"><a href="#Zuul-简介" class="headerlink" title="Zuul 简介"></a>Zuul 简介</h3><blockquote>
+<p>Zuul 是 Netflix OOS 中的一员，是一个基于 JVM 路由和服务端的负载均衡。提供路由、监控、弹性、安全等方面的服务框架。Zuul 能够与 Eureka 、Ribbon 、Hystrix 等组件配合使用。</p>
+<p>Zuul 的核心是过滤器，通过这些过滤器我们可以扩展出很多功能，比如：</p>
+<ul>
+<li>动态路由：动态的将客户端的请求路由到后端的不同服务，做一些逻辑处理，比如聚合多个服务的数据返回。</li>
+<li>请求监控：可以对整个系统的请求进行监控，记录详细的请求响应日志，可以实时统计出当前系统的访问量以及监控状态。</li>
+<li>认证鉴权：对每一个访问的请求做认证，拒绝非法请求，保护好后端的服务。</li>
+<li>压力测试：压力测试是一项很重要的工作，像电商公司需要模拟更多的真实的用户并发量来保证重大活动时系统的稳定。通过 Zuul 可以动态地将请求转发到后端服务的集群中，还可以识别测试流量和真实流量，从而做一些特殊处理。</li>
+<li>灰度发布：灰度发布可以保证系统的稳定，在初始灰度的时候就可以发现、调整问题、以保证其影响度。</li>
+</ul>
+<p align="right">——《spring cloud 微服务 入门、进阶与实战》第103页<p>
+</blockquote>
+<h3 id="使用-Zuul-构建微服务网关"><a href="#使用-Zuul-构建微服务网关" class="headerlink" title="使用 Zuul 构建微服务网关"></a>使用 Zuul 构建微服务网关</h3><h4 id="简单使用"><a href="#简单使用" class="headerlink" title="简单使用"></a>简单使用</h4><p>建立一个 spring cloud 项目。配置如下：</p>
+<ul>
+<li>pom添加依赖</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-netflix-zuul<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>properties 配置：</li>
+</ul>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">spring.application.name</span>=<span class="string">zuul-demo</span></span><br><span class="line"><span class="meta">server.port</span>=<span class="string">2103</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#拦截匹配了 /demo1/** 规则的url  转发到  https://blog.wu-zy.com/</span></span><br><span class="line"><span class="comment">#这里 routes.demo1 的 demo1 是自定义的</span></span><br><span class="line"><span class="meta">zuul.routes.demo1.path</span>=<span class="string">/demo1/**</span></span><br><span class="line"><span class="meta">zuul.routes.demo1.url</span>=<span class="string">https://blog.wu-zy.com/</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>启动类加上 @EnableZuulProxy 注解</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@EnableZuulProxy</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ZuulDemoApplication</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SpringApplication.run(ZuulDemoApplication<span class="class">.<span class="keyword">class</span>, <span class="title">args</span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>启动项目我们访问：<a href="http://localhost:2103/demo1/myblog" target="_blank" rel="noopener">http://localhost:2103/demo1/myblog</a></p>
+<p>结果跳转到了我的博客：<a href="https://blog.wu-zy.com/myblog/" target="_blank" rel="noopener">https://blog.wu-zy.com/myblog/</a></p>
+<h4 id="集成-Eurekas"><a href="#集成-Eurekas" class="headerlink" title="集成 Eurekas"></a>集成 Eurekas</h4><p>结合 Eureka 实现动态路由</p>
+<ul>
+<li>加入 Eureka 的依赖</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-netflix-eureka-client<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>配置注册中心</li>
+</ul>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#注册中心集群</span></span><br><span class="line"><span class="meta">eureka.client.serviceUrl.defaultZone</span>=<span class="string">http://WuZhiYong:123456@localhost:8761/eureka/,http://WuZhiYong:123456@localhost:8762/eureka/</span></span><br></pre></td></tr></table></figure>
+
+<a id="more"></a>我们可通过：  API网关地址 + 访问的服务实例的名称 + 服务接口的URL
+
+<p>我这里注册中心有个 eureka-client-service 服务 并且 该服务有 /user/hello 接口</p>
+<p>我们可通过  网关这样调用。</p>
+<p><a href="http://localhost:2103/eureka-client-service/user/hello" target="_blank" rel="noopener">http://localhost:2103/eureka-client-service/user/hello</a></p>
+<h4 id="Zuul-路由配置"><a href="#Zuul-路由配置" class="headerlink" title="Zuul 路由配置"></a>Zuul 路由配置</h4><ol>
+<li>指定具体服务的路由</li>
+</ol>
+<p>配置：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">zuul.routes.eureka-client-service.path</span>=<span class="string">/api-user/**</span></span><br></pre></td></tr></table></figure>
+
+<p>访问 <a href="http://localhost:2103/api-user/user/hello" target="_blank" rel="noopener">http://localhost:2103/api-user/user/hello</a>  即可调用 eureka-client-service 的接口了。</p>
+<blockquote>
+<p>以前面的配置为例：</p>
+<p>zuul.routes.demo1.path=/demo1/**<br>zuul.routes.demo1.url=<a href="https://blog.wu-zy.com/" target="_blank" rel="noopener">https://blog.wu-zy.com/</a></p>
+<p>这里给我的感觉是：如果我们只配置了path  zuul 会尝试将  demo1 尝试当作 服务实例名进行解析，如果我们配置了  url  zuul 就会根据我们指定的 url 进行转发。</p>
+<p>zuul.routes.${server_name}.path=/demo1/**<br>zuul.routes.${server_name}.url=<a href="https://blog.wu-zy.com/" target="_blank" rel="noopener">https://blog.wu-zy.com/</a></p>
+</blockquote>
+<ol start="2">
+<li>路由前缀</li>
+</ol>
+<p>对前缀的设置，分为 统一前缀  和每条转发路线的前缀</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#统一前缀 (所有请求进来的 地址 必须满足 /user 前缀)</span></span><br><span class="line"><span class="meta">zuul.prefix</span>=<span class="string">/user</span></span><br><span class="line"><span class="comment">#经过 zuul 后实际的请求  是否跳过（去除）统一前缀  默认为true</span></span><br><span class="line"><span class="meta">zuul.strip-prefix</span>=<span class="string">false</span></span><br><span class="line"></span><br><span class="line"><span class="meta">zuul.routes.demo1.path</span>=<span class="string">/demo1/**</span></span><br><span class="line"><span class="meta">zuul.routes.demo1.url</span>=<span class="string">https://blog.wu-zy.com/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#对某个服务进行转发</span></span><br><span class="line"><span class="meta">zuul.routes.eureka-client-service.path</span>=<span class="string">/api-user/**</span></span><br><span class="line"><span class="comment">#经过 zuul 后实际请求是否跳过（去除）path 所匹配的前缀 /api-user/  默认为 true</span></span><br><span class="line"><span class="meta">zuul.routes.eureka-client-service.strip-prefix</span>=<span class="string">true</span></span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>本地跳转</li>
+</ol>
+<ul>
+<li>为了逻辑简单我们去掉统一的前缀</li>
+</ul>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#统一前缀</span></span><br><span class="line"><span class="comment">#zuul.prefix=/user</span></span><br><span class="line"><span class="comment">#zuul.strip-prefix=false</span></span><br><span class="line"></span><br><span class="line"><span class="meta">zuul.routes.demo1.path</span>=<span class="string">/demo1/**</span></span><br><span class="line"><span class="meta">zuul.routes.demo1.url</span>=<span class="string">forward:/local</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>添加本地的控制器代码</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LocalController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/local/&#123;id&#125;"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">local</span><span class="params">(@PathVariable String id)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>测试</li>
+</ul>
+<p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200511112353620.png" alt="image-20200511112353620"></p>
+<h4 id="Zuul-中的过滤器"><a href="#Zuul-中的过滤器" class="headerlink" title="Zuul 中的过滤器"></a>Zuul 中的过滤器</h4><p>本文简介中也说到 zuul 中的很多高级功能都是通过 zuul 的过滤器实现的。与我们了解的传统 servlet 过滤器不同的是 zuul 中的过滤器分为 4 种。每一种都有对应的使用场景。</p>
+<h5 id="过滤器类型"><a href="#过滤器类型" class="headerlink" title="过滤器类型"></a>过滤器类型</h5><blockquote>
+<p>pre：可以在请求被路由之前调用。适用于身份认证的场景，认证通过后再继续执行下面的流程。</p>
+<p>route：在路由请求时被调用。适用于灰度发布场景，在将要路由的时候可以做一些自定义的逻辑。</p>
+<p>post：在 route和eror过滤器之后被调用。这种过滤器将请求路由到达具体的服务之后执行。适用于需要添加响应头，记录响应日志等应用场景。</p>
+<p>eror：处理请求时发生错误时被调用。在执行过程中发送错误时会进入eror过滤器，可以用来统一记录错误信息。</p>
+<p align="right">——《spring cloud 微服务 入门、进阶与实战》第107页<p>
+</blockquote>
+<h5 id="请求生命周期"><a href="#请求生命周期" class="headerlink" title="请求生命周期"></a>请求生命周期</h5><p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/u=3158899300,220096942&fm=26&gp=0.jpg" alt="img"></p>
+<p>通过上面的图可以清楚地知道整个执行的顺序，请求发过来首先到pre过滤器，再到routing过滤器，最后到post过滤器，任何一个过滤器有异常都会进入eror过滤器。</p>
+<p>在源码中也可看到这种执行顺序：</p>
+<p>源码包地址：com.netflix.zuul.http.ZuulServlet</p>
+<h5 id="使用过滤器"><a href="#使用过滤器" class="headerlink" title="使用过滤器"></a>使用过滤器</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyPreFilter</span> <span class="keyword">extends</span> <span class="title">ZuulFilter</span> </span>&#123;</span><br><span class="line">    <span class="comment">/** IP黑名单列表 */</span></span><br><span class="line">    <span class="keyword">private</span> List&lt;String&gt; blackIpList = Arrays.asList(<span class="string">"127.0.0.1"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 过滤器类型</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 可选值有pre、 route、post、 error</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">filterType</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"pre"</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 过滤器的执行顺序，数值越小，优先级越高。</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">filterOrder</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 是否执行该过滤器，</span></span><br><span class="line"><span class="comment">     * 这个也可以利用配置中心来实现，达到动态的开启和关闭过滤器</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> tue为执行， false为不执行</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">shouldFilter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 执行自己的业务逻辑，本段代码中是通过判断请求的IP是否在黑名单中，</span></span><br><span class="line"><span class="comment">     * 决定是否进行拦截。 blacklist字段是IP的黑名单，判断条件成立之后，</span></span><br><span class="line"><span class="comment">     * 通过设置ctx.setsendzuulresponse（ false），</span></span><br><span class="line"><span class="comment">     * 告诉Zul不需要将当前请求转发到后端的服务了。</span></span><br><span class="line"><span class="comment">     * 通过 setresponse Body返回数据给客户端。</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> ZuulException</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">run</span><span class="params">()</span> <span class="keyword">throws</span> ZuulException </span>&#123;</span><br><span class="line">        <span class="comment">//System.err.println(2/0);</span></span><br><span class="line">        RequestContext ctx = RequestContext.getCurrentContext();</span><br><span class="line">        String ip = IpUtils.getIpAddr(ctx.getRequest());</span><br><span class="line">        <span class="comment">// 在黑名单中禁用</span></span><br><span class="line">        <span class="keyword">if</span> (StringUtils.isNotBlank(ip) &amp;&amp; blackIpList.contains(ip)) &#123;</span><br><span class="line">            ctx.setSendZuulResponse(<span class="keyword">false</span>);</span><br><span class="line">            ctx.set(<span class="string">"sendForwardFilter.ran"</span>, <span class="keyword">true</span>);</span><br><span class="line">            ResponseData data = ResponseData.fail(<span class="string">"非法请求"</span>, ResponseCode.NO_AUTH_CODE.getCode());</span><br><span class="line">            ctx.setResponseBody(JsonUtils.toJson(data));</span><br><span class="line">            ctx.getResponse().setContentType(<span class="string">"application/json; charset=utf-8"</span>);</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>过滤器定义完成之后我们需要配置过滤器才能生效，</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FilterConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> MyPreFilter <span class="title">ipFilter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> MyPreFilter();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="禁用过滤器"><a href="#禁用过滤器" class="headerlink" title="禁用过滤器"></a>禁用过滤器</h5><ul>
+<li>利用 shouldFilter 方法中的 return false 让过滤器不再执行</li>
+<li>利用配置文件方式。格式为：“zuul.过滤器类名.过滤器类型.disable=true”  例：</li>
+</ul>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#禁用过滤器</span></span><br><span class="line"><span class="meta">zuul.MyPreFilter.pre.disable</span>=<span class="string">true</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="过滤器中传递数据"><a href="#过滤器中传递数据" class="headerlink" title="过滤器中传递数据"></a>过滤器中传递数据</h5><p>在前面的过滤器中我们可以这样存入数据：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.netflix.zuul.context.RequestContext;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line">...</span><br><span class="line">  </span><br><span class="line">RequestContext ctx = RequestContext.getCurrentContext();</span><br><span class="line">ctx.set(<span class="string">"msg"</span>,<span class="string">"hello"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>在后面的过滤器中我们可以这样取：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">RequestContext ctx = RequestContext.getCurrentContext();</span><br><span class="line">ctx.get(<span class="string">"msg"</span>);</span><br></pre></td></tr></table></figure>
+
+<h5 id="过滤器拦截请求"><a href="#过滤器拦截请求" class="headerlink" title="过滤器拦截请求"></a>过滤器拦截请求</h5><p>拦截和返回信息从前面代码里就可以看出：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//告诉 zuul 不需要将当前请求转发到后端服务</span></span><br><span class="line">ctx.setSendZuulResponse(<span class="keyword">false</span>);</span><br><span class="line"><span class="comment">//用来拦截本地转发请求的。当我们设置了 forward:/local 的路由，ctx.setSendZuulResponse(false)</span></span><br><span class="line"><span class="comment">//对 forward 是不起作用的，需要设置 ctx.set("sendForwardFilter.ran", true); 才行。</span></span><br><span class="line">ctx.set(<span class="string">"sendForwardFilter.ran"</span>, <span class="keyword">true</span>);</span><br><span class="line">ctx.setResponseBody(<span class="string">"返回信息"</span>);</span><br><span class="line"><span class="comment">//ctx.getResponse().setContentType("application/json; charset=utf-8");</span></span><br><span class="line"><span class="keyword">return</span> <span class="keyword">null</span>;</span><br></pre></td></tr></table></figure>
+
+<p>由于 zuul 拦截器和普通拦截器的逻辑的不同，如果 zuul 中有多个拦截器，即使 我们设置了 ctx.setSendZuulResponse(false); 和 ctx.set(“sendForwardFilter.ran”, true);。虽然请求最终不会转发到后端服务，但在后面的拦截器依然会执行。</p>
+<p>如果我们不想让后面的拦截器执行，可通过 转递数据的方法 例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//在前面的拦截器处理后 设置</span></span><br><span class="line">RequestContext ctx = RequestContext.getCurrentContext();</span><br><span class="line">ctx.set(<span class="string">"is_success"</span>,<span class="keyword">false</span>);</span><br></pre></td></tr></table></figure>
+
+<p>在后面的拦截器 shouldFilter 方法中</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">shouldFilter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  RequestContext ctx = RequestContext.getCurrentContext();</span><br><span class="line">  Object success = ctx.get(<span class="string">"is_success"</span>);</span><br><span class="line">  <span class="keyword">return</span> success == <span class="keyword">null</span> ? <span class="keyword">true</span> : Boolean.parseBoolean(success.toString());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="过滤器中的异常处理"><a href="#过滤器中的异常处理" class="headerlink" title="过滤器中的异常处理"></a>过滤器中的异常处理</h5><blockquote>
+<p>对于异常来说，无论在哪个地方都需要处理。过滤器中的异常主要发生在run方法中，可以用 try catch来处理。Zuul中也为我们提供了一个异常处理的过滤器，当过滤器在执行过程中发生异常，若没有被捕获到，就会进入 error过滤器中。</p>
+</blockquote>
+<p>我们可以定义一个eror过滤器来记录异常信息</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ErrorFilter</span> <span class="keyword">extends</span> <span class="title">ZuulFilter</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Logger log = LoggerFactory.getLogger(ErrorFilter<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">filterType</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"error"</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">filterOrder</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">100</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">shouldFilter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        RequestContext ctx = RequestContext.getCurrentContext();</span><br><span class="line">        Throwable throwable = ctx.getThrowable();</span><br><span class="line">        log.error(<span class="string">"Filter Erroe : &#123;&#125;"</span>, throwable.getCause().getMessage());</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>并在 ipFilter run 方法中 System.err.println(2/0);  这行代码取消注释。重启项目，在访问接口：</p>
+<p>得到响应：</p>
+<p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200511134331169.png" alt="image-20200511134331169"></p>
+<p>这种情况自然不符合和统一接口规范</p>
+<p>在 《spring cloud 微服务 入门、进阶与实战》书中说这种情况下使用 @ControllerAdvice 方式也是无效的，并解释：@ControllerAdvice 注解主要是针对 Controller 中的方法做处理的，作用于 @RequestMappping 标注的方法上，只针对与我们定义的方法有效，在 zuul 中是无效的。书中给出的解决方案是增加一个控制器类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ErrorHandlerController</span> <span class="keyword">implements</span> <span class="title">ErrorController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> ErrorAttributes errorAttributes;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getErrorPath</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"/error"</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping</span>(<span class="string">"/error"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResponseData <span class="title">error</span><span class="params">(HttpServletRequest request)</span> </span>&#123;</span><br><span class="line">        Map&lt;String, Object&gt; errorAttributes = getErrorAttributes(request);</span><br><span class="line">        String message = (String) errorAttributes.get(<span class="string">"message"</span>);</span><br><span class="line">        String trace = (String) errorAttributes.get(<span class="string">"trace"</span>);</span><br><span class="line">        <span class="keyword">if</span> (StringUtils.isNotBlank(trace)) &#123;</span><br><span class="line">            message += String.format(<span class="string">" and trace %s"</span>, trace);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ResponseData.fail(message, ResponseCode.SERVER_ERROR_CODE.getCode());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> Map&lt;String, Object&gt; <span class="title">getErrorAttributes</span><span class="params">(HttpServletRequest request)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> errorAttributes.getErrorAttributes(<span class="keyword">new</span> ServletWebRequest(request), <span class="keyword">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>再次请求发现返回了我们想要的格式的数据了。</p>
+<h4 id="Zuul-容错和回退"><a href="#Zuul-容错和回退" class="headerlink" title="Zuul 容错和回退"></a>Zuul 容错和回退</h4><h5 id="容错机制"><a href="#容错机制" class="headerlink" title="容错机制"></a>容错机制</h5><p>当某个服务不可用的时候能够切换到其他可用的服务上去。也就是需要重试机制。在 zuul 中开启重试机制需要依赖于 spring-retry</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.retry<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-retry<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>properties</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#开启重试</span></span><br><span class="line"><span class="meta">zuul.retryable</span>=<span class="string">true</span></span><br><span class="line"><span class="comment">#请求链接的超时时间</span></span><br><span class="line"><span class="meta">ribbon.ConnectTimeout</span>=<span class="string">1000</span></span><br><span class="line"><span class="comment">#请求处理的超时时间</span></span><br><span class="line"><span class="meta">ribbon.ReadTimeout</span>=<span class="string">1000</span></span><br><span class="line"><span class="comment">#对当前实例的重试次数</span></span><br><span class="line"><span class="meta">ribbon.MaxAutoRetries</span>=<span class="string">1</span></span><br><span class="line"><span class="comment">#切换实例的最大重试次数</span></span><br><span class="line"><span class="meta">ribbon.MaxAutoRetriesNextServer</span>=<span class="string">3</span></span><br><span class="line"><span class="comment">#对所有操作请求都进行重试</span></span><br><span class="line"><span class="meta">ribbon.OkToRetryOnAllOperations</span>=<span class="string">true</span></span><br><span class="line"><span class="comment">#对指定的 http 响应码进行重试</span></span><br><span class="line"><span class="meta">ribbon.retryableStatusCodes</span>=<span class="string">500,404,502</span></span><br></pre></td></tr></table></figure>
+
+<p>测试：</p>
+<p>服务提供方的集群我们启动多个服务，通过 zuul 不停调用，期间停掉集群中一台机器。发现确实达到了容错的目的。</p>
+<h5 id="回退机制"><a href="#回退机制" class="headerlink" title="回退机制"></a>回退机制</h5><p>在 spring cloud 中，zuul 默认整合了 hystrix ，当后端服务异常时可以为 zuul 添加回退的功能，返回默认的数据给客户端。</p>
+<p>实现回退机制需要实现 FallbackProvider 接口</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.study.base.ResponseCode;</span><br><span class="line"><span class="keyword">import</span> com.study.base.ResponseData;</span><br><span class="line"><span class="keyword">import</span> com.study.utils.JsonUtils;</span><br><span class="line"><span class="keyword">import</span> org.slf4j.Logger;</span><br><span class="line"><span class="keyword">import</span> org.slf4j.LoggerFactory;</span><br><span class="line"><span class="keyword">import</span> org.springframework.cloud.netflix.zuul.filters.route.FallbackProvider;</span><br><span class="line"><span class="keyword">import</span> org.springframework.http.HttpHeaders;</span><br><span class="line"><span class="keyword">import</span> org.springframework.http.HttpStatus;</span><br><span class="line"><span class="keyword">import</span> org.springframework.http.MediaType;</span><br><span class="line"><span class="keyword">import</span> org.springframework.http.client.ClientHttpResponse;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Component;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.ByteArrayInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStream;</span><br><span class="line"><span class="keyword">import</span> java.nio.charset.Charset;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@ClassName</span> ServiceConsumerFallbackProvider</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span> wuzhiyong</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span> 2020/5/11 15:07</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Version</span> 1.0</span></span><br><span class="line"><span class="comment"> **/</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ServiceConsumerFallbackProvider</span> <span class="keyword">implements</span> <span class="title">FallbackProvider</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Logger log = LoggerFactory.getLogger(ServiceConsumerFallbackProvider<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 匹配回退服务</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 返回 * 表示对所有服务进行回退操作。如果只想对某个服务进行回退，</span></span><br><span class="line"><span class="comment">     * 那么就返回需要回退的服务名称，这个名称一定要注册到 Eureka 中的名称</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getRoute</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"*"</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 构造回退内容</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> route</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> cause</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ClientHttpResponse <span class="title">fallbackResponse</span><span class="params">(String route, Throwable cause)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ClientHttpResponse() &#123;</span><br><span class="line">            <span class="comment">/**</span></span><br><span class="line"><span class="comment">             * 返回响应的 状态码</span></span><br><span class="line"><span class="comment">             * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">             * <span class="doctag">@throws</span> IOException</span></span><br><span class="line"><span class="comment">             */</span></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> HttpStatus <span class="title">getStatusCode</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">                <span class="keyword">return</span> HttpStatus.OK;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getRawStatusCode</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">this</span>.getStatusCode().value();</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">/**</span></span><br><span class="line"><span class="comment">             * 返回状态码对应的文本</span></span><br><span class="line"><span class="comment">             * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">             * <span class="doctag">@throws</span> IOException</span></span><br><span class="line"><span class="comment">             */</span></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> String <span class="title">getStatusText</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">this</span>.getStatusCode().getReasonPhrase();</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">/**</span></span><br><span class="line"><span class="comment">             * 返回回退的内容</span></span><br><span class="line"><span class="comment">             * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">             * <span class="doctag">@throws</span> IOException</span></span><br><span class="line"><span class="comment">             */</span></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> InputStream <span class="title">getBody</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">                <span class="keyword">if</span> (cause != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    log.error(<span class="string">""</span>, cause.getCause());</span><br><span class="line">                &#125;</span><br><span class="line">                ResponseData data = ResponseData.fail(route+<span class="string">"服务内部错误"</span>, ResponseCode.SERVER_ERROR_CODE.getCode());</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">new</span> ByteArrayInputStream(JsonUtils.toJson(data).getBytes());</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">/**</span></span><br><span class="line"><span class="comment">             * 返回响应的请求头信息</span></span><br><span class="line"><span class="comment">             * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">             */</span></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> HttpHeaders <span class="title">getHeaders</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                HttpHeaders headers = <span class="keyword">new</span> HttpHeaders();</span><br><span class="line">                MediaType mt = <span class="keyword">new</span> MediaType(<span class="string">"application"</span>, <span class="string">"json"</span>, Charset.forName(<span class="string">"UTF-8"</span>));</span><br><span class="line">                headers.setContentType(mt);</span><br><span class="line">                <span class="keyword">return</span> headers;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>重启 zuul 后我们停掉集群服务。再通过 zuul 访问接口。发现返回我们想要的数据了</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"code"</span>: <span class="number">500</span>,</span><br><span class="line">    <span class="attr">"message"</span>: <span class="string">"eureka-client-service服务内部错误"</span>,</span><br><span class="line">    <span class="attr">"data"</span>: <span class="literal">null</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Zuul-使用小经验"><a href="#Zuul-使用小经验" class="headerlink" title="Zuul 使用小经验"></a>Zuul 使用小经验</h3><h4 id="结合-Actuator-查看相关信息"><a href="#结合-Actuator-查看相关信息" class="headerlink" title="结合 Actuator 查看相关信息"></a>结合 Actuator 查看相关信息</h4><p>zuul 在结合 Actuator 使用的时候可以暴露一些端点来方面我们来查看管理 zuul 路由。</p>
+<p>首先我们添加 Actuator 并配置暴露出所有端点。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-actuator<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#暴露所有端点</span></span><br><span class="line"><span class="meta">management.endpoints.web.exposure.include</span>=<span class="string">*</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>/routes 端点</li>
+</ul>
+<p>访问：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">http://localhost:2103/actuator/routes</span></span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"/demo1/**"</span>: <span class="string">"forward:/local"</span>,</span><br><span class="line">    <span class="attr">"/api-server/**"</span>: <span class="string">"eureka-client-service"</span>,</span><br><span class="line">    <span class="attr">"/eureka-client-service/**"</span>: <span class="string">"eureka-client-service"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>/filters 端点</li>
+</ul>
+<p>访问：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">http://localhost:2103/actuator/filters</span></span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"error"</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">"class"</span>: <span class="string">"org.springframework.cloud.netflix.zuul.filters.post.SendErrorFilter"</span>,</span><br><span class="line">            <span class="attr">"order"</span>: <span class="number">0</span>,</span><br><span class="line">            <span class="attr">"disabled"</span>: <span class="literal">false</span>,</span><br><span class="line">            <span class="attr">"static"</span>: <span class="literal">true</span></span><br><span class="line">        &#125;</span><br><span class="line">    ],</span><br><span class="line">    <span class="attr">"post"</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">"class"</span>: <span class="string">"org.springframework.cloud.netflix.zuul.filters.post.SendResponseFilter"</span>,</span><br><span class="line">            <span class="attr">"order"</span>: <span class="number">1000</span>,</span><br><span class="line">            <span class="attr">"disabled"</span>: <span class="literal">false</span>,</span><br><span class="line">            <span class="attr">"static"</span>: <span class="literal">true</span></span><br><span class="line">        &#125;</span><br><span class="line">    ],</span><br><span class="line">    <span class="attr">"pre"</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">"class"</span>: <span class="string">"org.springframework.cloud.netflix.zuul.filters.pre.Servlet30WrapperFilter"</span>,</span><br><span class="line">            <span class="attr">"order"</span>: <span class="number">-2</span>,</span><br><span class="line">            <span class="attr">"disabled"</span>: <span class="literal">false</span>,</span><br><span class="line">            <span class="attr">"static"</span>: <span class="literal">true</span></span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">"class"</span>: <span class="string">"org.springframework.cloud.netflix.zuul.filters.pre.ServletDetectionFilter"</span>,</span><br><span class="line">            <span class="attr">"order"</span>: <span class="number">-3</span>,</span><br><span class="line">            <span class="attr">"disabled"</span>: <span class="literal">false</span>,</span><br><span class="line">            <span class="attr">"static"</span>: <span class="literal">true</span></span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">"class"</span>: <span class="string">"org.springframework.cloud.netflix.zuul.filters.pre.PreDecorationFilter"</span>,</span><br><span class="line">            <span class="attr">"order"</span>: <span class="number">5</span>,</span><br><span class="line">            <span class="attr">"disabled"</span>: <span class="literal">false</span>,</span><br><span class="line">            <span class="attr">"static"</span>: <span class="literal">true</span></span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">"class"</span>: <span class="string">"org.springframework.cloud.netflix.zuul.filters.pre.DebugFilter"</span>,</span><br><span class="line">            <span class="attr">"order"</span>: <span class="number">1</span>,</span><br><span class="line">            <span class="attr">"disabled"</span>: <span class="literal">false</span>,</span><br><span class="line">            <span class="attr">"static"</span>: <span class="literal">true</span></span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">"class"</span>: <span class="string">"org.springframework.cloud.netflix.zuul.filters.pre.FormBodyWrapperFilter"</span>,</span><br><span class="line">            <span class="attr">"order"</span>: <span class="number">-1</span>,</span><br><span class="line">            <span class="attr">"disabled"</span>: <span class="literal">false</span>,</span><br><span class="line">            <span class="attr">"static"</span>: <span class="literal">true</span></span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">"class"</span>: <span class="string">"com.study.customFilter.MyRouteFilter"</span>,</span><br><span class="line">            <span class="attr">"order"</span>: <span class="number">2</span>,</span><br><span class="line">            <span class="attr">"disabled"</span>: <span class="literal">false</span>,</span><br><span class="line">            <span class="attr">"static"</span>: <span class="literal">true</span></span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">"class"</span>: <span class="string">"com.study.customFilter.MyPreFilter"</span>,</span><br><span class="line">            <span class="attr">"order"</span>: <span class="number">1</span>,</span><br><span class="line">            <span class="attr">"disabled"</span>: <span class="literal">false</span>,</span><br><span class="line">            <span class="attr">"static"</span>: <span class="literal">true</span></span><br><span class="line">        &#125;</span><br><span class="line">    ],</span><br><span class="line">    <span class="attr">"route"</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">"class"</span>: <span class="string">"org.springframework.cloud.netflix.zuul.filters.route.SimpleHostRoutingFilter"</span>,</span><br><span class="line">            <span class="attr">"order"</span>: <span class="number">100</span>,</span><br><span class="line">            <span class="attr">"disabled"</span>: <span class="literal">false</span>,</span><br><span class="line">            <span class="attr">"static"</span>: <span class="literal">true</span></span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">"class"</span>: <span class="string">"org.springframework.cloud.netflix.zuul.filters.route.RibbonRoutingFilter"</span>,</span><br><span class="line">            <span class="attr">"order"</span>: <span class="number">10</span>,</span><br><span class="line">            <span class="attr">"disabled"</span>: <span class="literal">false</span>,</span><br><span class="line">            <span class="attr">"static"</span>: <span class="literal">true</span></span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">"class"</span>: <span class="string">"org.springframework.cloud.netflix.zuul.filters.route.SendForwardFilter"</span>,</span><br><span class="line">            <span class="attr">"order"</span>: <span class="number">500</span>,</span><br><span class="line">            <span class="attr">"disabled"</span>: <span class="literal">false</span>,</span><br><span class="line">            <span class="attr">"static"</span>: <span class="literal">true</span></span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="文件上传"><a href="#文件上传" class="headerlink" title="文件上传"></a>文件上传</h4><p>创建一个 spring cloud 应用  zuul-file-demo。并注册到 Eureka</p>
+<p>文件上传控制器接口</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FileController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@PostMapping</span>(<span class="string">"/file/upload"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">fileUpload</span><span class="params">(@RequestParam(value = <span class="string">"file"</span>)</span> MultipartFile file) <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        <span class="keyword">byte</span>[] bytes = file.getBytes();</span><br><span class="line">        File fileToSave = <span class="keyword">new</span> File(file.getOriginalFilename());</span><br><span class="line">        FileCopyUtils.copy(bytes, fileToSave);</span><br><span class="line">        <span class="keyword">return</span> fileToSave.getAbsolutePath();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用 postman 上传测试。并成功返回了文件路径</p>
+<p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200511160023555.png" alt="image-20200511160023555"></p>
+<p>然后换个大文件 35M。上传失败了</p>
+<p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200511160405668.png" alt="image-20200511160405668"></p>
+<p>在 zuul-demo 和 zuul-file-demo 都加上</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">spring.servlet.multipart.max-file-size</span>=<span class="string">100MB</span></span><br><span class="line"><span class="meta">spring.servlet.multipart.max-request-size</span>=<span class="string">100MB</span></span><br></pre></td></tr></table></figure>
+
+<p>在 zuul-demo 调整</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#请求链接的超时时间</span></span><br><span class="line"><span class="meta">ribbon.ConnectTimeout</span>=<span class="string">90000</span></span><br><span class="line"><span class="comment">#请求处理的超时时间</span></span><br><span class="line"><span class="meta">ribbon.ReadTimeout</span>=<span class="string">90000</span></span><br></pre></td></tr></table></figure>
+
+<p>重启两个服务再次测试便成功了。</p>
+<ul>
+<li>绕过 zuul 上传文件：</li>
+</ul>
+<p>在请求地址前面加上 /zuul 就可以绕过 zuul-demo 服务，这样就可以不用配置文件大小。但接收文件的服务 zuul-file-demo 还是得配置上</p>
+<p>访问：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">http://localhost:2103/zuul/zuul-file-demo/file/upload</span></span><br></pre></td></tr></table></figure>
+
+<p>注意：在Hystrix 隔离模式为线程模式下。需要设置 Hystrix 线程的超时时间。</p>
+<p>execution.isolation.thread.timeoutInMilliseconds （详细参看 Hystrix服务容错 文章）</p>
+<h4 id="请求响应详细信息输出"><a href="#请求响应详细信息输出" class="headerlink" title="请求响应详细信息输出"></a>请求响应详细信息输出</h4><p>实际开发当中，详细的日志能够帮助我们快速排查和定位系统的问题。在 zuul 中最适合的方式就是通过post 过滤器来实现输出详细日志。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStream;</span><br><span class="line"><span class="keyword">import</span> java.util.Enumeration;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.servlet.ServletInputStream;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletRequest;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.commons.io.IOUtils;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.netflix.util.Pair;</span><br><span class="line"><span class="keyword">import</span> com.netflix.zuul.ZuulFilter;</span><br><span class="line"><span class="keyword">import</span> com.netflix.zuul.context.RequestContext;</span><br><span class="line"><span class="keyword">import</span> org.springframework.cloud.netflix.ribbon.RibbonHttpResponse;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@ClassName</span> DebugRequestFilter</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span> wuzhiyong</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span> 2020/5/11 16:33</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Version</span> 1.0</span></span><br><span class="line"><span class="comment"> **/</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DebugRequestFilter</span> <span class="keyword">extends</span> <span class="title">ZuulFilter</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">filterType</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"post"</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">filterOrder</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">shouldFilter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        HttpServletRequest req = (HttpServletRequest)RequestContext.getCurrentContext().getRequest();</span><br><span class="line">        System.err.println(<span class="string">"REQUEST:: "</span> + req.getScheme() + <span class="string">" "</span> + req.getRemoteAddr() + <span class="string">":"</span> + req.getRemotePort());</span><br><span class="line">        StringBuilder params = <span class="keyword">new</span> StringBuilder(<span class="string">"?"</span>);</span><br><span class="line">        <span class="comment">// 获取URL参数</span></span><br><span class="line">        Enumeration&lt;String&gt; names = req.getParameterNames();</span><br><span class="line">        <span class="keyword">if</span>( req.getMethod().equals(<span class="string">"GET"</span>) ) &#123;</span><br><span class="line">            <span class="keyword">while</span> (names.hasMoreElements()) &#123;</span><br><span class="line">                String name = (String) names.nextElement();</span><br><span class="line">                params.append(name);</span><br><span class="line">                params.append(<span class="string">"="</span>);</span><br><span class="line">                params.append(req.getParameter(name));</span><br><span class="line">                params.append(<span class="string">"&amp;"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (params.length() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            params.delete(params.length()-<span class="number">1</span>, params.length());</span><br><span class="line">        &#125;</span><br><span class="line">        System.err.println(<span class="string">"REQUEST:: &gt; "</span> + req.getMethod() + <span class="string">" "</span> + req.getRequestURI() + params + <span class="string">" "</span> + req.getProtocol());</span><br><span class="line">        Enumeration&lt;String&gt; headers = req.getHeaderNames();</span><br><span class="line">        <span class="keyword">while</span> (headers.hasMoreElements()) &#123;</span><br><span class="line">            String name = (String) headers.nextElement();</span><br><span class="line">            String value = req.getHeader(name);</span><br><span class="line">            System.err.println(<span class="string">"REQUEST:: &gt; "</span> + name + <span class="string">":"</span> + value);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">final</span> RequestContext ctx = RequestContext.getCurrentContext();</span><br><span class="line">        <span class="comment">// 获取请求体参数</span></span><br><span class="line">        <span class="keyword">if</span> (!ctx.isChunkedRequestBody()) &#123;</span><br><span class="line">            ServletInputStream inp = <span class="keyword">null</span>;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                inp = ctx.getRequest().getInputStream();</span><br><span class="line">                String body = <span class="keyword">null</span>;</span><br><span class="line">                <span class="keyword">if</span> (inp != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    body = IOUtils.toString(inp);</span><br><span class="line">                    System.err.println(<span class="string">"REQUEST:: &gt; "</span> + body);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        List&lt;Pair&lt;String, String&gt;&gt;  headerList = RequestContext.getCurrentContext().getOriginResponseHeaders();</span><br><span class="line">        <span class="keyword">for</span> (Pair&lt;String, String&gt; pair : headerList) &#123;</span><br><span class="line">            System.err.println(<span class="string">"RESPONSE HEADER:: &gt; "</span> +pair.second());</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 第一种，获取响应结果</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">        	Object zuulResponse = RequestContext.getCurrentContext().get(<span class="string">"zuulResponse"</span>);</span><br><span class="line">        	<span class="keyword">if</span> (zuulResponse != <span class="keyword">null</span>) &#123;</span><br><span class="line">        		RibbonHttpResponse resp = (RibbonHttpResponse) zuulResponse;</span><br><span class="line">    			String body = IOUtils.toString(resp.getBody());</span><br><span class="line">    			System.err.println(<span class="string">"RESPONSE:: &gt; "</span> + body);</span><br><span class="line">    			resp.close();</span><br><span class="line">    			RequestContext.getCurrentContext().setResponseBody(body);</span><br><span class="line">        	&#125;</span><br><span class="line">		&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 第二种，获取响应结果</span></span><br><span class="line"><span class="comment">//        InputStream stream = RequestContext.getCurrentContext().getResponseDataStream();</span></span><br><span class="line"><span class="comment">//        try &#123;</span></span><br><span class="line"><span class="comment">//            if (stream != null) &#123;</span></span><br><span class="line"><span class="comment">//                String body = IOUtils.toString(stream);</span></span><br><span class="line"><span class="comment">//                System.err.println("RESPONSE:: &gt; " + body);</span></span><br><span class="line"><span class="comment">//                RequestContext.getCurrentContext().setResponseBody(body);</span></span><br><span class="line"><span class="comment">//            &#125;</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//        &#125; catch (IOException e) &#123;</span></span><br><span class="line"><span class="comment">//            e.printStackTrace();</span></span><br><span class="line"><span class="comment">//        &#125;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>控制台输出：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">REQUEST:: http 0:0:0:0:0:0:0:1:9596</span><br><span class="line">REQUEST:: &gt; GET /api-server/user/hello HTTP/1.1</span><br><span class="line">REQUEST:: &gt; content-type:application/json</span><br><span class="line">REQUEST:: &gt; user-agent:PostmanRuntime/7.24.1</span><br><span class="line">REQUEST:: &gt; accept:*/*</span><br><span class="line">REQUEST:: &gt; cache-control:no-cache</span><br><span class="line">REQUEST:: &gt; postman-token:9d887b8d-42d2-4787-bae8-11c63447be8c</span><br><span class="line">REQUEST:: &gt; host:localhost:2103</span><br><span class="line">REQUEST:: &gt; accept-encoding:gzip, deflate, br</span><br><span class="line">REQUEST:: &gt; connection:keep-alive</span><br><span class="line">REQUEST:: &gt; content-length:28</span><br><span class="line">REQUEST:: &gt; &#123;"username":"22","pwd":"33"&#125;</span><br><span class="line">RESPONSE HEADER:: &gt; eureka-client-service</span><br><span class="line">RESPONSE HEADER:: &gt; text/plain;charset=UTF-8</span><br><span class="line">RESPONSE HEADER:: &gt; 5</span><br><span class="line">RESPONSE HEADER:: &gt; Mon, 11 May 2020 08:37:33 GMT</span><br><span class="line">RESPONSE HEADER:: &gt; timeout=60</span><br><span class="line">RESPONSE HEADER:: &gt; keep-alive</span><br><span class="line">RESPONSE:: &gt; hello</span><br></pre></td></tr></table></figure>
+
+<h3 id="Zuul-高可用"><a href="#Zuul-高可用" class="headerlink" title="Zuul 高可用"></a>Zuul 高可用</h3><blockquote>
+<p>跟业务相关的服务我们都是注册到 Eureka 中，通过 Ribbon 来进行负载均衡，服务可以通过水平扩展来实现高可用。现实使用中，API网关这层往往是给 APP、 Webapp、客户来调用接口的，如果我们将 Zuul 也注册到 Eureka 中是达不到高可用的，因为你不可能让你的客户也去操作你的注册中心。这时最好的办法就是用额外的负载均衡器来实现 Zuul 的高可用，比如我们最常用的 Nginx，或者 Haproxy、F5等。</p>
+<p>这种方式也是单体项目最常用的负载方式，当用户请求一个地址的时候，通过Ngin去做转发，当一个服务挂掉的时候， Nginx会把它排除掉。</p>
+<p>如果想要API网关也能随时水平扩展，那么我们可以用脚本来动态修改 Nginx 的配置，通过脚本操作 Eureka，发现有新加人的网关服务或者下线的网关服务，直接修改 Nginx 的 upstream，然后通过重载（ reload）配置来达到网关的动态扩容。</p>
+<p>如果不用脚本结合注册中心去做的话，就只能提前规划好N个节点，然后手动配置上去。</p>
+</blockquote>
+<hr>
+<p>参考：</p>
+<p>《spring cloud 微服务 入门、进阶与实战》</p>
+<p>书中本章代码：</p>
+<p><a href="https://github.com/yinjihuan/spring-cloud/tree/master/Spring-Cloud-Book-Code-2/ch-7" target="_blank" rel="noopener">API 网关</a></p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/微信图片_20200501220918.png" alt="wuzhiyong 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/微信图片_20200501220907.jpg" alt="wuzhiyong 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/myblog/tags/springboot/" rel="tag"># springboot</a>
+              <a href="/myblog/tags/java/" rel="tag"># java</a>
+              <a href="/myblog/tags/spring-cloud/" rel="tag"># spring cloud</a>
+              <a href="/myblog/tags/Zuul/" rel="tag"># Zuul</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/myblog/Hystrix%E6%9C%8D%E5%8A%A1%E5%AE%B9%E9%94%99/" rel="prev" title="Hystrix服务容错">
+      <i class="fa fa-chevron-left"></i> Hystrix服务容错
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/myblog/%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83%E4%B9%8BApollo/" rel="next" title="配置中心之Apollo">
+      配置中心之Apollo <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Zuul-简介"><span class="nav-number">2.</span> <span class="nav-text">Zuul 简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用-Zuul-构建微服务网关"><span class="nav-number">3.</span> <span class="nav-text">使用 Zuul 构建微服务网关</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#简单使用"><span class="nav-number">3.1.</span> <span class="nav-text">简单使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#集成-Eurekas"><span class="nav-number">3.2.</span> <span class="nav-text">集成 Eurekas</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Zuul-路由配置"><span class="nav-number">3.3.</span> <span class="nav-text">Zuul 路由配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Zuul-中的过滤器"><span class="nav-number">3.4.</span> <span class="nav-text">Zuul 中的过滤器</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#过滤器类型"><span class="nav-number">3.4.1.</span> <span class="nav-text">过滤器类型</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#请求生命周期"><span class="nav-number">3.4.2.</span> <span class="nav-text">请求生命周期</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#使用过滤器"><span class="nav-number">3.4.3.</span> <span class="nav-text">使用过滤器</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#禁用过滤器"><span class="nav-number">3.4.4.</span> <span class="nav-text">禁用过滤器</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#过滤器中传递数据"><span class="nav-number">3.4.5.</span> <span class="nav-text">过滤器中传递数据</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#过滤器拦截请求"><span class="nav-number">3.4.6.</span> <span class="nav-text">过滤器拦截请求</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#过滤器中的异常处理"><span class="nav-number">3.4.7.</span> <span class="nav-text">过滤器中的异常处理</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Zuul-容错和回退"><span class="nav-number">3.5.</span> <span class="nav-text">Zuul 容错和回退</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#容错机制"><span class="nav-number">3.5.1.</span> <span class="nav-text">容错机制</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#回退机制"><span class="nav-number">3.5.2.</span> <span class="nav-text">回退机制</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Zuul-使用小经验"><span class="nav-number">4.</span> <span class="nav-text">Zuul 使用小经验</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#结合-Actuator-查看相关信息"><span class="nav-number">4.1.</span> <span class="nav-text">结合 Actuator 查看相关信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#文件上传"><span class="nav-number">4.2.</span> <span class="nav-text">文件上传</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#请求响应详细信息输出"><span class="nav-number">4.3.</span> <span class="nav-text">请求响应详细信息输出</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Zuul-高可用"><span class="nav-number">5.</span> <span class="nav-text">Zuul 高可用</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">wuzhiyong</p>
+  <div class="site-description" itemprop="description">吴志勇的博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/myblog/archives/">
+        
+          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/myblog/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/myblog/tags/">
+          
+        <span class="site-state-item-count">25</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="mailto:wzy563653092@gmail.com" title="E-Mail → mailto:wzy563653092@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wuzhiyong</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">139k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:07</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+  <div class="addthis_inline_share_toolbox">
+    <script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5eae29bdce1a511b" async="async"></script>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      // url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"jOjNqcMeMLL4ntoMdf13veTb-MdYXbMMI","app_key":"v50rUeYs7yeT6hECN7XAhYYM","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        // if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/myblog/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/myblog/lib/velocity/velocity.min.js"></script>
+  <script src="/myblog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/myblog/js/utils.js"></script>
+
+<script src="/myblog/js/motion.js"></script>
+
+
+<script src="/myblog/js/schemes/muse.js"></script>
+
+
+<script src="/myblog/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/myblog/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'jOjNqcMeMLL4ntoMdf13veTb-MdYXbMMI',
+      appKey     : 'v50rUeYs7yeT6hECN7XAhYYM',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/myblog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/myblog/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/myblog/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/myblog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/myblog/css/main.css">
+
+
+<link rel="stylesheet" href="/myblog/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wu_zhiyong.gitee.io","root":"/myblog/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":false,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="介绍 Apollo（阿波罗）是携程框架部门研发的分布式配置中心，能够集中化管理应用不同环境、不同集群的配置，配置修改后能够实时推送到应用端，并且具备规范的权限、流程治理等特性，适用于微服务配置管理场景。 —— Apollo官方WIKI  gitHub:Apollo 特点 正是基于配置的特殊性，所以Apollo从设计之初就立志于成为一个有治理能力的配置发布平台，目前提供了以下的特性：  统一管理不同">
+<meta property="og:type" content="article">
+<meta property="og:title" content="配置中心之Apollo">
+<meta property="og:url" content="http://wu_zhiyong.gitee.io/myblog/%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83%E4%B9%8BApollo/index.html">
+<meta property="og:site_name" content="吴志勇的博客">
+<meta property="og:description" content="介绍 Apollo（阿波罗）是携程框架部门研发的分布式配置中心，能够集中化管理应用不同环境、不同集群的配置，配置修改后能够实时推送到应用端，并且具备规范的权限、流程治理等特性，适用于微服务配置管理场景。 —— Apollo官方WIKI  gitHub:Apollo 特点 正是基于配置的特殊性，所以Apollo从设计之初就立志于成为一个有治理能力的配置发布平台，目前提供了以下的特性：  统一管理不同">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200512113925813.png">
+<meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200512115251752.png">
+<meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200512115334476.png">
+<meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200513113702191.png">
+<meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200513115527824-1589342252236.png">
+<meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200513120010468.png">
+<meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200513120059188.png">
+<meta property="article:published_time" content="2020-05-12T03:32:52.000Z">
+<meta property="article:modified_time" content="2020-05-13T04:16:40.001Z">
+<meta property="article:author" content="wuzhiyong">
+<meta property="article:tag" content="springboot">
+<meta property="article:tag" content="java">
+<meta property="article:tag" content="spring cloud">
+<meta property="article:tag" content="Apollo">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200512113925813.png">
+
+<link rel="canonical" href="http://wu_zhiyong.gitee.io/myblog/%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83%E4%B9%8BApollo/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>配置中心之Apollo | 吴志勇的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/myblog/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">吴志勇的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">学习、记录、总结、侃大山</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/myblog/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/myblog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/myblog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/myblog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://wu_zhiyong.gitee.io/myblog/%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83%E4%B9%8BApollo/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/myblog/images/avatar.gif">
+      <meta itemprop="name" content="wuzhiyong">
+      <meta itemprop="description" content="吴志勇的博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴志勇的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          配置中心之Apollo
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-05-12 11:32:52" itemprop="dateCreated datePublished" datetime="2020-05-12T11:32:52+08:00">2020-05-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-05-13 12:16:40" itemprop="dateModified" datetime="2020-05-13T12:16:40+08:00">2020-05-13</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">后端</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/myblog/%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83%E4%B9%8BApollo/" class="post-meta-item leancloud_visitors" data-flag-title="配置中心之Apollo" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/myblog/%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83%E4%B9%8BApollo/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/myblog/%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83%E4%B9%8BApollo/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4.4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><blockquote>
+<p>Apollo（阿波罗）是携程框架部门研发的分布式配置中心，能够集中化管理应用不同环境、不同集群的配置，配置修改后能够实时推送到应用端，并且具备规范的权限、流程治理等特性，适用于微服务配置管理场景。</p>
+<p align="right">—— Apollo官方WIKI<p>
+</blockquote>
+<p>gitHub:<a href="https://github.com/ctripcorp/apollo/" target="_blank" rel="noopener">Apollo</a></p>
+<h3 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h3><blockquote>
+<p>正是基于配置的特殊性，所以Apollo从设计之初就立志于成为一个有治理能力的配置发布平台，目前提供了以下的特性：</p>
+<ul>
+<li><strong>统一管理不同环境、不同集群的配置</strong><ul>
+<li>Apollo提供了一个统一界面集中式管理不同环境（environment）、不同集群（cluster）、不同命名空间（namespace）的配置。</li>
+<li>同一份代码部署在不同的集群，可以有不同的配置，比如zookeeper的地址等</li>
+<li>通过命名空间（namespace）可以很方便地支持多个不同应用共享同一份配置，同时还允许应用对共享的配置进行覆盖</li>
+</ul>
+</li>
+<li><strong>配置修改实时生效（热发布）</strong><ul>
+<li>用户在Apollo修改完配置并发布后，客户端能实时（1秒）接收到最新的配置，并通知到应用程序</li>
+</ul>
+</li>
+<li><strong>版本发布管理</strong><ul>
+<li>所有的配置发布都有版本概念，从而可以方便地支持配置的回滚</li>
+</ul>
+</li>
+<li><strong>灰度发布</strong><ul>
+<li>支持配置的灰度发布，比如点了发布后，只对部分应用实例生效，等观察一段时间没问题后再推给所有应用实例</li>
+</ul>
+</li>
+<li><strong>权限管理、发布审核、操作审计</strong><ul>
+<li>应用和配置的管理都有完善的权限管理机制，对配置的管理还分为了编辑和发布两个环节，从而减少人为的错误。</li>
+<li>所有的操作都有审计日志，可以方便地追踪问题</li>
+</ul>
+</li>
+<li><strong>客户端配置信息监控</strong><a id="more"></a><ul>
+<li>可以在界面上方便地看到配置在被哪些实例使用</li>
+</ul>
+</li>
+<li><strong>提供Java和.Net原生客户端</strong><ul>
+<li>提供了Java和.Net的原生客户端，方便应用集成</li>
+<li>支持Spring Placeholder, Annotation和Spring Boot的ConfigurationProperties，方便应用使用（需要Spring 3.1.1+）</li>
+<li>同时提供了Http接口，非Java和.Net应用也可以方便地使用</li>
+</ul>
+</li>
+<li><strong>提供开放平台API</strong><ul>
+<li>Apollo自身提供了比较完善的统一配置管理界面，支持多环境、多数据中心配置管理、权限、流程治理等特性。不过Apollo出于通用性考虑，不会对配置的修改做过多限制，只要符合基本的格式就能保存，不会针对不同的配置值进行针对性的校验，如数据库用户名、密码，Redis服务地址等</li>
+<li>对于这类应用配置，Apollo支持应用方通过开放平台API在Apollo进行配置的修改和发布，并且具备完善的授权和权限控制</li>
+</ul>
+</li>
+<li><strong>部署简单</strong><ul>
+<li>配置中心作为基础服务，可用性要求非常高，这就要求Apollo对外部依赖尽可能地少</li>
+<li>目前唯一的外部依赖是MySQL，所以部署非常简单，只要安装好Java和MySQL就可以让Apollo跑起来</li>
+<li>Apollo还提供了打包脚本，一键就可以生成所有需要的安装包，并且支持自定义运行时参数</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<h3 id="快速开始"><a href="#快速开始" class="headerlink" title="快速开始"></a>快速开始</h3><p>确保  java version 8+</p>
+<h4 id="下载快速开始项目"><a href="#下载快速开始项目" class="headerlink" title="下载快速开始项目"></a>下载快速开始项目</h4><p>下载：<a href="https://github.com/nobodyiam/apollo-build-scripts.git" target="_blank" rel="noopener">https://github.com/nobodyiam/apollo-build-scripts.git</a></p>
+<p>下到本地后解压如下：</p>
+<p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200512113925813.png" alt="image-20200512113925813"></p>
+<h4 id="启动本地服务端"><a href="#启动本地服务端" class="headerlink" title="启动本地服务端"></a>启动本地服务端</h4><p>使用 gitbash 在当前目录（上图）执行 demo.sh</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">s-master</span><br><span class="line"><span class="meta">$</span><span class="bash"> ./demo.sh start</span></span><br><span class="line">Windows new JAVA_HOME is: /d/Java/jdk1.8.0_144</span><br><span class="line">version : 1.8.0_144</span><br><span class="line">==== starting service ====</span><br><span class="line">Service logging file is ./service/apollo-service.log</span><br><span class="line">Started [18080]</span><br><span class="line">Waiting for config service startup......</span><br><span class="line">Config service started. You may visit http://localhost:8080 for service status now!</span><br><span class="line">Waiting for admin service startup</span><br><span class="line">Admin service started</span><br><span class="line">==== starting portal ====</span><br><span class="line">Portal logging file is ./portal/apollo-portal.log</span><br><span class="line">Started [19772]</span><br><span class="line">Waiting for portal startup...</span><br><span class="line">Portal started. You can visit http://localhost:8070 now!</span><br><span class="line"></span><br><span class="line">wuzhiyong@DESKTOP-SAUA6M1 MINGW64 /e/迅雷下载/apollo配置中心/apollo-build-scripts-master</span><br><span class="line"><span class="meta">$</span></span><br></pre></td></tr></table></figure>
+
+<p>在 Windows 下执行可能会出现类似提示：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Java version is , please make sure java 1.8+ is in the path</span><br></pre></td></tr></table></figure>
+
+<p>本人这里折腾了些时间，重新下载配置更高版本的jdk，修改调试 demo.sh 都不行，后来在这篇博客（<a href="http://www.kungge.com/kwan/3896.html" target="_blank" rel="noopener">点这里</a>）得到解决。 问题原因是 apollo 读 java 地址路径上不能有空格。我的 jdk 是放在 Program Files 下，这里有个空格。后面 把 jdk 移到其它位置，并重新配置好环境变量就可以了。</p>
+<h4 id="登录服务端控制台"><a href="#登录服务端控制台" class="headerlink" title="登录服务端控制台"></a>登录服务端控制台</h4><p>打开地址：</p>
+<p><a href="http://localhost:8070" target="_blank" rel="noopener">http://localhost:8070</a></p>
+<p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200512115251752.png" alt="image-20200512115251752"></p>
+<p>输入  用户名：apollo  密码 admin</p>
+<p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200512115334476.png" alt="image-20200512115334476"></p>
+<p>点击 SampleApp 项目后可看到类似下面的内容</p>
+<p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200513113702191.png" alt="image-20200513113702191"></p>
+<h4 id="配置客户端"><a href="#配置客户端" class="headerlink" title="配置客户端"></a>配置客户端</h4><p>在 springboot 项目中添加客户端依赖</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.ctrip.framework.apollo<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>apollo-client<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.1.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>启动类设置环境 (下下来的快速开始项目 本地启动只有一个环境，我测试的时候不加这段也可以)</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SpringcloudZuulFileDemoApplication</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        System.setProperty(<span class="string">"env"</span>,<span class="string">"DEV"</span>);</span><br><span class="line">        SpringApplication.run(SpringcloudZuulFileDemoApplication<span class="class">.<span class="keyword">class</span>, <span class="title">args</span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>properties中配置</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">apollo.bootstrap.enabled</span>=<span class="string">true</span></span><br><span class="line"><span class="meta">app.id</span>=<span class="string">SampleApp</span></span><br><span class="line"><span class="meta">apollo.meta</span>=<span class="string">http://localhost:8080</span></span><br><span class="line"><span class="meta">apollo.bootstrap.namespaces</span>=<span class="string">application</span></span><br></pre></td></tr></table></figure>
+
+<p>添加一个属性类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestJavaConfigBean</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Value</span>(<span class="string">"$&#123;timeout:100&#125;"</span>)</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> timeout;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> batch;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Value</span>(<span class="string">"$&#123;batch:200&#125;"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setBatch</span><span class="params">(<span class="keyword">int</span> batch)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.batch = batch;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getTimeout</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> timeout;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getBatch</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> batch;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>配置</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@EnableApolloConfig</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AppConfig</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> TestJavaConfigBean <span class="title">javaConfigBean</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> TestJavaConfigBean();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>控制器测试</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Controller</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    TestJavaConfigBean testJavaConfigBean;</span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"get/config"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">test</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"timeout:"</span>+testJavaConfigBean.getTimeout()</span><br><span class="line">                +<span class="string">"batch"</span></span><br><span class="line">                +testJavaConfigBean.getBatch();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="测试读取配置"><a href="#测试读取配置" class="headerlink" title="测试读取配置"></a>测试读取配置</h4><p>启动项目调用测试接口：</p>
+<p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200513115527824-1589342252236.png" alt="image-20200513115527824"></p>
+<p>apollo 控制台 增加修改并发布</p>
+<p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200513120010468.png" alt="image-20200513120010468"></p>
+<p>再次请求 spring boot 的测试接口</p>
+<p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200513120059188.png" alt="image-20200513120059188"></p>
+<p>发现配置已经更新了。</p>
+<h3 id="apollo-中的核心概念"><a href="#apollo-中的核心概念" class="headerlink" title="apollo 中的核心概念"></a>apollo 中的核心概念</h3><blockquote>
+<p>在介绍高级特性前，我们有必要先来了解一下Apollo中的几个核心概念：</p>
+<h4 id="application-应用"><a href="#application-应用" class="headerlink" title="application (应用)"></a>application (应用)</h4><ul>
+<li><p>这个很好理解，就是实际使用配置的应用，Apollo客户端在运行时需要知道当前应用是谁，从而可以去获取对应的配置</p>
+</li>
+<li><p>每个应用都需要有唯一的身份标识 – appId，我们认为应用身份是跟着代码走的，所以需要在代码中配置，具体信息请参见<a href="https://github.com/ctripcorp/apollo/wiki/Java客户端使用指南" target="_blank" rel="noopener">Java客户端使用指南</a>。</p>
+<h4 id="environment-环境"><a href="#environment-环境" class="headerlink" title="environment (环境)"></a>environment (环境)</h4></li>
+<li><p>配置对应的环境，Apollo客户端在运行时需要知道当前应用处于哪个环境，从而可以去获取应用的配置</p>
+</li>
+<li><p>我们认为环境和代码无关，同一份代码部署在不同的环境就应该能够获取到不同环境的配置</p>
+</li>
+<li><p>所以环境默认是通过读取机器上的配置（server.properties中的env属性）指定的，不过为了开发方便，我们也支持运行时通过System Property等指定，具体信息请参见<a href="https://github.com/ctripcorp/apollo/wiki/Java客户端使用指南" target="_blank" rel="noopener">Java客户端使用指南</a>。</p>
+</li>
+</ul>
+<h4 id="cluster-集群"><a href="#cluster-集群" class="headerlink" title="cluster (集群)"></a>cluster (集群)</h4><ul>
+<li>一个应用下不同实例的分组，比如典型的可以按照数据中心分，把上海机房的应用实例分为一个集群，把北京机房的应用实例分为另一个集群。</li>
+<li>对不同的cluster，同一个配置可以有不一样的值，如zookeeper地址。</li>
+<li>集群默认是通过读取机器上的配置（server.properties中的idc属性）指定的，不过也支持运行时通过System Property指定，具体信息请参见<a href="https://github.com/ctripcorp/apollo/wiki/Java客户端使用指南" target="_blank" rel="noopener">Java客户端使用指南</a>。<h4 id="namespace-命名空间"><a href="#namespace-命名空间" class="headerlink" title="namespace (命名空间)"></a>namespace (命名空间)</h4></li>
+<li>一个应用下不同配置的分组，可以简单地把namespace类比为文件，不同类型的配置存放在不同的文件中，如数据库配置文件，RPC配置文件，应用自身的配置文件等</li>
+<li>应用可以直接读取到公共组件的配置namespace，如DAL，RPC等</li>
+<li>应用也可以通过继承公共组件的配置namespace来对公共组件的配置做调整，如DAL的初始数据库连接数</li>
+</ul>
+</blockquote>
+<p>更多高级使用和配置请参考官方文档：</p>
+<p><a href="https://github.com/ctripcorp/apollo/wiki" target="_blank" rel="noopener">apollo 官方 Wiki</a></p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/微信图片_20200501220918.png" alt="wuzhiyong 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/微信图片_20200501220907.jpg" alt="wuzhiyong 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/myblog/tags/springboot/" rel="tag"># springboot</a>
+              <a href="/myblog/tags/java/" rel="tag"># java</a>
+              <a href="/myblog/tags/spring-cloud/" rel="tag"># spring cloud</a>
+              <a href="/myblog/tags/Apollo/" rel="tag"># Apollo</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/myblog/API%E7%BD%91%E5%85%B3%E4%B9%8BZuul/" rel="prev" title="API网关之Zuul">
+      <i class="fa fa-chevron-left"></i> API网关之Zuul
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/myblog/%E6%9C%8D%E5%8A%A1%E8%B7%9F%E8%B8%AASleuth/" rel="next" title="服务跟踪Sleuth">
+      服务跟踪Sleuth <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#介绍"><span class="nav-number">1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#特点"><span class="nav-number">2.</span> <span class="nav-text">特点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#快速开始"><span class="nav-number">3.</span> <span class="nav-text">快速开始</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#下载快速开始项目"><span class="nav-number">3.1.</span> <span class="nav-text">下载快速开始项目</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#启动本地服务端"><span class="nav-number">3.2.</span> <span class="nav-text">启动本地服务端</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#登录服务端控制台"><span class="nav-number">3.3.</span> <span class="nav-text">登录服务端控制台</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#配置客户端"><span class="nav-number">3.4.</span> <span class="nav-text">配置客户端</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#测试读取配置"><span class="nav-number">3.5.</span> <span class="nav-text">测试读取配置</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#apollo-中的核心概念"><span class="nav-number">4.</span> <span class="nav-text">apollo 中的核心概念</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#application-应用"><span class="nav-number">4.1.</span> <span class="nav-text">application (应用)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#environment-环境"><span class="nav-number">4.2.</span> <span class="nav-text">environment (环境)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#cluster-集群"><span class="nav-number">4.3.</span> <span class="nav-text">cluster (集群)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#namespace-命名空间"><span class="nav-number">4.4.</span> <span class="nav-text">namespace (命名空间)</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">wuzhiyong</p>
+  <div class="site-description" itemprop="description">吴志勇的博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/myblog/archives/">
+        
+          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/myblog/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/myblog/tags/">
+          
+        <span class="site-state-item-count">25</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="mailto:wzy563653092@gmail.com" title="E-Mail → mailto:wzy563653092@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wuzhiyong</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">139k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:07</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+  <div class="addthis_inline_share_toolbox">
+    <script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5eae29bdce1a511b" async="async"></script>
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      // url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"jOjNqcMeMLL4ntoMdf13veTb-MdYXbMMI","app_key":"v50rUeYs7yeT6hECN7XAhYYM","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        // if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/myblog/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/myblog/lib/velocity/velocity.min.js"></script>
+  <script src="/myblog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/myblog/js/utils.js"></script>
+
+<script src="/myblog/js/motion.js"></script>
+
+
+<script src="/myblog/js/schemes/muse.js"></script>
+
+
+<script src="/myblog/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/myblog/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'jOjNqcMeMLL4ntoMdf13veTb-MdYXbMMI',
+      appKey     : 'v50rUeYs7yeT6hECN7XAhYYM',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
