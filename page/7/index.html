@@ -191,6 +191,137 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://wu_zhiyong.gitee.io/myblog/springboot%E8%AF%BB%E5%8F%96%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/myblog/images/avatar.gif">
+      <meta itemprop="name" content="wuzhiyong">
+      <meta itemprop="description" content="吴志勇的博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴志勇的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/myblog/springboot%E8%AF%BB%E5%8F%96%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" class="post-title-link" itemprop="url">springboot读取配置文件</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-04-24 22:42:18" itemprop="dateCreated datePublished" datetime="2020-04-24T22:42:18+08:00">2020-04-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-04-25 14:42:38" itemprop="dateModified" datetime="2020-04-25T14:42:38+08:00">2020-04-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">后端</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/myblog/springboot%E8%AF%BB%E5%8F%96%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" class="post-meta-item leancloud_visitors" data-flag-title="springboot读取配置文件" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/myblog/springboot%E8%AF%BB%E5%8F%96%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/myblog/springboot%E8%AF%BB%E5%8F%96%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>897</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="配置属性值"><a href="#配置属性值" class="headerlink" title="配置属性值"></a>配置属性值</h3><p>application.properties</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">server.port</span>=<span class="string">8080</span></span><br><span class="line"></span><br><span class="line"><span class="meta">com.study.name</span>=<span class="string">WuZhiYong</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Environment对象读取"><a href="#Environment对象读取" class="headerlink" title="Environment对象读取"></a>Environment对象读取</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 注入 Environment 对象</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> Environment env;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/port"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getPort</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="comment">//读取并返回配置</span></span><br><span class="line">        <span class="keyword">return</span> env.getProperty(<span class="string">"server.port"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行项目 访问 <a href="http://localhost:8080/port" target="_blank" rel="noopener">http://localhost:8080/port</a></p>
+<p>返回8080</p>
+<h3 id="value注解读取"><a href="#value注解读取" class="headerlink" title="@value注解读取"></a>@value注解读取</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Value</span>(<span class="string">"$&#123;server.port&#125;"</span>)</span><br><span class="line"><span class="keyword">private</span> String port;</span><br><span class="line"></span><br><span class="line"><span class="meta">@GetMapping</span>(<span class="string">"/getPortByValeAnnotation"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">getPortByValeAnnotation</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> port;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="prefix前缀读取"><a href="#prefix前缀读取" class="headerlink" title="prefix前缀读取"></a>prefix前缀读取</h3><p>新建配置类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ConfigurationProperties</span>(prefix = <span class="string">"com.study"</span>)</span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyConfig</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>控制器获取</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Autowired</span></span><br><span class="line"><span class="keyword">private</span> MyConfig myConfig;</span><br><span class="line"></span><br><span class="line"><span class="meta">@GetMapping</span>(<span class="string">"getPropByPrefix"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">getPropByPrefix</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> myConfig.getName();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://wu_zhiyong.gitee.io/myblog/hexo%E4%B8%BB%E9%A1%B5%E5%9B%BE%E7%89%87%E6%98%BE%E7%A4%BA%E9%97%AE%E9%A2%98/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -500,173 +631,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://wu_zhiyong.gitee.io/myblog/%E4%B8%80%E6%96%87%E5%A4%9A%E5%8F%91ArtiPub/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/myblog/images/avatar.gif">
-      <meta itemprop="name" content="wuzhiyong">
-      <meta itemprop="description" content="吴志勇的博客">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="吴志勇的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/myblog/%E4%B8%80%E6%96%87%E5%A4%9A%E5%8F%91ArtiPub/" class="post-title-link" itemprop="url">一文多发ArtiPub</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-04-22 11:34:41" itemprop="dateCreated datePublished" datetime="2020-04-22T11:34:41+08:00">2020-04-22</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-24 14:43:22" itemprop="dateModified" datetime="2020-04-24T14:43:22+08:00">2020-04-24</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/%E5%85%B6%E5%AE%83/" itemprop="url" rel="index"><span itemprop="name">其它</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/%E5%85%B6%E5%AE%83/%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">博客</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/myblog/%E4%B8%80%E6%96%87%E5%A4%9A%E5%8F%91ArtiPub/" class="post-meta-item leancloud_visitors" data-flag-title="一文多发ArtiPub" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/myblog/%E4%B8%80%E6%96%87%E5%A4%9A%E5%8F%91ArtiPub/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/myblog/%E4%B8%80%E6%96%87%E5%A4%9A%E5%8F%91ArtiPub/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>1.2k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><blockquote>
-<p>ArtiPub (Article Publisher 的简称，意为 “文章发布者”) 是一款开源的一文多发平台，可以帮助文章作者将编写好的文章自动发布到掘金、SegmentFault、CSDN、知乎、开源中国等技术媒体平台，传播优质知识，获取最大的曝光度。ArtiPub 安装简单，提供了多种安装方式，可以一键安装使用，安装一般只要 5 分钟。</p>
-<p>ArtiPub 目前支持文章编辑、文章发布、数据统计的功能，后期我们会加入存量文章导入、数据分析的功能，让您更好的管理、优化您的技术文章。此外，我们还会接入更多媒体渠道，真正做到让文章随处可阅。</p>
-</blockquote>
-<p>（gitHub原文）</p>
-<p>地址：<a href="https://github.com/crawlab-team/artipub" target="_blank" rel="noopener">https://github.com/crawlab-team/artipub</a></p>
-<h3 id="下载安装"><a href="#下载安装" class="headerlink" title="下载安装"></a>下载安装</h3><p>尝试过npm 在线安装发现num 地址下下来的不是最新版本。启动的时候有mongoDB 链接的错误。</p>
-<p>后手动下载zip包到本地进行安装</p>
-<img data-src="/myblog/%E4%B8%80%E6%96%87%E5%A4%9A%E5%8F%91ArtiPub/image-20200422114015781.png" class="">
-
-<p>解压出 artipub-master</p>
-<p>安装参考gitHub</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> artipub-master</span><br><span class="line"></span><br><span class="line">npm install</span><br></pre></td></tr></table></figure>
-
-<p>启动</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#启动前端</span></span><br><span class="line">npm run start:frontend</span><br><span class="line"></span><br><span class="line"><span class="comment">#启动后端</span></span><br><span class="line">npm run start:backend</span><br><span class="line"></span><br><span class="line"><span class="comment">#备注：</span></span><br><span class="line"><span class="comment">#1、这两个命令需在当前目录执行  即解压后的项目根目录</span></span><br><span class="line"><span class="comment">#2、命令执行成功后会hold命令行，所以两个命令需分别用两个命令行执行</span></span><br></pre></td></tr></table></figure>
-
-<img data-src="/myblog/%E4%B8%80%E6%96%87%E5%A4%9A%E5%8F%91ArtiPub/image-20200422114747648.png" class="">
-
-<h3 id="预览"><a href="#预览" class="headerlink" title="预览"></a>预览</h3><p>访问 localhost：8000（命令行提示）</p>
-<img data-src="/myblog/%E4%B8%80%E6%96%87%E5%A4%9A%E5%8F%91ArtiPub/image-20200422115009963.png" class="">
-
-<p>安装说明操作即可</p>
-<img data-src="/myblog/%E4%B8%80%E6%96%87%E5%A4%9A%E5%8F%91ArtiPub/image-20200422114903962.png" class="">
-
-<h3 id="注意项"><a href="#注意项" class="headerlink" title="注意项"></a>注意项</h3><ol>
-<li><p>编写文章时文章标题无法输入，且提示字数限制</p>
-<p>请检查后端是否正常启动</p>
-</li>
-<li><p>点击  平台管理菜单-&gt;更新Cookie状态 按钮没反应</p>
-<p>有可能是页面没有刷新       点击左上角的项目logo刷新</p>
-<p>有可能是后端卡住了     在后端命令行 执行 ctrl + c  结束进程3</p>
-</li>
-<li><p>没看到发布按钮</p>
-<p>在文章的条目上点击发布（云状图标）</p>
-<p>在弹出的列表页勾选平台后  滚动到最下边有个发布按钮</p>
-</li>
-<li><p>点击发布   与   前面的更新Cookie状态按钮是会弹出内置浏览器打开相应的平台</p>
-<p>不要担心  功能执行完毕后 会自动关掉的。</p>
-</li>
-<li><p>在启动前端后在命令行 看到了一个 3000 端口上的服务</p>
-<p>打开地址呈现如下。似乎是一个前端的服务框架（容器），不太懂。</p>
-<p>（不知道为什么代码里会嵌入这个，内容（依赖）似乎还挺大的，下了蛮久）</p>
-<img data-src="/myblog/%E4%B8%80%E6%96%87%E5%A4%9A%E5%8F%91ArtiPub/image-20200422123253222.png" class="">
-
-</li>
-</ol>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>由于项目正处在开发阶段，许多功能还不稳定。比如我尝试发布文章，却没有一个发布成功的（简书里只新建了个草稿文章且文章内容还没有）。看错误信息有提示  type 什么的。（应该是分类不好处理吧，毕竟每个平台的分类是不一样的）</p>
-<p>相比较于OpenWrite，功能上都差不多，界面布局也很相近。只是技术上还不够成熟。</p>
-<p>不过OpenWrite是正式运营中的项目了（开始赚钱）Cookie 什么的可能会有泄露的风险。且免费的功能限制比较多。费用的话不打折还是挺贵的。</p>
-<p>artiPub 则是自己部署，数据都是保存在服务器或本地，理论上安全些。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -736,7 +700,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/myblog/archives/">
         
-          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-count">29</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -749,7 +713,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/myblog/tags/">
           
-        <span class="site-state-item-count">25</span>
+        <span class="site-state-item-count">26</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -790,12 +754,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">148k</span>
+    <span title="站点总字数">152k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">2:14</span>
+    <span title="站点阅读时长">2:18</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
   </div>
