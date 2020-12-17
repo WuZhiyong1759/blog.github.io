@@ -191,6 +191,359 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://wu_zhiyong.gitee.io/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/myblog/images/avatar.gif">
+      <meta itemprop="name" content="wuzhiyong">
+      <meta itemprop="description" content="吴志勇的博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴志勇的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/" class="post-title-link" itemprop="url">springboot jdbcTemplate 连接mysql</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-09-28 20:23:07" itemprop="dateCreated datePublished" datetime="2019-09-28T20:23:07+08:00">2019-09-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-04-24 15:07:36" itemprop="dateModified" datetime="2020-04-24T15:07:36+08:00">2020-04-24</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">后端</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/" class="post-meta-item leancloud_visitors" data-flag-title="springboot jdbcTemplate 连接mysql" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4.3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>本实例 是在 springboot-base 的基础上进行的。</p>
+<h4 id="第一步：添加依赖"><a href="#第一步：添加依赖" class="headerlink" title="第一步：添加依赖"></a>第一步：添加依赖</h4><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-jdbc<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>mysql<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mysql-connector-java<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 这里不需要版本号 --&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这里我们另外再添加两个依赖。等下写http接口的发布之后，可以帮我们生成一个可访问的接口文档。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger2 --&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.springfox<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springfox-swagger2<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;swagger.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">      <span class="comment">&lt;!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui --&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.springfox<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springfox-swagger-ui<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;swagger.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>其中的版本是在上方定义的：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">swagger.version</span>&gt;</span>2.9.2<span class="tag">&lt;/<span class="name">swagger.version</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="第二步：配置数据库连接信息"><a href="#第二步：配置数据库连接信息" class="headerlink" title="第二步：配置数据库连接信息"></a>第二步：配置数据库连接信息</h4><p>在 applcatiion.properties 文件里：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 这里根据自己的数据库信息填写</span></span><br><span class="line"><span class="meta">spring.datasource.driver-class-name</span>=<span class="string">com.mysql.jdbc.Driver</span></span><br><span class="line"><span class="meta">spring.datasource.url</span>=<span class="string">jdbc:mysql://127.0.0.1:3306/web?serverTimezone=UTC</span></span><br><span class="line"><span class="meta">spring.datasource.username</span>=<span class="string">root</span></span><br><span class="line"><span class="meta">spring.datasource.password</span>=<span class="string">123456</span></span><br><span class="line"><span class="meta">spring.datasource.name</span>=<span class="string">test</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="第三步：在数据库建表："><a href="#第三步：在数据库建表：" class="headerlink" title="第三步：在数据库建表："></a>第三步：在数据库建表：</h4><p>这里可以通过idea 本身的database 模块连接数据库建表：</p>
+<img data-src="/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569679502067.png" class="">
+
+<p>也可以用其它工具（例如navicat）连接数据库建表：</p>
+<img data-src="/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569679591601.png" class="">
+
+<p>这里建议用idea 本身的 databases 模块连接数据库。因为等下我们可以用idea的一些插件来一件生成代码</p>
+<p>这边我们来建个学生表：</p>
+<img data-src="/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569680104922.png" class="">
+
+<p>(建表时记得把备注（comment）填写全，后面生成代码时，可以帮助我们生成注释)</p>
+<p>sql语句为：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> student</span><br><span class="line">(</span><br><span class="line">    <span class="keyword">id</span>         <span class="built_in">int</span> auto_increment <span class="keyword">comment</span> <span class="string">'数据id'</span> primary <span class="keyword">key</span>,</span><br><span class="line">    study_no   <span class="built_in">varchar</span>(<span class="number">20</span>) <span class="keyword">not</span> <span class="literal">null</span> <span class="keyword">comment</span> <span class="string">'学号'</span>,</span><br><span class="line">    stu_name   <span class="built_in">varchar</span>(<span class="number">20</span>) <span class="keyword">not</span> <span class="literal">null</span> <span class="keyword">comment</span> <span class="string">'学生姓名'</span>,</span><br><span class="line">    stu_age    <span class="built_in">int</span>         <span class="keyword">not</span> <span class="literal">null</span> <span class="keyword">comment</span> <span class="string">'学生年龄'</span>,</span><br><span class="line">    class_name <span class="built_in">varchar</span>(<span class="number">32</span>) <span class="keyword">not</span> <span class="literal">null</span> <span class="keyword">comment</span> <span class="string">'班级名称'</span></span><br><span class="line">)</span><br><span class="line">    <span class="keyword">comment</span> <span class="string">'学生表'</span>;</span><br></pre></td></tr></table></figure>
+
+<p>我们再双击student 表添加两条数据：</p>
+<img data-src="/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569680601726.png" class="">
+
+<p>控制台自动把插入数据的sql 打印了出来</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[2019-09-28 22:20:43] 0 rows retrieved in 43 ms (execution: 8 ms, fetching: 35 ms)</span><br><span class="line">sql&gt; INSERT INTO `web`.`student` (`study_no`, `stu_name`, `stu_age`, `class_name`) VALUES ('00110', '张三', 12, '初一6班')</span><br><span class="line">[2019-09-28 22:22:33] 1 row affected in 14 ms</span><br><span class="line">sql&gt; INSERT INTO `web`.`student` (`study_no`, `stu_name`, `stu_age`, `class_name`) VALUES ('00111', '李四', 12, '初一3班')</span><br></pre></td></tr></table></figure>
+
+<h4 id="第四步：我们来自动生成个实体类（也可以自己手动写这个类）"><a href="#第四步：我们来自动生成个实体类（也可以自己手动写这个类）" class="headerlink" title="第四步：我们来自动生成个实体类（也可以自己手动写这个类）"></a>第四步：我们来自动生成个实体类（也可以自己手动写这个类）</h4><p>我们在这里新建一个包来存放实体类。</p>
+<img data-src="/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569680881837.png" class="">
+
+<p>然后我们再右击表名 选择 generate java class</p>
+<img data-src="/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569680862129.png" class="">
+
+<p>没有这个选项的需要安装一个插件。（插件为收费版）</p>
+<img data-src="/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569681007667.png" class="">
+
+<p>点击generate java class 后：</p>
+<img data-src="/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569681201640.png" class="">
+
+<p>java class path 选择我们前面建的包名。</p>
+<p>勾选 comment 能够帮我们生成备注。</p>
+<p>勾选swagger 能够帮我们生成swagger 的一些注解注释。</p>
+<p>点击ok 就会生成好一个实体类。</p>
+<img data-src="/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569681488344.png" class="">
+
+<h4 id="第五步：我们来写调用数据库的一些方法。"><a href="#第五步：我们来写调用数据库的一些方法。" class="headerlink" title="第五步：我们来写调用数据库的一些方法。"></a>第五步：我们来写调用数据库的一些方法。</h4><img data-src="/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569682912018.png" class="">
+
+<p>这里的代码先简单这样写了。实际开发中业务相关的代码一般不放在 controller.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example.springbootbase.controller;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.example.springbootbase.model.Student;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.jdbc.core.BeanPropertyRowMapper;</span><br><span class="line"><span class="keyword">import</span> org.springframework.jdbc.core.JdbcTemplate;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@ClassName</span> StudentController</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span> wuzhiyong</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span> 2019/9/28 22:41</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Version</span> 1.0</span></span><br><span class="line"><span class="comment"> **/</span></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StudentController</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    JdbcTemplate jdbcTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ResponseBody</span></span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/stu/&#123;id&#125;"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Student <span class="title">getStuById</span><span class="params">(@PathVariable(<span class="string">"id"</span>)</span> <span class="keyword">int</span> id)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> (Student) jdbcTemplate.queryForObject(<span class="string">"select * from  student where  id = "</span>+id,<span class="keyword">new</span> BeanPropertyRowMapper(Student<span class="class">.<span class="keyword">class</span>))</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@ResponseBody</span></span><br><span class="line">    <span class="meta">@DeleteMapping</span>(<span class="string">"/stu/&#123;id&#125;"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Map <span class="title">delStuById</span><span class="params">(@PathVariable(<span class="string">"id"</span>)</span> <span class="keyword">int</span> id)</span>&#123;</span><br><span class="line">        jdbcTemplate.execute(<span class="string">"delect from  student when  id = "</span>+id);</span><br><span class="line">        Map result = <span class="keyword">new</span> HashMap(<span class="number">2</span>);</span><br><span class="line">        result.put(<span class="string">"code"</span>,<span class="number">200</span>);</span><br><span class="line">        result.put(<span class="string">"msg"</span>,<span class="string">"success"</span>);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们今天测接口不用postman 也不用浏览器，我们来用一个叫 restfulToolKit 的插件</p>
+<p>装好之后 侧边栏有个 restServices 的选项卡点开后 找到我们编写的接口。修改参数后点击send  即可发送请求测试</p>
+<img data-src="/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569683461753.png" class="">
+
+<p>点击send 后 response 里可看到请求的结果。下面看到了数据表的数据表示我们成功的从数据库里拿到了数据</p>
+<img data-src="/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569683819259.png" class="">
+
+<h4 id="第六步：利用swagger框架生成接口文档同时测试接口。"><a href="#第六步：利用swagger框架生成接口文档同时测试接口。" class="headerlink" title="第六步：利用swagger框架生成接口文档同时测试接口。"></a>第六步：利用swagger框架生成接口文档同时测试接口。</h4><p>最简单的使用我们只需要在启动类上加上@EnableSwagger2注解然后重启就可以了</p>
+<img data-src="/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569683988703.png" class="">
+
+<p>然后我们就可以通过浏览器访问地址 <a href="http://localhost:8080/swagger-ui.html" target="_blank" rel="noopener">http://localhost:8080/swagger-ui.html</a> 看到我们的接口了</p>
+<p><video src="./bandicam 2019-09-30 12-07-11-599.mp4" controls="controls"></video></p>
+<h4 id="第七步：配置连接池"><a href="#第七步：配置连接池" class="headerlink" title="第七步：配置连接池"></a>第七步：配置连接池</h4><p>由于spring boot默认集成hikari 链接池</p>
+<p>所以我们直接复制一段连接池的配置就可以了。不需要额外添加依赖。当然如果你不想用这个链接池那么得自行添加依赖了</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">spring.datasource.type</span>=<span class="string">com.zaxxer.hikari.HikariDataSourcespring.datasource.hikari.minimum-idle=5</span></span><br><span class="line"><span class="meta">spring.datasource.hikari.maximum-pool-size</span>=<span class="string">15spring.datasource.hikari.auto-commit=true</span></span><br><span class="line"><span class="meta">spring.datasource.hikari.idle-timeout</span>=<span class="string">30000spring.datasource.hikari.pool-name=DatebookHikariCP</span></span><br><span class="line"><span class="meta">spring.datasource.hikari.max-lifetime</span>=<span class="string">1800000spring.datasource.hikari.connection-timeout=30000</span></span><br><span class="line"><span class="meta">spring.datasource.hikari.connection-test-query</span>=<span class="string">SELECT 1</span></span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://wu_zhiyong.gitee.io/myblog/springboot%E5%8F%91%E5%B8%83http%E6%8E%A5%E5%8F%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/myblog/images/avatar.gif">
+      <meta itemprop="name" content="wuzhiyong">
+      <meta itemprop="description" content="吴志勇的博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴志勇的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/myblog/springboot%E5%8F%91%E5%B8%83http%E6%8E%A5%E5%8F%A3/" class="post-title-link" itemprop="url">springboot发布http接口</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-09-25 15:33:25" itemprop="dateCreated datePublished" datetime="2019-09-25T15:33:25+08:00">2019-09-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-04-25 14:42:25" itemprop="dateModified" datetime="2020-04-25T14:42:25+08:00">2020-04-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">后端</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/myblog/springboot%E5%8F%91%E5%B8%83http%E6%8E%A5%E5%8F%A3/" class="post-meta-item leancloud_visitors" data-flag-title="springboot发布http接口" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/myblog/springboot%E5%8F%91%E5%B8%83http%E6%8E%A5%E5%8F%A3/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/myblog/springboot%E5%8F%91%E5%B8%83http%E6%8E%A5%E5%8F%A3/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>本例子是再springboot-base 基础上进行</p>
+<p>新建一个包用来存放接口类文件</p>
+<img data-src="/myblog/springboot%E5%8F%91%E5%B8%83http%E6%8E%A5%E5%8F%A3/1569397133707.png" class="">
+
+<p>再新建一个HelloWorld类文件敲上如下代码：</p>
+<img data-src="/myblog/springboot%E5%8F%91%E5%B8%83http%E6%8E%A5%E5%8F%A3/1569399733325.png" class="">
+
+<img data-src="/myblog/springboot%E5%8F%91%E5%B8%83http%E6%8E%A5%E5%8F%A3/1569399861010.png" class="">
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example.springbootbase.controller;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Controller;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.GetMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.PathVariable;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.PostMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.ResponseBody;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@ClassName</span> HelloWorld</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span> wuzhiyong</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span> 2019/9/25 15:39</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Version</span> 1.0</span></span><br><span class="line"><span class="comment"> **/</span></span><br><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloWorld</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    List&lt;String&gt; list_str = Arrays.asList(<span class="string">"java"</span>,<span class="string">"php"</span>,<span class="string">"go"</span>,<span class="string">"c"</span>);</span><br><span class="line"></span><br><span class="line">    Map map_str = <span class="keyword">new</span> HashMap&lt;String,String&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/hello"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">hello</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"hello world"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@ResponseBody</span></span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"list"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">getList</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> list_str;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@ResponseBody</span></span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"list/&#123;index&#125;"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">getListByIndex</span><span class="params">(@PathVariable(<span class="string">"index"</span>)</span> <span class="keyword">int</span> index)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> list_str.get(index);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"list01/&#123;index&#125;"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">getListByIndex01</span><span class="params">(@PathVariable(<span class="string">"index"</span>)</span> <span class="keyword">int</span> index)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> list_str.get(index);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@ResponseBody</span></span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"map/&#123;key&#125;"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">getValueByKeyOnMap</span><span class="params">(@PathVariable (<span class="string">"key"</span>)</span> String key)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> map_str.get(key);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@ResponseBody</span></span><br><span class="line">    <span class="meta">@PostMapping</span>(<span class="string">"map/&#123;key&#125;/&#123;value&#125;"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">putMapBykv</span><span class="params">( @PathVariable(<span class="string">"key"</span>)</span> String key, @<span class="title">PathVariable</span><span class="params">(<span class="string">"value"</span>)</span> String value) </span>&#123;</span><br><span class="line">        map_str.put(key,value);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"success"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>启动项目打开浏览器（或用接口测试工具 例：postman）测试</p>
+<img data-src="/myblog/springboot%E5%8F%91%E5%B8%83http%E6%8E%A5%E5%8F%A3/1569403680828.png" class="">
+
+<p>浏览器请求 /hello 接口404错误  是因为 该接口没有加 @ResponseBody 注解。系统会去找页面。由于页面没有配置，所以这里出现404</p>
+<img data-src="/myblog/springboot%E5%8F%91%E5%B8%83http%E6%8E%A5%E5%8F%A3/1569403744387.png" class="">
+
+<p>请求list 接口 数据正常返回了</p>
+<img data-src="/myblog/springboot%E5%8F%91%E5%B8%83http%E6%8E%A5%E5%8F%A3/1569403782104.png" class="">
+
+<p>这个是用 postman 测试list接口 也正常返回了</p>
+<img data-src="/myblog/springboot%E5%8F%91%E5%B8%83http%E6%8E%A5%E5%8F%A3/1569403842099.png" class="">
+
+<p>测试 /list/0 接口返回了 list 的0位数据，正常得到了  java</p>
+<img data-src="/myblog/springboot%E5%8F%91%E5%B8%83http%E6%8E%A5%E5%8F%A3/1569403925422.png" class="">
+
+<p>访问/list01/0 接口。虽然接口内容相同。 出现400  是因为接口没有加上 @ResponseBody 注解。</p>
+<img data-src="/myblog/springboot%E5%8F%91%E5%B8%83http%E6%8E%A5%E5%8F%A3/1569404022936.png" class="">
+
+<p>出现了405 是因为 请求方法不对。后台这个接口请求得 用post 方式请求（浏览器默认是GET方式请求）。</p>
+<p>下面用工具 用post方式 请求就正常了。</p>
+<img data-src="/myblog/springboot%E5%8F%91%E5%B8%83http%E6%8E%A5%E5%8F%A3/1569404512476.png" class="">
+
+<img data-src="/myblog/springboot%E5%8F%91%E5%B8%83http%E6%8E%A5%E5%8F%A3/1569404548317.png" class="">
+
+<p>这里 再通过 /map/{key}接口获取 刚刚 存入map 里的数据。正常返回！</p>
+<h4 id="听说前后台都是用JSON数据进行交互的，这里我要返回一个json字符串怎么办。"><a href="#听说前后台都是用JSON数据进行交互的，这里我要返回一个json字符串怎么办。" class="headerlink" title="听说前后台都是用JSON数据进行交互的，这里我要返回一个json字符串怎么办。"></a>听说前后台都是用JSON数据进行交互的，这里我要返回一个json字符串怎么办。</h4><p>我们先加上这样一个方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ResponseBody</span></span><br><span class="line">   <span class="meta">@GetMapping</span>(<span class="string">"getjson"</span>)</span><br><span class="line">   <span class="function"><span class="keyword">public</span> Object <span class="title">getjson</span><span class="params">( )</span> </span>&#123;</span><br><span class="line">       map_str.put(<span class="string">"我要学习"</span>,<span class="string">"java"</span>);</span><br><span class="line">       map_str.put(<span class="string">"我要认真学习"</span>,<span class="string">"数据库"</span>);</span><br><span class="line">       map_str.put(<span class="string">"我要好好学习"</span>,<span class="string">"spring"</span>);</span><br><span class="line">       map_str.put(<span class="string">"所以我今晚打算"</span>,<span class="string">"去搓麻将"</span>);</span><br><span class="line">       <span class="keyword">return</span> map_str;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="然后重启项目"><a href="#然后重启项目" class="headerlink" title="然后重启项目"></a>然后重启项目</h4><p>然后浏览器访问：</p>
+<img data-src="/myblog/springboot%E5%8F%91%E5%B8%83http%E6%8E%A5%E5%8F%A3/1569406143618.png" class="">
+
+<p>用postman访问：</p>
+<img data-src="/myblog/springboot%E5%8F%91%E5%B8%83http%E6%8E%A5%E5%8F%A3/1569406193340.png" class="">
+
+<p>postman 自动将返回的数据格式化了。</p>
+<p>ps:由于map 是无序的 所以这里得到的结果是无序的。</p>
+<p>使用工具来测试接口。可以更直观的看到请求方式、参数列表、请求状态、响应时间、数据大小。并且填写好备注后，可以直接生成接口文档。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://wu_zhiyong.gitee.io/myblog/idea-%E5%88%9B%E5%BB%BAspringboot%E9%A1%B9%E7%9B%AE/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -327,117 +680,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://wu_zhiyong.gitee.io/myblog/%E5%AD%A6%E4%B9%A0%E8%AE%A1%E5%88%92/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/myblog/images/avatar.gif">
-      <meta itemprop="name" content="wuzhiyong">
-      <meta itemprop="description" content="吴志勇的博客">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="吴志勇的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/myblog/%E5%AD%A6%E4%B9%A0%E8%AE%A1%E5%88%92/" class="post-title-link" itemprop="url">学习计划</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-09-23 10:12:59" itemprop="dateCreated datePublished" datetime="2019-09-23T10:12:59+08:00">2019-09-23</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-05-24 21:03:27" itemprop="dateModified" datetime="2020-05-24T21:03:27+08:00">2020-05-24</time>
-              </span>
-
-          
-            <span id="/myblog/%E5%AD%A6%E4%B9%A0%E8%AE%A1%E5%88%92/" class="post-meta-item leancloud_visitors" data-flag-title="学习计划" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/myblog/%E5%AD%A6%E4%B9%A0%E8%AE%A1%E5%88%92/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/myblog/%E5%AD%A6%E4%B9%A0%E8%AE%A1%E5%88%92/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>534</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          文章界面介绍
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/myblog/%E5%AD%A6%E4%B9%A0%E8%AE%A1%E5%88%92/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/myblog/page/9/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/myblog/">1</a><span class="space">&hellip;</span><a class="page-number" href="/myblog/page/9/">9</a><span class="page-number current">10</span>
+    <a class="extend prev" rel="prev" href="/myblog/page/9/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/myblog/">1</a><span class="space">&hellip;</span><a class="page-number" href="/myblog/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/myblog/page/11/">11</a><a class="extend next" rel="next" href="/myblog/page/11/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -503,7 +749,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/myblog/archives/">
         
-          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-count">31</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -516,7 +762,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/myblog/tags/">
           
-        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-count">28</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -557,12 +803,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">152k</span>
+    <span title="站点总字数">185k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">2:18</span>
+    <span title="站点阅读时长">2:48</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
   </div>
