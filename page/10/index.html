@@ -191,6 +191,309 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://wu_zhiyong.gitee.io/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/myblog/images/avatar.gif">
+      <meta itemprop="name" content="wuzhiyong">
+      <meta itemprop="description" content="吴志勇的博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴志勇的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/" class="post-title-link" itemprop="url">hexo配置next主题</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-04-24 09:58:48" itemprop="dateCreated datePublished" datetime="2020-04-24T09:58:48+08:00">2020-04-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-05-19 08:49:34" itemprop="dateModified" datetime="2020-05-19T08:49:34+08:00">2020-05-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/%E5%85%B6%E5%AE%83/" itemprop="url" rel="index"><span itemprop="name">其它</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/%E5%85%B6%E5%AE%83/%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">博客</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/" class="post-meta-item leancloud_visitors" data-flag-title="hexo配置next主题" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>6.1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>6 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="next主页"><a href="#next主页" class="headerlink" title="next主页"></a>next主页</h3><p><a href="https://github.com/theme-next/hexo-theme-next" target="_blank" rel="noopener">https://github.com/theme-next/hexo-theme-next</a></p>
+<img data-src="/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/image-20200424100945802.png" class="">
+
+<h3 id="下载安装"><a href="#下载安装" class="headerlink" title="下载安装"></a>下载安装</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> hexo/themes</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git <span class="built_in">clone</span> https://github.com/theme-next/hexo-theme-next next</span></span><br></pre></td></tr></table></figure>
+
+<p>修改hexo项目根目录下的_config.yml文件</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># theme: landscape</span></span><br><span class="line"><span class="attr">theme:</span> <span class="string">next</span></span><br></pre></td></tr></table></figure>
+
+<p>命令行执行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">D:\myblog&gt;hexo s</span><br><span class="line">INFO  Start processing</span><br><span class="line">INFO  Hexo is running at http://localhost:4000 . Press Ctrl+C to stop.</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置标签和分类"><a href="#配置标签和分类" class="headerlink" title="配置标签和分类"></a>配置标签和分类</h3><ol>
+<li><p>生成标签页
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/myblog/hexo%E9%85%8D%E7%BD%AEnext%E4%B8%BB%E9%A2%98/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://wu_zhiyong.gitee.io/myblog/%E4%B8%80%E6%96%87%E5%A4%9A%E5%8F%91ArtiPub/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/myblog/images/avatar.gif">
+      <meta itemprop="name" content="wuzhiyong">
+      <meta itemprop="description" content="吴志勇的博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴志勇的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/myblog/%E4%B8%80%E6%96%87%E5%A4%9A%E5%8F%91ArtiPub/" class="post-title-link" itemprop="url">一文多发ArtiPub</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-04-22 11:34:41" itemprop="dateCreated datePublished" datetime="2020-04-22T11:34:41+08:00">2020-04-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-04-24 14:43:22" itemprop="dateModified" datetime="2020-04-24T14:43:22+08:00">2020-04-24</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/%E5%85%B6%E5%AE%83/" itemprop="url" rel="index"><span itemprop="name">其它</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/%E5%85%B6%E5%AE%83/%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">博客</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/myblog/%E4%B8%80%E6%96%87%E5%A4%9A%E5%8F%91ArtiPub/" class="post-meta-item leancloud_visitors" data-flag-title="一文多发ArtiPub" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/myblog/%E4%B8%80%E6%96%87%E5%A4%9A%E5%8F%91ArtiPub/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/myblog/%E4%B8%80%E6%96%87%E5%A4%9A%E5%8F%91ArtiPub/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><blockquote>
+<p>ArtiPub (Article Publisher 的简称，意为 “文章发布者”) 是一款开源的一文多发平台，可以帮助文章作者将编写好的文章自动发布到掘金、SegmentFault、CSDN、知乎、开源中国等技术媒体平台，传播优质知识，获取最大的曝光度。ArtiPub 安装简单，提供了多种安装方式，可以一键安装使用，安装一般只要 5 分钟。</p>
+<p>ArtiPub 目前支持文章编辑、文章发布、数据统计的功能，后期我们会加入存量文章导入、数据分析的功能，让您更好的管理、优化您的技术文章。此外，我们还会接入更多媒体渠道，真正做到让文章随处可阅。</p>
+</blockquote>
+<p>（gitHub原文）</p>
+<p>地址：<a href="https://github.com/crawlab-team/artipub" target="_blank" rel="noopener">https://github.com/crawlab-team/artipub</a></p>
+<h3 id="下载安装"><a href="#下载安装" class="headerlink" title="下载安装"></a>下载安装</h3><p>尝试过npm 在线安装发现num 地址下下来的不是最新版本。启动的时候有mongoDB 链接的错误。</p>
+<p>后手动下载zip包到本地进行安装</p>
+<img data-src="/myblog/%E4%B8%80%E6%96%87%E5%A4%9A%E5%8F%91ArtiPub/image-20200422114015781.png" class="">
+
+<p>解压出 artipub-master</p>
+<p>安装参考gitHub</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> artipub-master</span><br><span class="line"></span><br><span class="line">npm install</span><br></pre></td></tr></table></figure>
+
+<p>启动</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#启动前端</span></span><br><span class="line">npm run start:frontend</span><br><span class="line"></span><br><span class="line"><span class="comment">#启动后端</span></span><br><span class="line">npm run start:backend</span><br><span class="line"></span><br><span class="line"><span class="comment">#备注：</span></span><br><span class="line"><span class="comment">#1、这两个命令需在当前目录执行  即解压后的项目根目录</span></span><br><span class="line"><span class="comment">#2、命令执行成功后会hold命令行，所以两个命令需分别用两个命令行执行</span></span><br></pre></td></tr></table></figure>
+
+<img data-src="/myblog/%E4%B8%80%E6%96%87%E5%A4%9A%E5%8F%91ArtiPub/image-20200422114747648.png" class="">
+
+<h3 id="预览"><a href="#预览" class="headerlink" title="预览"></a>预览</h3><p>访问 localhost：8000（命令行提示）</p>
+<img data-src="/myblog/%E4%B8%80%E6%96%87%E5%A4%9A%E5%8F%91ArtiPub/image-20200422115009963.png" class="">
+
+<p>安装说明操作即可</p>
+<img data-src="/myblog/%E4%B8%80%E6%96%87%E5%A4%9A%E5%8F%91ArtiPub/image-20200422114903962.png" class="">
+
+<h3 id="注意项"><a href="#注意项" class="headerlink" title="注意项"></a>注意项</h3><ol>
+<li><p>编写文章时文章标题无法输入，且提示字数限制</p>
+<p>请检查后端是否正常启动</p>
+</li>
+<li><p>点击  平台管理菜单-&gt;更新Cookie状态 按钮没反应</p>
+<p>有可能是页面没有刷新       点击左上角的项目logo刷新</p>
+<p>有可能是后端卡住了     在后端命令行 执行 ctrl + c  结束进程3</p>
+</li>
+<li><p>没看到发布按钮</p>
+<p>在文章的条目上点击发布（云状图标）</p>
+<p>在弹出的列表页勾选平台后  滚动到最下边有个发布按钮</p>
+</li>
+<li><p>点击发布   与   前面的更新Cookie状态按钮是会弹出内置浏览器打开相应的平台</p>
+<p>不要担心  功能执行完毕后 会自动关掉的。</p>
+</li>
+<li><p>在启动前端后在命令行 看到了一个 3000 端口上的服务</p>
+<p>打开地址呈现如下。似乎是一个前端的服务框架（容器），不太懂。</p>
+<p>（不知道为什么代码里会嵌入这个，内容（依赖）似乎还挺大的，下了蛮久）</p>
+<img data-src="/myblog/%E4%B8%80%E6%96%87%E5%A4%9A%E5%8F%91ArtiPub/image-20200422123253222.png" class="">
+
+</li>
+</ol>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>由于项目正处在开发阶段，许多功能还不稳定。比如我尝试发布文章，却没有一个发布成功的（简书里只新建了个草稿文章且文章内容还没有）。看错误信息有提示  type 什么的。（应该是分类不好处理吧，毕竟每个平台的分类是不一样的）</p>
+<p>相比较于OpenWrite，功能上都差不多，界面布局也很相近。只是技术上还不够成熟。</p>
+<p>不过OpenWrite是正式运营中的项目了（开始赚钱）Cookie 什么的可能会有泄露的风险。且免费的功能限制比较多。费用的话不打折还是挺贵的。</p>
+<p>artiPub 则是自己部署，数据都是保存在服务器或本地，理论上安全些。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://wu_zhiyong.gitee.io/myblog/Yapi-%E4%BD%BF%E7%94%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -320,327 +623,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://wu_zhiyong.gitee.io/myblog/IDEA%E5%B8%B8%E7%94%A8%E5%BF%AB%E6%8D%B7%E9%94%AE/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/myblog/images/avatar.gif">
-      <meta itemprop="name" content="wuzhiyong">
-      <meta itemprop="description" content="吴志勇的博客">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="吴志勇的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/myblog/IDEA%E5%B8%B8%E7%94%A8%E5%BF%AB%E6%8D%B7%E9%94%AE/" class="post-title-link" itemprop="url">IDEA常用快捷键</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-03-31 16:12:00" itemprop="dateCreated datePublished" datetime="2020-03-31T16:12:00+08:00">2020-03-31</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-05-02 15:07:47" itemprop="dateModified" datetime="2020-05-02T15:07:47+08:00">2020-05-02</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/%E5%85%B6%E5%AE%83/" itemprop="url" rel="index"><span itemprop="name">其它</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/%E5%85%B6%E5%AE%83/%E5%BF%AB%E6%8D%B7%E9%94%AE/" itemprop="url" rel="index"><span itemprop="name">快捷键</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/myblog/IDEA%E5%B8%B8%E7%94%A8%E5%BF%AB%E6%8D%B7%E9%94%AE/" class="post-meta-item leancloud_visitors" data-flag-title="IDEA常用快捷键" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/myblog/IDEA%E5%B8%B8%E7%94%A8%E5%BF%AB%E6%8D%B7%E9%94%AE/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/myblog/IDEA%E5%B8%B8%E7%94%A8%E5%BF%AB%E6%8D%B7%E9%94%AE/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>160</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h4 id="清除无效的导包"><a href="#清除无效的导包" class="headerlink" title="清除无效的导包"></a>清除无效的导包</h4><p>ctrl + alt + o</p>
-<h4 id="代码块上下移动"><a href="#代码块上下移动" class="headerlink" title="代码块上下移动"></a>代码块上下移动</h4><p>上移：ctrl + shift + ↑</p>
-<p>下移：ctrl + shift + ↓</p>
-<h4 id="类中的方法间跳动"><a href="#类中的方法间跳动" class="headerlink" title="类中的方法间跳动"></a>类中的方法间跳动</h4><p>往上跳动：alt + ↑</p>
-<p>往下跳动：alt + ↓</p>
-<h4 id="光标下另起一行"><a href="#光标下另起一行" class="headerlink" title="光标下另起一行"></a>光标下另起一行</h4><p>shift + Enter</p>
-<h4 id="选定代码转大写"><a href="#选定代码转大写" class="headerlink" title="选定代码转大写"></a>选定代码转大写</h4><p>ctrl + shift + U</p>
-<h4 id="撤销与反撤销"><a href="#撤销与反撤销" class="headerlink" title="撤销与反撤销"></a>撤销与反撤销</h4><p>撤销：ctrl + z</p>
-<p>反撤销： ctrl + shift + z</p>
-<h4 id="查看子类"><a href="#查看子类" class="headerlink" title="查看子类"></a>查看子类</h4><p>ctrl + h</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://wu_zhiyong.gitee.io/myblog/springboot-%E6%95%B4%E5%90%88spring-security/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/myblog/images/avatar.gif">
-      <meta itemprop="name" content="wuzhiyong">
-      <meta itemprop="description" content="吴志勇的博客">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="吴志勇的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/myblog/springboot-%E6%95%B4%E5%90%88spring-security/" class="post-title-link" itemprop="url">springboot 整合spring security</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-03-30 16:05:10" itemprop="dateCreated datePublished" datetime="2020-03-30T16:05:10+08:00">2020-03-30</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-24 15:45:43" itemprop="dateModified" datetime="2020-04-24T15:45:43+08:00">2020-04-24</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">后端</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/myblog/springboot-%E6%95%B4%E5%90%88spring-security/" class="post-meta-item leancloud_visitors" data-flag-title="springboot 整合spring security" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/myblog/springboot-%E6%95%B4%E5%90%88spring-security/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/myblog/springboot-%E6%95%B4%E5%90%88spring-security/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>9.9k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>9 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>security作为一个流行的安全框架，很多公司都用其来做web的认证与授权。activiti7 工作流默认使用其的 用户-角色 功能。所以我们必须了解它。</p>
-<h3 id="建立web项目"><a href="#建立web项目" class="headerlink" title="建立web项目"></a>建立web项目</h3><p>首先建立一个web项目（springboot）同时我们写上一个接口用于测试。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestController</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Logger logger = LoggerFactory.getLogger(TestController<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">    <span class="meta">@GetMapping</span>(value = <span class="string">"/admin/1"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">admin</span><span class="params">()</span></span>&#123;</span><br><span class="line">        Map map = <span class="keyword">new</span> HashMap();</span><br><span class="line">        map.put(<span class="string">"code"</span>,<span class="number">200</span>);</span><br><span class="line">        map.put(<span class="string">"msg"</span>,<span class="string">"success"</span>);</span><br><span class="line">        map.put(<span class="string">"data"</span>,<span class="string">"admin"</span>);</span><br><span class="line">        <span class="keyword">return</span> map;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/user/1"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">user</span><span class="params">()</span></span>&#123;</span><br><span class="line">        Map map = <span class="keyword">new</span> HashMap();</span><br><span class="line">        map.put(<span class="string">"code"</span>,<span class="number">200</span>);</span><br><span class="line">        map.put(<span class="string">"msg"</span>,<span class="string">"success"</span>);</span><br><span class="line">        map.put(<span class="string">"data"</span>,<span class="string">"user"</span>);</span><br><span class="line">        <span class="keyword">return</span> map;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/free/1"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">free</span><span class="params">()</span></span>&#123;</span><br><span class="line">        Map map = <span class="keyword">new</span> HashMap();</span><br><span class="line">        map.put(<span class="string">"code"</span>,<span class="number">200</span>);</span><br><span class="line">        map.put(<span class="string">"msg"</span>,<span class="string">"success"</span>);</span><br><span class="line">        map.put(<span class="string">"data"</span>,<span class="string">"free"</span>);</span><br><span class="line">        <span class="keyword">return</span> map;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@PostMapping</span>(<span class="string">"/logout/success"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">logoutSuccess</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"logout success POST"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/logout/success"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">logoutSuccessGet</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"logout success Get"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@PostMapping</span>(<span class="string">"/login/error2"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">loginError</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"logoin error"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/test"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">test</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"test"</span>;</span><br><span class="line">    &#125;   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>启动项目访问我们的接口</p>
-<p>（正常返回数据）</p>
-<img data-src="/myblog/springboot-%E6%95%B4%E5%90%88spring-security/image-20200331163706253.png" class="">
-
-<h3 id="添加security依赖"><a href="#添加security依赖" class="headerlink" title="添加security依赖"></a>添加security依赖</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-security --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-security<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>再次访问接口：</p>
-<img data-src="/myblog/springboot-%E6%95%B4%E5%90%88spring-security/image-20200331164035818.png" class="">
-
-<p>接口提示401 msg显示没有认证  说明security已经其作用了</p>
-<p>接着我们再用浏览器看看</p>
-<p><a href="http://localhost:8080/admin/1" target="_blank" rel="noopener">http://localhost:8080/admin/1</a></p>
-<img data-src="/myblog/springboot-%E6%95%B4%E5%90%88spring-security/image-20200331164253612.png" class="">
-
-<p>发现浏览器重定向到一个登录页面</p>
-<p>从IDEA控制台我们发现密码巴拉巴拉什么的</p>
-<img data-src="/myblog/springboot-%E6%95%B4%E5%90%88spring-security/image-20200331164557365.png" class="">
-
-<p>然后我们使用  用户名：user   还有控制台的密码登录及可返回我们想要的数据。</p>
-<p>从spring security 的文档中也可以找到说明：</p>
-<img data-src="/myblog/springboot-%E6%95%B4%E5%90%88spring-security/image-20200331165141402.png" class="">
-
-<p>当然这种用户名和密码我们也可以自定义：</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">spring.security.user.name</span>=<span class="string">abc</span></span><br><span class="line"><span class="meta">spring.security.user.password</span>=<span class="string">123457</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="简单配置与说明"><a href="#简单配置与说明" class="headerlink" title="简单配置与说明"></a>简单配置与说明</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example.springbootactiviti.demo.config;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Bean;</span><br><span class="line"><span class="keyword">import</span> org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;</span><br><span class="line"><span class="keyword">import</span> org.springframework.security.config.annotation.web.builders.HttpSecurity;</span><br><span class="line"><span class="keyword">import</span> org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;</span><br><span class="line"><span class="keyword">import</span> org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;</span><br><span class="line"><span class="keyword">import</span> org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;</span><br><span class="line"><span class="keyword">import</span> org.springframework.security.crypto.password.PasswordEncoder;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@ClassName</span> SpringSecurityCustomConfig</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span> wuzhiyong</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span> 2020/3/4 21:17</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Version</span> 1.0</span></span><br><span class="line"><span class="comment"> **/</span></span><br><span class="line"><span class="meta">@EnableWebSecurity</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SpringSecurityCustomConfig</span> <span class="keyword">extends</span> <span class="title">WebSecurityConfigurerAdapter</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> PasswordEncoder encoding;</span><br><span class="line"><span class="comment">//    @Autowired</span></span><br><span class="line"><span class="comment">//    private SpringDataUserDetailsService userDetailsService;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 指定加密方式（默认会自动配上BCrypt加密）</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> PasswordEncoder <span class="title">passwordEncoder</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> BCryptPasswordEncoder();</span><br><span class="line"><span class="comment">//        return new Md4PasswordEncoder();</span></span><br><span class="line">        <span class="comment">//配置不加密的时候  下方的用户的密码用明文即可</span></span><br><span class="line"><span class="comment">//        return  NoOpPasswordEncoder.getInstance(); //不加密</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//    @Bean</span></span><br><span class="line"><span class="comment">//    public SpringDataUserDetailsService customUserDetailsService() &#123;</span></span><br><span class="line"><span class="comment">//        return new SpringDataUserDetailsService();</span></span><br><span class="line"><span class="comment">//    &#125;</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">configureGlobal</span><span class="params">(AuthenticationManagerBuilder auth)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        auth</span><br><span class="line"><span class="comment">//                .userDetailsService(userDetailsService)//配置自定义的验证（从数据库查询）逻辑</span></span><br><span class="line">                .inMemoryAuthentication()</span><br><span class="line">                .withUser(<span class="string">"user"</span>).password(encoding.encode(<span class="string">"123"</span>)).roles(<span class="string">"USER"</span>).and()</span><br><span class="line">                .withUser(<span class="string">"admin"</span>).password(encoding.encode(<span class="string">"1234"</span>)).roles(<span class="string">"USER"</span>, <span class="string">"ADMIN"</span>)</span><br><span class="line">                .and().withUser(<span class="string">"zhnagsan"</span>).password(encoding.encode(<span class="string">"12345"</span>)).roles(<span class="string">"LEADER"</span>)</span><br><span class="line">        ;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">(HttpSecurity http)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        http</span><br><span class="line">                <span class="comment">//关闭 CSRF 保护（如果不关闭  访问logoutUrl 必须为post方式  见源码注释）</span></span><br><span class="line">                .csrf().disable()</span><br><span class="line">                .authorizeRequests()</span><br><span class="line">                <span class="comment">//允许匿名访问</span></span><br><span class="line">                .antMatchers(<span class="string">"/free/**"</span>,<span class="string">"/logout/success"</span>).permitAll()</span><br><span class="line">                <span class="comment">//匹配/admin/**  API需要ADMIN的角色</span></span><br><span class="line">                .antMatchers(<span class="string">"/admin/**"</span>).hasRole(<span class="string">"ADMIN"</span>)</span><br><span class="line">                <span class="comment">//拥有其中任意权限</span></span><br><span class="line">                .antMatchers(<span class="string">"/user/**"</span>).hasAnyAuthority(<span class="string">"ROLE_USER"</span>,<span class="string">"ROLE_ADMIN"</span>)</span><br><span class="line">                <span class="comment">//拥有其中任意权限（与上面不同的是这里不用  ROLE_前缀）</span></span><br><span class="line">                .antMatchers(<span class="string">"/test"</span>).hasAnyRole(<span class="string">"USER"</span>,<span class="string">"ADMIN"</span>)</span><br><span class="line">                <span class="comment">//任何请求都需要认证</span></span><br><span class="line">                .anyRequest().authenticated()</span><br><span class="line">                .and()</span><br><span class="line">                <span class="comment">//配置登录页面,登录错误后的路径（同样是登录的页面）</span></span><br><span class="line">                .formLogin().failureUrl( <span class="string">"/login/error2"</span> )</span><br><span class="line">                <span class="comment">//配置登出的 url  以及  登出成功后 重定向的url地址</span></span><br><span class="line">                <span class="comment">//注意：logoutSuccessUrl url  必须是 能够匿名访问的  否则 重定向过去后 会被拦截 再跳转到登录页面</span></span><br><span class="line">                .and().logout().logoutUrl(<span class="string">"/logout/out"</span>).logoutSuccessUrl(<span class="string">"/logout/success"</span>)</span><br><span class="line">        ;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>在配置权限认证的时候，遵循自上而下的匹配规则。</p>
-<p>上面我们的用户是在代码中写死的，而实际项目中我们的用户信息都是在数据库里接下来我们来实现从数据库里读取用户的逻辑。</p>
-<p>新建一个类：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example.springbootactiviti.demo.config;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.example.springbootactiviti.demo.model.User;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.jdbc.core.BeanPropertyRowMapper;</span><br><span class="line"><span class="keyword">import</span> org.springframework.jdbc.core.JdbcTemplate;</span><br><span class="line"><span class="keyword">import</span> org.springframework.security.core.GrantedAuthority;</span><br><span class="line"><span class="keyword">import</span> org.springframework.security.core.authority.SimpleGrantedAuthority;</span><br><span class="line"><span class="keyword">import</span> org.springframework.security.core.userdetails.UserDetails;</span><br><span class="line"><span class="keyword">import</span> org.springframework.security.core.userdetails.UserDetailsService;</span><br><span class="line"><span class="keyword">import</span> org.springframework.security.core.userdetails.UsernameNotFoundException;</span><br><span class="line"><span class="keyword">import</span> org.springframework.security.crypto.password.PasswordEncoder;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@ClassName</span> SpringDataUserDetailsService</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span> wuzhiyong</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span> 2020/3/6 12:37</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Version</span> 1.0</span></span><br><span class="line"><span class="comment"> **/</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SpringDataUserDetailsService</span> <span class="keyword">implements</span> <span class="title">UserDetailsService</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    JdbcTemplate jdbcTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 需新建配置类注册一个指定的加密方式Bean，或在下一步Security配置类中注册指定</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> PasswordEncoder passwordEncoder;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> UserDetails <span class="title">loadUserByUsername</span><span class="params">(String username)</span> <span class="keyword">throws</span> UsernameNotFoundException </span>&#123;</span><br><span class="line">        <span class="comment">// 通过用户名从数据库获取用户信息</span></span><br><span class="line"><span class="comment">//        User userInfo = userInfoService.queryForObject("select * fron user", com.example.springbootactiviti.demo.model.User.class);</span></span><br><span class="line">        List&lt;User&gt; userList = jdbcTemplate.query(<span class="string">"select * from user where username = ?"</span>,<span class="keyword">new</span> Object[]&#123;username&#125;, <span class="keyword">new</span> BeanPropertyRowMapper&lt;&gt;(User<span class="class">.<span class="keyword">class</span>))</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (userList == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> UsernameNotFoundException(<span class="string">"用户不存在"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        userList.forEach(i-&gt; System.out.println(i.toString()));</span><br><span class="line">        <span class="comment">// 得到用户角色</span></span><br><span class="line">        String role = userList.get(<span class="number">0</span>).getRole();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 角色集合</span></span><br><span class="line">        List&lt;GrantedAuthority&gt; authorities = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        <span class="comment">// 角色必须以`ROLE_`开头，数据库中没有，则在这里加</span></span><br><span class="line">        authorities.add(<span class="keyword">new</span> SimpleGrantedAuthority(<span class="string">"ROLE_"</span> + role));</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> org.springframework.security.core.userdetails.User(</span><br><span class="line">                userList.get(<span class="number">0</span>).getUsername(),</span><br><span class="line">                <span class="comment">// 如果数据库是明文，这里需加密，除非指定配置了不加密（一般数据库里存的都是加密后的字符串）</span></span><br><span class="line">                userList.get(<span class="number">0</span>).getPassword(),</span><br><span class="line">                authorities</span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>实体类：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String id;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String username;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String password;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String role;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//set get 方法就省略不贴了</span></span><br></pre></td></tr></table></figure>
-
-<p>准备数据：</p>
-<p>其中user密码明文是123 ，admin 密码明文是1234.这里插入的都是BCrypt加密后的密文。</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> <span class="keyword">user</span></span><br><span class="line">(</span><br><span class="line">    <span class="keyword">id</span>       <span class="built_in">varchar</span>(<span class="number">20</span>)  <span class="keyword">not</span> <span class="literal">null</span>,</span><br><span class="line">    username <span class="built_in">varchar</span>(<span class="number">50</span>)  <span class="keyword">not</span> <span class="literal">null</span>,</span><br><span class="line">    <span class="keyword">password</span> <span class="built_in">varchar</span>(<span class="number">100</span>) <span class="keyword">not</span> <span class="literal">null</span>,</span><br><span class="line">    <span class="keyword">role</span>     <span class="built_in">varchar</span>(<span class="number">50</span>)  <span class="keyword">not</span> <span class="literal">null</span></span><br><span class="line">)</span><br><span class="line">    <span class="keyword">collate</span> = utf8_bin;</span><br><span class="line">    </span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> spring_security.user (<span class="keyword">id</span>, username, <span class="keyword">password</span>, <span class="keyword">role</span>) <span class="keyword">VALUES</span> (<span class="string">'1'</span>, <span class="string">'user'</span>, <span class="string">'$2a$10$elDLIbuSf9UZ9XpLr2FVPOgfAQARQURnbymSg7HyxCTW.copZR3Y6'</span>, <span class="string">'USER'</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> spring_security.user (<span class="keyword">id</span>, username, <span class="keyword">password</span>, <span class="keyword">role</span>) <span class="keyword">VALUES</span> (<span class="string">'2'</span>, <span class="string">'admin'</span>, <span class="string">'$2a$10$P0mwGYvKDgK5KBr7ybQ7D.GJJ4Ban3wSB/1DvOo17qjktvgH5Pwh6'</span>, <span class="string">'ADMIN'</span>);</span><br></pre></td></tr></table></figure>
-
-<p>修改配置：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Autowired</span></span><br><span class="line"><span class="keyword">private</span> SpringDataUserDetailsService userDetailsService;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> SpringDataUserDetailsService <span class="title">customUserDetailsService</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> SpringDataUserDetailsService();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Autowired</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">configureGlobal</span><span class="params">(AuthenticationManagerBuilder auth)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">  auth</span><br><span class="line">    .userDetailsService(userDetailsService)<span class="comment">//配置自定义的验证（从数据库查询）逻辑</span></span><br><span class="line">    <span class="comment">//                .inMemoryAuthentication()</span></span><br><span class="line">    <span class="comment">//                .withUser("user").password(encoding.encode("123")).roles("USER").and()</span></span><br><span class="line">    <span class="comment">//                .withUser("admin").password(encoding.encode("1234")).roles("USER", "ADMIN")</span></span><br><span class="line">    <span class="comment">//                .and().withUser("zhnagsan").password(encoding.encode("12345")).roles("LEADER")</span></span><br><span class="line">    ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>好了！如果是一般的单体架构web项目，了解这些基本满足使用了。</p>
-<p>由于restful API 与分布式、微服务的流行，现在很多项目都已经实现了前后端的分离。服务端（后端）只提供调用方API，前后端采用token认证的方式进行数据交互。而在token认证方式中 jwt 是比较流行的一种。接下来开始spring security 与 jwt 的整合。</p>
-<h3 id="security-JWT"><a href="#security-JWT" class="headerlink" title="security+JWT"></a>security+JWT</h3><p>首先简单说下token认证授权的逻辑<strong>3步走</strong>。</p>
-<ol>
-<li>用户通过名称和密码访问登录接口    登录成功返回  token</li>
-<li>用户带上token（一般存放在head中） 访问 资源地址  服务端拦截请求解析token  如果正确则返回资源</li>
-<li>用户访问登出接口  服务端清除token</li>
-</ol>
-<p>再简单认识下security中的常见的过滤器</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//可简单认为是  登录前置 的过滤器</span></span><br><span class="line">UsernamePasswordAuthenticationFilter</span><br><span class="line">  </span><br><span class="line"><span class="comment">//可简单认为是   认证与授权的  过滤器</span></span><br><span class="line">BasicAuthenticationFilter</span><br><span class="line">  </span><br><span class="line"><span class="comment">//对用户名密码的一层封装</span></span><br><span class="line">UsernamePasswordAuthenticationToken</span><br><span class="line">  </span><br><span class="line"><span class="comment">//认证对象的封装  也是UsernamePasswordAuthenticationToken的顶级父类</span></span><br><span class="line">Authentication</span><br><span class="line">  </span><br><span class="line"><span class="comment">//security  中对用户的抽象 通常业务中的User类继承自此类</span></span><br><span class="line">UserDetails</span><br><span class="line">  </span><br><span class="line"><span class="comment">//通过传入的名称  返回UserDetails 对象  相当于userDao，在这里可以自定从不同的数据源里获取所需的对象数据</span></span><br><span class="line">UserDetailsService</span><br><span class="line">  </span><br><span class="line"><span class="comment">//认证管理</span></span><br><span class="line">authenticationManager</span><br></pre></td></tr></table></figure>
-
-<p>security 默认的 /login（可配置）  作为登录的url 。当访问该login时。会被 </p>
-<p>AbstractAuthenticationProcessingFilter拦截后调用UsernamePasswordAuthenticationFilter 的方法得到UsernamePasswordAuthenticationToken做认证。然后调用过滤器链继续过滤</p>
-<p>其中UsernamePasswordAuthenticationFilter 里是将读取用户名密码等信息封装成UsernamePasswordAuthenticationToken</p>
-<p>当访问需要某项权限的url时（/login 接口不需要权限）会经过BasicAuthenticationFilter过滤器时会进行认证授权。并把认证结果保存在上下文中。</p>
-<p>在BasicAuthenticationFilter中这里会在request中解析（通过存在请求头中的内容）出UsernamePasswordAuthenticationToken委托给authenticationManager的authenticate方法进行认证。</p>
-<p>在authenticate的具体实现中会取出前面解析出的UsernamePasswordAuthenticationToken 中的用户名</p>
-<p>通过UserDetailsService获取到数据库的用户信息（密码）与UsernamePasswordAuthenticationToken 中的密码进行比对。如果发生异常则抛出。</p>
-<p>抛出的异常会被BasicAuthenticationFilter捕获  并交给认证失败处理方法（可重写）进行后续处理。</p>
-<p>如果没有异常就继续交给过滤器链过滤处理。</p>
-<p><strong>还记得上面的4步走么</strong></p>
-<p><strong>其中第一步</strong></p>
-<p>我们可以手动写一个restful接口用于登录。接口内验证用户名密码无误后通过jwt工具生成一个token返回给客户端。也可以继承自UsernamePasswordAuthenticationFilter 类在请求中拿到用户名密码验证无误后返回token给客户端。（返回客户端前 可把token存入redis 等）</p>
-<p><strong>其中第二步</strong></p>
-<p>用户访问资源链接时带上token会被BasicAuthenticationFilter拦截。</p>
-<p>我们自定义一个类继承与它。把请求头中的token用jwt工具类解析然后封装成UsernamePasswordAuthenticationToken 其它代码不变。（当然如果前面把相关信息存在了redis里这里可直接在redis里取）</p>
-<p><strong>其中第三步</strong></p>
-<p>我们可以写个restful接口，客户端访问后，我们通过token解析出用户后，清除token（如果是redis做token验证这里清空redis里的token即可，如果不是可通过jwt工具类设置token的时效性使其失效）</p>
-<p><strong>补充说明</strong></p>
-<p>由于前后端的交互统一的json格式。所以我们需要重写掉security验证失败的默认处理unsuccessfulAuthentication方法。</p>
-<p>很多地方是通过AuthenticationFailureHandler类来做默认处理的这里我们继承重写掉这个类即可</p>
-<h3 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">extends</span><br><span class="line">UsernamePasswordAuthenticationFilter </span><br><span class="line">BasicAuthenticationFilter </span><br><span class="line">AbstractSecurityInterceptor </span><br><span class="line">OncePerRequestFilter </span><br><span class="line">AbstractAuthenticationProcessingFilter </span><br><span class="line">implements</span><br><span class="line">FilterInvocationSecurityMetadataSource </span><br><span class="line">AccessDecisionManager</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -710,20 +692,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/myblog/archives/">
         
-          <span class="site-state-item-count">34</span>
+          <span class="site-state-item-count">36</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/myblog/categories/">
           
-        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/myblog/tags/">
           
-        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-count">33</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -764,12 +746,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">236k</span>
+    <span title="站点总字数">244k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:34</span>
+    <span title="站点阅读时长">3:42</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
   </div>
