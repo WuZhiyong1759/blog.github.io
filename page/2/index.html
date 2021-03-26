@@ -191,6 +191,150 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://wu_zhiyong.gitee.io/myblog/%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98-JSAPI/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/myblog/images/avatar.gif">
+      <meta itemprop="name" content="wuzhiyong">
+      <meta itemprop="description" content="吴志勇的博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴志勇的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/myblog/%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98-JSAPI/" class="post-title-link" itemprop="url">微信支付-JSAPI</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-03-04 16:00:58" itemprop="dateCreated datePublished" datetime="2021-03-04T16:00:58+08:00">2021-03-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-03-05 17:04:33" itemprop="dateModified" datetime="2021-03-05T17:04:33+08:00">2021-03-05</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">后端</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/myblog/%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98-JSAPI/" class="post-meta-item leancloud_visitors" data-flag-title="微信支付-JSAPI" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/myblog/%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98-JSAPI/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/myblog/%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98-JSAPI/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>15k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>13 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="必要条件"><a href="#必要条件" class="headerlink" title="必要条件"></a>必要条件</h3><ul>
+<li><p><strong>一台可通过公网地址访问的服务器</strong></p>
+<p>服务器可在阿里云或腾讯云购买。</p>
+</li>
+<li><p><strong>一个具有支付接口权限的公众号</strong></p>
+<p>公众号自然是在 ‘微信公众平台’ 申请。具有支付权限的公众号得注册为企业级公众号（或称为服务号），并且通过了企业认证。企业认证需要机关单位或企业门店的 ‘营业执照’ 。在公司的话可使用公司营业执照。如果是个人，除了借别人的就只能自己去办一个了。（我就是自己去申请办理了 “个体工商户营业执照”。办理这个营业执照需要房屋或经营场所的产权使用证明和身份证。房屋使用证明可以是购房合同，和租赁合同，或产权证和产权所有方手写的一张授权使用证明。办理地点就在经营场所所在当地的市场监督管理局，一般一周就能办理下来。办理下来后根据规定得去当地的税务局办理税务登记手续，然后就可以去正规的刻章店刻章了，这时候你这个个体户也就是小企业可以开张了。公众号有了营业执照和公章就足以办理企业认证了。当然如果你办公场地装修好了也有人上岗办公了那么这个时候可以去银行开通一个对公账户。微信支付可用的上，没有的话也没关系微信支付也可以填写私人银行账户。另外：办理税务登记后记得每个季度去办理税务申报，可在网上办理也可直接去税务局办理。逾期没办的税务局会打电话给你，有可能会影响企业信誉）</p>
+<p>听说前段时间微信给个人公众号也开放的支付功能，我还没去看相关文档。</p>
+</li>
+<li><p><strong>一个已经通过了备案的域名</strong></p>
+<p>域名和服务器一样可在阿里或腾讯购买。（不过我忘了域名备案需要些什么东西了）</p>
+</li>
+<li><p><strong>具有一定的前后端开发能力以及服务器搭建能力</strong></p>
+</li>
+</ul>
+<h3 id="实现步骤"><a href="#实现步骤" class="headerlink" title="实现步骤"></a>实现步骤</h3><h4 id="首要目标"><a href="#首要目标" class="headerlink" title="首要目标"></a>首要目标</h4><p>在微信的小程序或公众号内的支付场景中，除了业务上的一些交互外往往最终付款的时候我们就是通过一个按钮 “结算” 或 “付款” 来唤起支付页面。然后输入密码，成功后就跳转到支付成功的页面。事实上也是如此。通过微信开放文档得知唤起支付页面就是下面这段 js 代码</p>
+<blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//文档地址：https://developers.weixin.qq.com/doc/offiaccount/OA_Web_Apps/JS-SDK.html#58</span></span><br><span class="line">wx.chooseWXPay(&#123;</span><br><span class="line">  timestamp: <span class="number">0</span>, <span class="comment">// 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符</span></span><br><span class="line">  nonceStr: <span class="string">''</span>, <span class="comment">// 支付签名随机串，不长于 32 位</span></span><br><span class="line">  package: <span class="string">''</span>, <span class="comment">// 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=\*\*\*）</span></span><br><span class="line">  signType: <span class="string">''</span>, <span class="comment">// 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'</span></span><br><span class="line">  paySign: <span class="string">''</span>, <span class="comment">// 支付签名</span></span><br><span class="line">  success: <span class="function"><span class="keyword">function</span> (<span class="params">res</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 支付成功后的回调函数（跳转到支付成功页面等操作）</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>我们的<strong>目标</strong>就是要这段代码能够完美的得到执行。</p>
+<p>通过阅读文档发现这段 js 需要的参数package prepay_id 得通过统一下单接口才能拿到。而调用统一下单接口又有一个关键参数 openId 而这个 openId 得通过网页授权才能拿到。</p>
+<p>网页授权的前提又必须开启公众号的开发者模式。开启开发者模式可参看本博客文章 <a href="https://wu_zhiyong.gitee.io/myblog/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%EF%BC%88%E6%9C%8D%E5%8A%A1%E5%8F%B7%EF%BC%89%E9%85%8D%E7%BD%AE%E6%9C%8D%E5%8A%A1%E5%99%A8/">微信公众号配置服务器</a>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/myblog/%E5%BE%AE%E4%BF%A1%E6%94%AF%E4%BB%98-JSAPI/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://wu_zhiyong.gitee.io/myblog/%E8%B7%AF%E7%94%B1%E5%99%A8%E8%AE%BE%E7%BD%AE%E5%A4%96%E7%BD%91%E8%AE%BF%E9%97%AE/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -487,136 +631,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://wu_zhiyong.gitee.io/myblog/centOS7-%E5%AE%89%E8%A3%85-redis6-0-6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/myblog/images/avatar.gif">
-      <meta itemprop="name" content="wuzhiyong">
-      <meta itemprop="description" content="吴志勇的博客">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="吴志勇的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/myblog/centOS7-%E5%AE%89%E8%A3%85-redis6-0-6/" class="post-title-link" itemprop="url">centOS7 安装 redis6.0.6</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2020-12-17 13:51:13 / 修改时间：15:12:20" itemprop="dateCreated datePublished" datetime="2020-12-17T13:51:13+08:00">2020-12-17</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">后端</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/myblog/centOS7-%E5%AE%89%E8%A3%85-redis6-0-6/" class="post-meta-item leancloud_visitors" data-flag-title="centOS7 安装 redis6.0.6" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/myblog/centOS7-%E5%AE%89%E8%A3%85-redis6-0-6/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/myblog/centOS7-%E5%AE%89%E8%A3%85-redis6-0-6/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>7.4k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>7 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h4 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h4><p>linux 上执行：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@iZx068ismxxjaoZ src]#  wget http://download.redis.io/releases/redis-6.0.6.tar.gz</span><br><span class="line">--2020-12-17 12:58:12--  http://download.redis.io/releases/redis-6.0.6.tar.gz</span><br><span class="line">Resolving download.redis.io (download.redis.io)... 45.60.125.1</span><br><span class="line">Connecting to download.redis.io (download.redis.io)|45.60.125.1|:80... connected.</span><br><span class="line">HTTP request sent, awaiting response... 200 OK</span><br><span class="line">Length: 2228781 (2.1M) [application/octet-stream]</span><br><span class="line">Saving to: ‘redis-6.0.6.tar.gz’</span><br><span class="line"></span><br><span class="line"><span class="meta">100%</span><span class="bash">[========================================================================================================================&gt;] 2,228,781   24.6KB/s   <span class="keyword">in</span> 69s    </span></span><br><span class="line"></span><br><span class="line">2020-12-17 12:59:25 (31.6 KB/s) - ‘redis-6.0.6.tar.gz’ saved [2228781/2228781]</span><br></pre></td></tr></table></figure>
-
-<h4 id="解压"><a href="#解压" class="headerlink" title="解压"></a>解压</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@iZx068ismxxjaoZ src]# tar -xzf redis-6.0.6.tar.gz</span><br></pre></td></tr></table></figure>
-
-<h4 id="编译（源码）"><a href="#编译（源码）" class="headerlink" title="编译（源码）"></a>编译（源码）</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@iZx068ismxxjaoZ src]# cd redis-6.0.6</span><br><span class="line">[root@iZx068ismxxjaoZ redis-6.0.6]# make</span><br></pre></td></tr></table></figure>
-
-<p>报错：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">......</span><br><span class="line">^</span><br><span class="line">server.c:5212:31: error: ‘struct redisServer’ has no member named ‘server_cpulist’</span><br><span class="line">     redisSetCpuAffinity(server.server_cpulist);</span><br><span class="line">                               ^</span><br><span class="line">server.c: In <span class="keyword">function</span> ‘hasActiveChildProcess’:</span><br><span class="line">server.c:1480:1: warning: control reaches end of non-void <span class="keyword">function</span> [-Wreturn-type]</span><br><span class="line"> &#125;</span><br><span class="line"> ^</span><br><span class="line">server.c: In <span class="keyword">function</span> ‘allPersistenceDisabled’:</span><br><span class="line">server.c:1486:1: warning: control reaches end of non-void <span class="keyword">function</span> [-Wreturn-type]</span><br><span class="line"> &#125;</span><br><span class="line"> ^</span><br><span class="line">server.c: In <span class="keyword">function</span> ‘writeCommandsDeniedByDiskError’:</span><br><span class="line">server.c:3826:1: warning: control reaches end of non-void <span class="keyword">function</span> [-Wreturn-type]</span><br><span class="line"> &#125;</span><br><span class="line"> ^</span><br><span class="line">server.c: In <span class="keyword">function</span> ‘iAmMaster’:</span><br><span class="line">server.c:5000:1: warning: control reaches end of non-void <span class="keyword">function</span> [-Wreturn-type]</span><br><span class="line"> &#125;</span><br><span class="line"> ^</span><br><span class="line">make[1]: *** [server.o] Error 1</span><br><span class="line">make[1]: Leaving directory `/usr/<span class="built_in">local</span>/src/redis-6.0.6/src<span class="string">'</span></span><br><span class="line"><span class="string">make: *** [all] Error 2</span></span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/myblog/centOS7-%E5%AE%89%E8%A3%85-redis6-0-6/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/myblog/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/myblog/">1</a><span class="page-number current">2</span><a class="page-number" href="/myblog/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/myblog/page/12/">12</a><a class="extend next" rel="next" href="/myblog/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/myblog/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/myblog/">1</a><span class="page-number current">2</span><a class="page-number" href="/myblog/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/myblog/page/13/">13</a><a class="extend next" rel="next" href="/myblog/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -682,7 +700,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/myblog/archives/">
         
-          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-count">37</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -736,12 +754,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">244k</span>
+    <span title="站点总字数">246k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:42</span>
+    <span title="站点阅读时长">3:43</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
   </div>

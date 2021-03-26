@@ -191,6 +191,165 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://wu_zhiyong.gitee.io/myblog/Actuator%E6%A8%A1%E5%9D%97%E7%9B%91%E6%8E%A7springboot%E4%BF%A1%E6%81%AF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/myblog/images/avatar.gif">
+      <meta itemprop="name" content="wuzhiyong">
+      <meta itemprop="description" content="吴志勇的博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴志勇的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/myblog/Actuator%E6%A8%A1%E5%9D%97%E7%9B%91%E6%8E%A7springboot%E4%BF%A1%E6%81%AF/" class="post-title-link" itemprop="url">Actuator模块监控springboot信息</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-04-25 10:28:02 / 修改时间：14:37:57" itemprop="dateCreated datePublished" datetime="2020-04-25T10:28:02+08:00">2020-04-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">后端</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/myblog/Actuator%E6%A8%A1%E5%9D%97%E7%9B%91%E6%8E%A7springboot%E4%BF%A1%E6%81%AF/" class="post-meta-item leancloud_visitors" data-flag-title="Actuator模块监控springboot信息" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/myblog/Actuator%E6%A8%A1%E5%9D%97%E7%9B%91%E6%8E%A7springboot%E4%BF%A1%E6%81%AF/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/myblog/Actuator%E6%A8%A1%E5%9D%97%E7%9B%91%E6%8E%A7springboot%E4%BF%A1%E6%81%AF/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h3><blockquote>
+<p>Spring Boot包含许多其他功能，可在您将应用程序投入生产时帮助您监视和管理应用程序。您可以选择使用HTTP端点或JMX管理和监视应用程序。审核，运行状况和指标收集也可以自动应用于您的应用程序</p>
+</blockquote>
+<h3 id="maven依赖"><a href="#maven依赖" class="headerlink" title="maven依赖"></a>maven依赖</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-actuator<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="查看监控"><a href="#查看监控" class="headerlink" title="查看监控"></a>查看监控</h3><p>添加依赖后启动项目控制台看到如下信息</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2020-04-25 13:35:12.836  INFO 748 --- [  restartedMain] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'</span><br></pre></td></tr></table></figure>
+
+<p>在《Spring Cloud 微服务 入门、实战、进阶》这本书里描述说控制台输出了一系列的监控  路径（url）。可能是不同版本差异造成的吧。</p>
+<hr>
+<p>我们通过端口+/actuator  接口（端点）得到下面的响应。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"_links"</span>: &#123;</span><br><span class="line">        <span class="attr">"self"</span>: &#123;</span><br><span class="line">            <span class="attr">"href"</span>: <span class="string">"http://localhost:8082/actuator"</span>,</span><br><span class="line">            <span class="attr">"templated"</span>: <span class="literal">false</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="attr">"health-component"</span>: &#123;</span><br><span class="line">            <span class="attr">"href"</span>: <span class="string">"http://localhost:8082/actuator/health/&#123;component&#125;"</span>,</span><br><span class="line">            <span class="attr">"templated"</span>: <span class="literal">true</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="attr">"health"</span>: &#123;</span><br><span class="line">            <span class="attr">"href"</span>: <span class="string">"http://localhost:8082/actuator/health"</span>,</span><br><span class="line">            <span class="attr">"templated"</span>: <span class="literal">false</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="attr">"health-component-instance"</span>: &#123;</span><br><span class="line">            <span class="attr">"href"</span>: <span class="string">"http://localhost:8082/actuator/health/&#123;component&#125;/&#123;instance&#125;"</span>,</span><br><span class="line">            <span class="attr">"templated"</span>: <span class="literal">true</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="attr">"info"</span>: &#123;</span><br><span class="line">            <span class="attr">"href"</span>: <span class="string">"http://localhost:8082/actuator/info"</span>,</span><br><span class="line">            <span class="attr">"templated"</span>: <span class="literal">false</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们再来访问下这个端点</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://localhost:8082/actuator/health</span><br></pre></td></tr></table></figure>
+
+<p>得到响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"status"</span>: <span class="string">"UP"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>在actuator中，status状态 其中up表示健康，down表示不健康</p>
+</blockquote>
+<p>可以通过如下配置展示更多信息：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#显示健康详情</span></span><br><span class="line"><span class="meta">management.endpoint.health.show-details</span>=<span class="string">always</span></span><br></pre></td></tr></table></figure>
+
+<p>再次请求得到响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"status"</span>: <span class="string">"UP"</span>,</span><br><span class="line">    <span class="attr">"details"</span>: &#123;</span><br><span class="line">        <span class="attr">"diskSpace"</span>: &#123;</span><br><span class="line">            <span class="attr">"status"</span>: <span class="string">"UP"</span>,</span><br><span class="line">            <span class="attr">"details"</span>: &#123;</span><br><span class="line">                <span class="attr">"total"</span>: <span class="number">127718649856</span>,</span><br><span class="line">                <span class="attr">"free"</span>: <span class="number">43498004480</span>,</span><br><span class="line">                <span class="attr">"threshold"</span>: <span class="number">10485760</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>actuator的默认配置有很多端点是不暴露的我们可通过如下配置来暴露指定端点和所有端点</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#暴露 configprops,和beans  使用逗号分隔</span></span><br><span class="line"><span class="meta">management.endpoints.web.exposure.exclude</span>=<span class="string">configprops,beans</span></span><br><span class="line"><span class="comment">#暴露所有端点</span></span><br><span class="line"><span class="meta">management.endpoints.web.exposure.include</span>=<span class="string">*</span></span><br></pre></td></tr></table></figure>
+
+<p>在spring cloud ‘全家桶’里集成不同的模块会有不同的端点，具体得参考官方文档</p>
+<p>springboot 2.2.6 RELEASE actuator 文档地址：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">https://docs.spring.io/spring-boot/docs/2.2.6.RELEASE/actuator-api/html/#overview</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="自定义actuator端点"><a href="#自定义actuator端点" class="headerlink" title="自定义actuator端点"></a>自定义actuator端点</h3><p>有时候这些默认的信息并不能满足我们的业务场景与需求，我们可通过自定义添加额外信息或自定义新的端点来进行扩展。</p>
+<h4 id="扩展健康端点添加额外信息"><a href="#扩展健康端点添加额外信息" class="headerlink" title="扩展健康端点添加额外信息"></a>扩展健康端点添加额外信息</h4><p>添加自定义类MyHealthIndicator继承自AbstractHealthIndicator</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyHealthIndicator</span> <span class="keyword">extends</span> <span class="title">AbstractHealthIndicator</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doHealthCheck</span><span class="params">(Health.Builder builder)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        builder.up().withDetail(<span class="string">"my_status"</span>,<span class="string">"success"</span>);</span><br><span class="line"><span class="comment">//        builder.down().withDetail("my_status","err");</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>再次请求健康端点得到响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"status"</span>: <span class="string">"UP"</span>,</span><br><span class="line">    <span class="attr">"details"</span>: &#123;</span><br><span class="line">        <span class="attr">"my"</span>: &#123; <span class="comment">// 我们的类名MyHealthIndicator已my开头所以这里是my</span></span><br><span class="line">            <span class="attr">"status"</span>: <span class="string">"UP"</span>,</span><br><span class="line">            <span class="attr">"details"</span>: &#123;</span><br><span class="line">                <span class="attr">"my_status"</span>: <span class="string">"success"</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="attr">"diskSpace"</span>: &#123;</span><br><span class="line">            <span class="attr">"status"</span>: <span class="string">"UP"</span>,</span><br><span class="line">            <span class="attr">"details"</span>: &#123;</span><br><span class="line">                <span class="attr">"total"</span>: <span class="number">127718649856</span>,</span><br><span class="line">                <span class="attr">"free"</span>: <span class="number">43498000384</span>,</span><br><span class="line">                <span class="attr">"threshold"</span>: <span class="number">10485760</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="自定义新的端点"><a href="#自定义新的端点" class="headerlink" title="自定义新的端点"></a>自定义新的端点</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="meta">@Endpoint</span>(id = <span class="string">"user"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserEndpoint</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ReadOperation</span></span><br><span class="line">    <span class="keyword">public</span> List&lt;Map&lt;String,Object&gt;&gt; health()&#123;</span><br><span class="line">        List&lt;Map&lt;String,Object&gt;&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        Map m = <span class="keyword">new</span> HashMap();</span><br><span class="line">        m.put(<span class="string">"username"</span>,<span class="string">"wuzhiyong"</span>);</span><br><span class="line">        m.put(<span class="string">"pwd"</span>,<span class="string">"123456"</span>);</span><br><span class="line">        m.put(<span class="string">"age"</span>,<span class="number">88</span>);</span><br><span class="line">        list.add(m);</span><br><span class="line">        <span class="keyword">return</span> list;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>访问：ip:+port+/actuator/user  响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="attr">"pwd"</span>: <span class="string">"123456"</span>,</span><br><span class="line">        <span class="attr">"age"</span>: <span class="number">88</span>,</span><br><span class="line">        <span class="attr">"username"</span>: <span class="string">"wuzhiyong"</span></span><br><span class="line">    &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://wu_zhiyong.gitee.io/myblog/%E5%A4%9A%E7%8E%AF%E5%A2%83%E4%B8%8E%E7%83%AD%E9%83%A8%E7%BD%B2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -480,187 +639,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://wu_zhiyong.gitee.io/myblog/hexo%E4%B8%BB%E9%A1%B5%E5%9B%BE%E7%89%87%E6%98%BE%E7%A4%BA%E9%97%AE%E9%A2%98/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/myblog/images/avatar.gif">
-      <meta itemprop="name" content="wuzhiyong">
-      <meta itemprop="description" content="吴志勇的博客">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="吴志勇的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/myblog/hexo%E4%B8%BB%E9%A1%B5%E5%9B%BE%E7%89%87%E6%98%BE%E7%A4%BA%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">hexo主页图片显示问题</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-04-24 11:14:54" itemprop="dateCreated datePublished" datetime="2020-04-24T11:14:54+08:00">2020-04-24</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-05-02 19:58:29" itemprop="dateModified" datetime="2020-05-02T19:58:29+08:00">2020-05-02</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/%E5%85%B6%E5%AE%83/" itemprop="url" rel="index"><span itemprop="name">其它</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/%E5%85%B6%E5%AE%83/%E5%8D%9A%E5%AE%A2/" itemprop="url" rel="index"><span itemprop="name">博客</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/myblog/hexo%E4%B8%BB%E9%A1%B5%E5%9B%BE%E7%89%87%E6%98%BE%E7%A4%BA%E9%97%AE%E9%A2%98/" class="post-meta-item leancloud_visitors" data-flag-title="hexo主页图片显示问题" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/myblog/hexo%E4%B8%BB%E9%A1%B5%E5%9B%BE%E7%89%87%E6%98%BE%E7%A4%BA%E9%97%AE%E9%A2%98/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/myblog/hexo%E4%B8%BB%E9%A1%B5%E5%9B%BE%E7%89%87%E6%98%BE%E7%A4%BA%E9%97%AE%E9%A2%98/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>1.8k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>用hexo+typora写博客时会面临一个图片显示的问题。</p>
-<p>md文件中插入图片，md的语法为</p>
-<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">![]()</span><br></pre></td></tr></table></figure>
-
-<p>其中【】里写图片文件的描述</p>
-<p>（）里填写图片的src    (可以是网络地址，也可以是本地的绝对或相对地址)</p>
-<p>初期的时候为了图片的统一管理，我们会在myblog-&gt;source  文件下建立个img文件夹，图片都放在这个文件夹里，在编写博客文章的时候通过相对引用  比如：../img/xxx.png 来插入这张图片。(在typora的设置中的也对图片的存放提供了很好的支持)</p>
-<p>通过hexo 发布服务后我们能在文章中正确浏览到该图片</p>
-<p>但是在博客的主页中 文章中如果有图片却看不到图片。</p>
-<p>在hexo的官方文档中也有说明：</p>
-<p><a href="https://hexo.io/zh-cn/docs/asset-folders" target="_blank" rel="noopener">https://hexo.io/zh-cn/docs/asset-folders</a></p>
-<img data-src="/myblog/hexo%E4%B8%BB%E9%A1%B5%E5%9B%BE%E7%89%87%E6%98%BE%E7%A4%BA%E9%97%AE%E9%A2%98/image-20200424165223145.png" class="">
-
-<h3 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h3><p>网络上有很多方案比如安装 hexo-asset-image 第三方插件、还有编写hexo过滤器等等。</p>
-<p>比如这篇网站就说写给拦截器（我看到这篇尝试修改源码但没成功）</p>
-<p><a href="https://www.cnblogs.com/guide2it/p/11111715.html" target="_blank" rel="noopener">https://www.cnblogs.com/guide2it/p/11111715.html</a></p>
-<p>安装第三方插件的方式我也没有使用，因为有人说很久没维护了。我没安装是因为实在是不喜欢给电脑上安装太多东西。</p>
-<hr>
-<p>官方提供了解决方案</p>
-<p><a href="https://hexo.io/zh-cn/docs/asset-folders" target="_blank" rel="noopener">https://hexo.io/zh-cn/docs/asset-folders</a></p>
-<img data-src="/myblog/hexo%E4%B8%BB%E9%A1%B5%E5%9B%BE%E7%89%87%E6%98%BE%E7%A4%BA%E9%97%AE%E9%A2%98/image-20200424170427331.png" class="">
-
-<p>说实话我没看懂：</p>
-<p>我曾以为是在  头部的标签中加入这些代码</p>
-<p>还以为:  “不是 markdown”  是不是不能下载md文件里，我差点去源代码的文章模块js中 写了。</p>
-<p>然后把那段代码贴到typora 中，typora没有实时显示图片然后我以为错了。</p>
-<p>。。。真的找了很久找到这篇博客才搞清除。</p>
-<p><a href="https://www.jianshu.com/p/cf0628478a4e" target="_blank" rel="noopener">https://www.jianshu.com/p/cf0628478a4e</a></p>
-<hr>
-<p>首先得参照官方的解决方案 在hexo配置文件中 把post_asset_folder 属性设置为true。</p>
-<p>改完后  通过  hexo new “xxx” 就会多生成一个与md文件同名的文件夹。</p>
-<p>如果是之前md文件没有同名文件夹 。手动建立一个就好</p>
-<p>然后得把图片放在那个同名的文件夹里。</p>
-<p>贴上官方的那段代码</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;% asset_img example.jpg This is an example image %&#125;</span><br></pre></td></tr></table></figure>
-
-<p>然后把 example.jpg 替换掉自己的图片名字（后面的提示随便写）并保存</p>
-<p>这个时候 typora 中是不展示图片的   记住  <strong><em>typora中是不展示图片的</em></strong></p>
-<p>得通过 hexo发布成服务后 通过网页才能展示。</p>
-<p>ps：如果有同名的文件夹。typora 中通过如下设置插入图片的时候会自动将图片存入到同名的文件夹中</p>
-<img data-src="/myblog/hexo%E4%B8%BB%E9%A1%B5%E5%9B%BE%E7%89%87%E6%98%BE%E7%A4%BA%E9%97%AE%E9%A2%98/image-20200424172520555.png" class="">
-
-<p>如果是后来手动建立的同名文件夹想把之前md文件里的图片搬过去。typora中鼠标右击图片可选择存入同名文件夹。然后再用官方解决办法的标签语法再写一遍就好了。</p>
-<h3 id="解决办法二"><a href="#解决办法二" class="headerlink" title="解决办法二"></a>解决办法二</h3><p>前两天在微信公众号里看了一篇 picgo + typoa 的文章。后来好奇的百度上搜了搜关于picgo的文章。</p>
-<p>picgo就是一图片上传和管理的工具。图片上传到第三方平台后有个外链。picgo本身不存贮图片。只是通过第三方授权（token），管理在第三方的图片的工具。</p>
-<p>picgo gitHub地址：<a href="https://github.com/Molunerfinn/PicGo" target="_blank" rel="noopener">https://github.com/Molunerfinn/PicGo</a></p>
-<hr>
-<p>解决办法：</p>
-<p>思路：hexo 主页图片不显示的主要是typora里的相对路径与hexo里的目录的处理方式不一致。如果我们引用的是外链图片那么这种相对路径的问题就不存在了。不管是博客首页还是文章里，图片的路径都是外链也就是都能正常显示。</p>
-<p>typora提供了对picgo的支持（现在去官网下的typora都会支持）。</p>
-<p>typora设置picgo.</p>
-<p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200502181611617.png" alt="image-20200502181611617"></p>
-<p>我是自己下好picgo 并配置了gitee.io的仓库。然后在这里把picgo 的路径设置在这里。然后点击验证图片上传：</p>
-<p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200502183107903.png" alt="image-20200502183107903"></p>
-<p>验证成功后会上传俩个图片。（如果图片没删除掉再次点击验证会提示验证失败和 {“success”:false}）</p>
-<p>好了：</p>
-<p>我们把图片黏贴进来后会存到同名的文件夹中，并且在typora能预览到图片。然后鼠标右击图片选择上传。上传成功后会自动将外链地址替换掉图片的引用地址。</p>
-<p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200502194913442.png" alt="image-20200502194913442"></p>
-<hr>
-<p>picgo 配置 gitee 可参考这篇博客</p>
-<p><a href="https://www.jianshu.com/p/b69950a49ae2" target="_blank" rel="noopener">https://www.jianshu.com/p/b69950a49ae2</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/myblog/page/8/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/myblog/">1</a><span class="space">&hellip;</span><a class="page-number" href="/myblog/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/myblog/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/myblog/page/12/">12</a><a class="extend next" rel="next" href="/myblog/page/10/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/myblog/page/8/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/myblog/">1</a><span class="space">&hellip;</span><a class="page-number" href="/myblog/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/myblog/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/myblog/page/13/">13</a><a class="extend next" rel="next" href="/myblog/page/10/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -726,7 +708,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/myblog/archives/">
         
-          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-count">37</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -780,12 +762,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">244k</span>
+    <span title="站点总字数">246k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:42</span>
+    <span title="站点阅读时长">3:43</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
   </div>
