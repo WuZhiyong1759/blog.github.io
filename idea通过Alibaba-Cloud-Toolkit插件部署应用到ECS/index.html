@@ -38,7 +38,7 @@
 <meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20210326213010298.png">
 <meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20210326193706700.png">
 <meta property="article:published_time" content="2021-03-26T05:52:22.000Z">
-<meta property="article:modified_time" content="2021-03-26T13:30:31.510Z">
+<meta property="article:modified_time" content="2021-03-27T04:07:20.964Z">
 <meta property="article:author" content="wuzhiyong">
 <meta property="article:tag" content="springboot">
 <meta property="article:tag" content="java">
@@ -225,10 +225,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-03-26 13:52:22 / 修改时间：21:30:31" itemprop="dateCreated datePublished" datetime="2021-03-26T13:52:22+08:00">2021-03-26</time>
+              <time title="创建时间：2021-03-26 13:52:22" itemprop="dateCreated datePublished" datetime="2021-03-26T13:52:22+08:00">2021-03-26</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-03-27 12:07:20" itemprop="dateModified" datetime="2021-03-27T12:07:20+08:00">2021-03-27</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -274,7 +280,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>1.7k</span>
+              <span>1.9k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -305,7 +311,10 @@
 <p>上传进度</p>
 <p><img data-src="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20210326141439165.png" alt="image-20210326141439165"></p>
 <h3 id="后台启动"><a href="#后台启动" class="headerlink" title="后台启动"></a>后台启动</h3><ul>
-<li>nohup 方式</li>
+<li><p>nohup 方式</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup java -jar  platform-0.0.1-SNAPSHOT.jar &gt;&gt; /usr/local/myweb/api/nohup.log 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
+
+</li>
 </ul>
 <p>参考：<a href="https://blog.csdn.net/qq_38974634/article/details/81710382" target="_blank" rel="noopener">https://blog.csdn.net/qq_38974634/article/details/81710382</a></p>
 <ul>
@@ -314,7 +323,7 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=myweb-api</span><br><span class="line">After=syslog.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line"><span class="meta">#</span><span class="bash"> 这里填写自己的路径</span></span><br><span class="line">ExecStart=/usr/local/jdk1.8/bin/java -jar /usr/local/myweb/api/platform-0.0.1-SNAPSHOT.jar</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
 
 <p>保存后启动：systemctl start myweb-api.service </p>
-<p>缺点：日志文件一直打在根目录</p>
+<p>缺点：日志文件一直打在根目录。可能造成 jar 运行端口一直被占用问题。</p>
 <p><strong>日志重定向</strong></p>
 <p>参考：<a href="https://www.itranslater.com/qa/details/2123871100852503552" target="_blank" rel="noopener">https://www.itranslater.com/qa/details/2123871100852503552</a></p>
 <p>参考：<a href="https://www.it1352.com/1558911.html" target="_blank" rel="noopener">https://www.it1352.com/1558911.html</a></p>
@@ -524,7 +533,7 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:43</span>
+    <span title="站点阅读时长">3:44</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
   </div>
