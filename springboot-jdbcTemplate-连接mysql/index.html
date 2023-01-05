@@ -5,42 +5,42 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 4.2.1">
-  <link rel="apple-touch-icon" sizes="180x180" href="/myblog/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/myblog/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/myblog/images/favicon-16x16-next.png">
-  <link rel="mask-icon" href="/myblog/images/logo.svg" color="#222">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
 
-<link rel="stylesheet" href="/myblog/css/main.css">
+<link rel="stylesheet" href="/blog/css/main.css">
 
 
-<link rel="stylesheet" href="/myblog/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wu_zhiyong.gitee.io","root":"/myblog/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":false,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wuzhiyong1759.github.io","root":"/blog/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":false,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="本实例 是在 springboot-base 的基础上进行的。 第一步：添加依赖123456789	&lt;dependency&gt;          &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;          &lt;artifactId&gt;spring-boot-starter-jdbc&lt;&#x2F;artifactId">
 <meta property="og:type" content="article">
 <meta property="og:title" content="springboot jdbcTemplate 连接mysql">
-<meta property="og:url" content="http://wu_zhiyong.gitee.io/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/index.html">
+<meta property="og:url" content="https://wuzhiyong1759.github.io/blog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/index.html">
 <meta property="og:site_name" content="吴志勇的博客">
 <meta property="og:description" content="本实例 是在 springboot-base 的基础上进行的。 第一步：添加依赖123456789	&lt;dependency&gt;          &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;          &lt;artifactId&gt;spring-boot-starter-jdbc&lt;&#x2F;artifactId">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://wu_zhiyong.gitee.io/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569679502067.png">
-<meta property="og:image" content="http://wu_zhiyong.gitee.io/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569679591601.png">
-<meta property="og:image" content="http://wu_zhiyong.gitee.io/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569680104922.png">
-<meta property="og:image" content="http://wu_zhiyong.gitee.io/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569680601726.png">
-<meta property="og:image" content="http://wu_zhiyong.gitee.io/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569680881837.png">
-<meta property="og:image" content="http://wu_zhiyong.gitee.io/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569680862129.png">
-<meta property="og:image" content="http://wu_zhiyong.gitee.io/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569681007667.png">
-<meta property="og:image" content="http://wu_zhiyong.gitee.io/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569681201640.png">
-<meta property="og:image" content="http://wu_zhiyong.gitee.io/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569681488344.png">
-<meta property="og:image" content="http://wu_zhiyong.gitee.io/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569682912018.png">
-<meta property="og:image" content="http://wu_zhiyong.gitee.io/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569683461753.png">
-<meta property="og:image" content="http://wu_zhiyong.gitee.io/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569683819259.png">
-<meta property="og:image" content="http://wu_zhiyong.gitee.io/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569683988703.png">
+<meta property="og:image" content="https://wuzhiyong1759.github.io/blog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569679502067.png">
+<meta property="og:image" content="https://wuzhiyong1759.github.io/blog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569679591601.png">
+<meta property="og:image" content="https://wuzhiyong1759.github.io/blog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569680104922.png">
+<meta property="og:image" content="https://wuzhiyong1759.github.io/blog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569680601726.png">
+<meta property="og:image" content="https://wuzhiyong1759.github.io/blog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569680881837.png">
+<meta property="og:image" content="https://wuzhiyong1759.github.io/blog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569680862129.png">
+<meta property="og:image" content="https://wuzhiyong1759.github.io/blog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569681007667.png">
+<meta property="og:image" content="https://wuzhiyong1759.github.io/blog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569681201640.png">
+<meta property="og:image" content="https://wuzhiyong1759.github.io/blog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569681488344.png">
+<meta property="og:image" content="https://wuzhiyong1759.github.io/blog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569682912018.png">
+<meta property="og:image" content="https://wuzhiyong1759.github.io/blog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569683461753.png">
+<meta property="og:image" content="https://wuzhiyong1759.github.io/blog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569683819259.png">
+<meta property="og:image" content="https://wuzhiyong1759.github.io/blog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569683988703.png">
 <meta property="article:published_time" content="2019-09-28T12:23:07.000Z">
 <meta property="article:modified_time" content="2020-04-24T07:07:36.106Z">
 <meta property="article:author" content="wuzhiyong">
@@ -49,9 +49,9 @@
 <meta property="article:tag" content="mysql">
 <meta property="article:tag" content="jdbcTemplate">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://wu_zhiyong.gitee.io/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569679502067.png">
+<meta name="twitter:image" content="https://wuzhiyong1759.github.io/blog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569679502067.png">
 
-<link rel="canonical" href="http://wu_zhiyong.gitee.io/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/">
+<link rel="canonical" href="https://wuzhiyong1759.github.io/blog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/">
 
 
 <script id="page-configurations">
@@ -113,7 +113,7 @@
 
   <div class="site-meta">
 
-    <a href="/myblog/" class="brand" rel="start">
+    <a href="/blog/" class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <h1 class="site-title">吴志勇的博客</h1>
       <span class="logo-line-after"><i></i></span>
@@ -135,22 +135,22 @@
   <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/myblog/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/myblog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/myblog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/myblog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -208,10 +208,10 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://wu_zhiyong.gitee.io/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/">
+    <link itemprop="mainEntityOfPage" href="https://wuzhiyong1759.github.io/blog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/myblog/images/avatar.gif">
+      <meta itemprop="image" content="/blog/images/avatar.gif">
       <meta itemprop="name" content="wuzhiyong">
       <meta itemprop="description" content="吴志勇的博客">
     </span>
@@ -246,20 +246,20 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
+                  <a href="/blog/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
                 </span>
                   ，
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">后端</span></a>
+                  <a href="/blog/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">后端</span></a>
                 </span>
                   ，
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                  <a href="/blog/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
                 </span>
             </span>
 
           
-            <span id="/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/" class="post-meta-item leancloud_visitors" data-flag-title="springboot jdbcTemplate 连接mysql" title="阅读次数">
+            <span id="/blog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/" class="post-meta-item leancloud_visitors" data-flag-title="springboot jdbcTemplate 连接mysql" title="阅读次数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
@@ -274,8 +274,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/" itemprop="commentCount"></span>
+    <a title="valine" href="/blog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/blog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -319,57 +319,57 @@
 
 
 <h4 id="第三步：在数据库建表："><a href="#第三步：在数据库建表：" class="headerlink" title="第三步：在数据库建表："></a>第三步：在数据库建表：</h4><p>这里可以通过idea 本身的database 模块连接数据库建表：</p>
-<img data-src="/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569679502067.png" class="">
+<img data-src="/blog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569679502067.png" class="">
 
 <p>也可以用其它工具（例如navicat）连接数据库建表：</p>
-<img data-src="/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569679591601.png" class="">
+<img data-src="/blog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569679591601.png" class="">
 
 <p>这里建议用idea 本身的 databases 模块连接数据库。因为等下我们可以用idea的一些插件来一件生成代码</p>
 <p>这边我们来建个学生表：</p>
-<img data-src="/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569680104922.png" class="">
+<img data-src="/blog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569680104922.png" class="">
 
 <p>(建表时记得把备注（comment）填写全，后面生成代码时，可以帮助我们生成注释)</p>
 <p>sql语句为：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> student</span><br><span class="line">(</span><br><span class="line">    <span class="keyword">id</span>         <span class="built_in">int</span> auto_increment <span class="keyword">comment</span> <span class="string">'数据id'</span> primary <span class="keyword">key</span>,</span><br><span class="line">    study_no   <span class="built_in">varchar</span>(<span class="number">20</span>) <span class="keyword">not</span> <span class="literal">null</span> <span class="keyword">comment</span> <span class="string">'学号'</span>,</span><br><span class="line">    stu_name   <span class="built_in">varchar</span>(<span class="number">20</span>) <span class="keyword">not</span> <span class="literal">null</span> <span class="keyword">comment</span> <span class="string">'学生姓名'</span>,</span><br><span class="line">    stu_age    <span class="built_in">int</span>         <span class="keyword">not</span> <span class="literal">null</span> <span class="keyword">comment</span> <span class="string">'学生年龄'</span>,</span><br><span class="line">    class_name <span class="built_in">varchar</span>(<span class="number">32</span>) <span class="keyword">not</span> <span class="literal">null</span> <span class="keyword">comment</span> <span class="string">'班级名称'</span></span><br><span class="line">)</span><br><span class="line">    <span class="keyword">comment</span> <span class="string">'学生表'</span>;</span><br></pre></td></tr></table></figure>
 
 <p>我们再双击student 表添加两条数据：</p>
-<img data-src="/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569680601726.png" class="">
+<img data-src="/blog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569680601726.png" class="">
 
 <p>控制台自动把插入数据的sql 打印了出来</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[2019-09-28 22:20:43] 0 rows retrieved in 43 ms (execution: 8 ms, fetching: 35 ms)</span><br><span class="line">sql&gt; INSERT INTO `web`.`student` (`study_no`, `stu_name`, `stu_age`, `class_name`) VALUES ('00110', '张三', 12, '初一6班')</span><br><span class="line">[2019-09-28 22:22:33] 1 row affected in 14 ms</span><br><span class="line">sql&gt; INSERT INTO `web`.`student` (`study_no`, `stu_name`, `stu_age`, `class_name`) VALUES ('00111', '李四', 12, '初一3班')</span><br></pre></td></tr></table></figure>
 
 <h4 id="第四步：我们来自动生成个实体类（也可以自己手动写这个类）"><a href="#第四步：我们来自动生成个实体类（也可以自己手动写这个类）" class="headerlink" title="第四步：我们来自动生成个实体类（也可以自己手动写这个类）"></a>第四步：我们来自动生成个实体类（也可以自己手动写这个类）</h4><p>我们在这里新建一个包来存放实体类。</p>
-<img data-src="/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569680881837.png" class="">
+<img data-src="/blog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569680881837.png" class="">
 
 <p>然后我们再右击表名 选择 generate java class</p>
-<img data-src="/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569680862129.png" class="">
+<img data-src="/blog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569680862129.png" class="">
 
 <p>没有这个选项的需要安装一个插件。（插件为收费版）</p>
-<img data-src="/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569681007667.png" class="">
+<img data-src="/blog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569681007667.png" class="">
 
 <p>点击generate java class 后：</p>
-<img data-src="/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569681201640.png" class="">
+<img data-src="/blog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569681201640.png" class="">
 
 <p>java class path 选择我们前面建的包名。</p>
 <p>勾选 comment 能够帮我们生成备注。</p>
 <p>勾选swagger 能够帮我们生成swagger 的一些注解注释。</p>
 <p>点击ok 就会生成好一个实体类。</p>
-<img data-src="/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569681488344.png" class="">
+<img data-src="/blog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569681488344.png" class="">
 
-<h4 id="第五步：我们来写调用数据库的一些方法。"><a href="#第五步：我们来写调用数据库的一些方法。" class="headerlink" title="第五步：我们来写调用数据库的一些方法。"></a>第五步：我们来写调用数据库的一些方法。</h4><img data-src="/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569682912018.png" class="">
+<h4 id="第五步：我们来写调用数据库的一些方法。"><a href="#第五步：我们来写调用数据库的一些方法。" class="headerlink" title="第五步：我们来写调用数据库的一些方法。"></a>第五步：我们来写调用数据库的一些方法。</h4><img data-src="/blog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569682912018.png" class="">
 
 <p>这里的代码先简单这样写了。实际开发中业务相关的代码一般不放在 controller.</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example.springbootbase.controller;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.example.springbootbase.model.Student;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.jdbc.core.BeanPropertyRowMapper;</span><br><span class="line"><span class="keyword">import</span> org.springframework.jdbc.core.JdbcTemplate;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@ClassName</span> StudentController</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span> wuzhiyong</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span> 2019/9/28 22:41</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Version</span> 1.0</span></span><br><span class="line"><span class="comment"> **/</span></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StudentController</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    JdbcTemplate jdbcTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ResponseBody</span></span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/stu/&#123;id&#125;"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Student <span class="title">getStuById</span><span class="params">(@PathVariable(<span class="string">"id"</span>)</span> <span class="keyword">int</span> id)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> (Student) jdbcTemplate.queryForObject(<span class="string">"select * from  student where  id = "</span>+id,<span class="keyword">new</span> BeanPropertyRowMapper(Student<span class="class">.<span class="keyword">class</span>))</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@ResponseBody</span></span><br><span class="line">    <span class="meta">@DeleteMapping</span>(<span class="string">"/stu/&#123;id&#125;"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Map <span class="title">delStuById</span><span class="params">(@PathVariable(<span class="string">"id"</span>)</span> <span class="keyword">int</span> id)</span>&#123;</span><br><span class="line">        jdbcTemplate.execute(<span class="string">"delect from  student when  id = "</span>+id);</span><br><span class="line">        Map result = <span class="keyword">new</span> HashMap(<span class="number">2</span>);</span><br><span class="line">        result.put(<span class="string">"code"</span>,<span class="number">200</span>);</span><br><span class="line">        result.put(<span class="string">"msg"</span>,<span class="string">"success"</span>);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>我们今天测接口不用postman 也不用浏览器，我们来用一个叫 restfulToolKit 的插件</p>
 <p>装好之后 侧边栏有个 restServices 的选项卡点开后 找到我们编写的接口。修改参数后点击send  即可发送请求测试</p>
-<img data-src="/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569683461753.png" class="">
+<img data-src="/blog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569683461753.png" class="">
 
 <p>点击send 后 response 里可看到请求的结果。下面看到了数据表的数据表示我们成功的从数据库里拿到了数据</p>
-<img data-src="/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569683819259.png" class="">
+<img data-src="/blog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569683819259.png" class="">
 
 <h4 id="第六步：利用swagger框架生成接口文档同时测试接口。"><a href="#第六步：利用swagger框架生成接口文档同时测试接口。" class="headerlink" title="第六步：利用swagger框架生成接口文档同时测试接口。"></a>第六步：利用swagger框架生成接口文档同时测试接口。</h4><p>最简单的使用我们只需要在启动类上加上@EnableSwagger2注解然后重启就可以了</p>
-<img data-src="/myblog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569683988703.png" class="">
+<img data-src="/blog/springboot-jdbcTemplate-%E8%BF%9E%E6%8E%A5mysql/1569683988703.png" class="">
 
 <p>然后我们就可以通过浏览器访问地址 <a href="http://localhost:8080/swagger-ui.html" target="_blank" rel="noopener">http://localhost:8080/swagger-ui.html</a> 看到我们的接口了</p>
 <p><video src="./bandicam 2019-09-30 12-07-11-599.mp4" controls="controls"></video></p>
@@ -406,10 +406,10 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/myblog/tags/springboot/" rel="tag"># springboot</a>
-              <a href="/myblog/tags/java/" rel="tag"># java</a>
-              <a href="/myblog/tags/mysql/" rel="tag"># mysql</a>
-              <a href="/myblog/tags/jdbcTemplate/" rel="tag"># jdbcTemplate</a>
+              <a href="/blog/tags/springboot/" rel="tag"># springboot</a>
+              <a href="/blog/tags/java/" rel="tag"># java</a>
+              <a href="/blog/tags/mysql/" rel="tag"># mysql</a>
+              <a href="/blog/tags/jdbcTemplate/" rel="tag"># jdbcTemplate</a>
           </div>
 
         
@@ -418,11 +418,11 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/myblog/springboot%E5%8F%91%E5%B8%83http%E6%8E%A5%E5%8F%A3/" rel="prev" title="springboot发布http接口">
+    <a href="/blog/springboot%E5%8F%91%E5%B8%83http%E6%8E%A5%E5%8F%A3/" rel="prev" title="springboot发布http接口">
       <i class="fa fa-chevron-left"></i> springboot发布http接口
     </a></div>
       <div class="post-nav-item">
-    <a href="/myblog/springboot-%E6%95%B4%E5%90%88spring-security/" rel="next" title="springboot 整合spring security">
+    <a href="/blog/springboot-%E6%95%B4%E5%90%88spring-security/" rel="next" title="springboot 整合spring security">
       springboot 整合spring security <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
@@ -496,22 +496,22 @@
 <div class="site-state-wrap motion-element">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
-          <a href="/myblog/archives/">
+          <a href="/blog/archives/">
         
-          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-count">40</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
-            <a href="/myblog/categories/">
+            <a href="/blog/categories/">
           
-        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-            <a href="/myblog/tags/">
+            <a href="/blog/tags/">
           
-        <span class="site-state-item-count">33</span>
+        <span class="site-state-item-count">34</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -543,7 +543,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
@@ -552,12 +552,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">246k</span>
+    <span title="站点总字数">260k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:44</span>
+    <span title="站点阅读时长">3:56</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
   </div>
@@ -670,33 +670,33 @@
   </div>
 
   
-  <script src="/myblog/lib/anime.min.js"></script>
+  <script src="/blog/lib/anime.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
   <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
-  <script src="/myblog/lib/velocity/velocity.min.js"></script>
-  <script src="/myblog/lib/velocity/velocity.ui.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
 
-<script src="/myblog/js/utils.js"></script>
+<script src="/blog/js/utils.js"></script>
 
-<script src="/myblog/js/motion.js"></script>
-
-
-<script src="/myblog/js/schemes/muse.js"></script>
+<script src="/blog/js/motion.js"></script>
 
 
-<script src="/myblog/js/next-boot.js"></script>
+<script src="/blog/js/schemes/muse.js"></script>
 
 
-
-
-  
+<script src="/blog/js/next-boot.js"></script>
 
 
 
 
   
-<script src="/myblog/js/local-search.js"></script>
+
+
+
+
+  
+<script src="/blog/js/local-search.js"></script>
 
 
 

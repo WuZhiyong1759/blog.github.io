@@ -5,43 +5,43 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 4.2.1">
-  <link rel="apple-touch-icon" sizes="180x180" href="/myblog/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/myblog/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/myblog/images/favicon-16x16-next.png">
-  <link rel="mask-icon" href="/myblog/images/logo.svg" color="#222">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
 
-<link rel="stylesheet" href="/myblog/css/main.css">
+<link rel="stylesheet" href="/blog/css/main.css">
 
 
-<link rel="stylesheet" href="/myblog/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wu_zhiyong.gitee.io","root":"/myblog/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":false,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wuzhiyong1759.github.io","root":"/blog/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":false,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="引言 spring boot 的便利体现在，它简化了很多繁琐的配置，这对开发人员来说是一个福音。只要引入框架的starter就可以使用框架的功能了。不过当出现错误时，排查问题的难度就上升了。因为自动配置的逻辑都在spring boot starter中，想要快速定位问题，就必须了解spring boot starter的内部原理。下面我们自己动手来实现一个spring boot starter —">
 <meta property="og:type" content="article">
 <meta property="og:title" content="自定义Starter">
-<meta property="og:url" content="http://wu_zhiyong.gitee.io/myblog/%E8%87%AA%E5%AE%9A%E4%B9%89Starter/index.html">
+<meta property="og:url" content="https://wuzhiyong1759.github.io/blog/%E8%87%AA%E5%AE%9A%E4%B9%89Starter/index.html">
 <meta property="og:site_name" content="吴志勇的博客">
 <meta property="og:description" content="引言 spring boot 的便利体现在，它简化了很多繁琐的配置，这对开发人员来说是一个福音。只要引入框架的starter就可以使用框架的功能了。不过当出现错误时，排查问题的难度就上升了。因为自动配置的逻辑都在spring boot starter中，想要快速定位问题，就必须了解spring boot starter的内部原理。下面我们自己动手来实现一个spring boot starter —">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://wu_zhiyong.gitee.io/myblog/%E8%87%AA%E5%AE%9A%E4%B9%89Starter/image-20200427161948084.png">
-<meta property="og:image" content="http://wu_zhiyong.gitee.io/myblog/%E8%87%AA%E5%AE%9A%E4%B9%89Starter/image-20200427163018487.png">
-<meta property="og:image" content="http://wu_zhiyong.gitee.io/myblog/%E8%87%AA%E5%AE%9A%E4%B9%89Starter/image-20200427163601006.png">
-<meta property="og:image" content="http://wu_zhiyong.gitee.io/myblog/%E8%87%AA%E5%AE%9A%E4%B9%89Starter/image-20200427164403776.png">
-<meta property="og:image" content="http://wu_zhiyong.gitee.io/myblog/%E8%87%AA%E5%AE%9A%E4%B9%89Starter/image-20200428102410838.png">
+<meta property="og:image" content="https://wuzhiyong1759.github.io/blog/%E8%87%AA%E5%AE%9A%E4%B9%89Starter/image-20200427161948084.png">
+<meta property="og:image" content="https://wuzhiyong1759.github.io/blog/%E8%87%AA%E5%AE%9A%E4%B9%89Starter/image-20200427163018487.png">
+<meta property="og:image" content="https://wuzhiyong1759.github.io/blog/%E8%87%AA%E5%AE%9A%E4%B9%89Starter/image-20200427163601006.png">
+<meta property="og:image" content="https://wuzhiyong1759.github.io/blog/%E8%87%AA%E5%AE%9A%E4%B9%89Starter/image-20200427164403776.png">
+<meta property="og:image" content="https://wuzhiyong1759.github.io/blog/%E8%87%AA%E5%AE%9A%E4%B9%89Starter/image-20200428102410838.png">
 <meta property="article:published_time" content="2020-04-26T14:44:23.000Z">
 <meta property="article:modified_time" content="2020-05-01T15:37:15.059Z">
 <meta property="article:author" content="wuzhiyong">
 <meta property="article:tag" content="springboot">
 <meta property="article:tag" content="java">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://wu_zhiyong.gitee.io/myblog/%E8%87%AA%E5%AE%9A%E4%B9%89Starter/image-20200427161948084.png">
+<meta name="twitter:image" content="https://wuzhiyong1759.github.io/blog/%E8%87%AA%E5%AE%9A%E4%B9%89Starter/image-20200427161948084.png">
 
-<link rel="canonical" href="http://wu_zhiyong.gitee.io/myblog/%E8%87%AA%E5%AE%9A%E4%B9%89Starter/">
+<link rel="canonical" href="https://wuzhiyong1759.github.io/blog/%E8%87%AA%E5%AE%9A%E4%B9%89Starter/">
 
 
 <script id="page-configurations">
@@ -103,7 +103,7 @@
 
   <div class="site-meta">
 
-    <a href="/myblog/" class="brand" rel="start">
+    <a href="/blog/" class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <h1 class="site-title">吴志勇的博客</h1>
       <span class="logo-line-after"><i></i></span>
@@ -125,22 +125,22 @@
   <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/myblog/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/myblog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/myblog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/myblog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -198,10 +198,10 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://wu_zhiyong.gitee.io/myblog/%E8%87%AA%E5%AE%9A%E4%B9%89Starter/">
+    <link itemprop="mainEntityOfPage" href="https://wuzhiyong1759.github.io/blog/%E8%87%AA%E5%AE%9A%E4%B9%89Starter/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/myblog/images/avatar.gif">
+      <meta itemprop="image" content="/blog/images/avatar.gif">
       <meta itemprop="name" content="wuzhiyong">
       <meta itemprop="description" content="吴志勇的博客">
     </span>
@@ -236,20 +236,20 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
+                  <a href="/blog/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
                 </span>
                   ，
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">后端</span></a>
+                  <a href="/blog/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">后端</span></a>
                 </span>
                   ，
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                  <a href="/blog/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
                 </span>
             </span>
 
           
-            <span id="/myblog/%E8%87%AA%E5%AE%9A%E4%B9%89Starter/" class="post-meta-item leancloud_visitors" data-flag-title="自定义Starter" title="阅读次数">
+            <span id="/blog/%E8%87%AA%E5%AE%9A%E4%B9%89Starter/" class="post-meta-item leancloud_visitors" data-flag-title="自定义Starter" title="阅读次数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
@@ -264,8 +264,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/myblog/%E8%87%AA%E5%AE%9A%E4%B9%89Starter/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/myblog/%E8%87%AA%E5%AE%9A%E4%B9%89Starter/" itemprop="commentCount"></span>
+    <a title="valine" href="/blog/%E8%87%AA%E5%AE%9A%E4%B9%89Starter/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/blog/%E8%87%AA%E5%AE%9A%E4%B9%89Starter/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -301,10 +301,10 @@
 <h3 id="spring-boot-starter-项目创建"><a href="#spring-boot-starter-项目创建" class="headerlink" title="spring boot starter 项目创建"></a>spring boot starter 项目创建</h3><p>创建一个项目 spring-starter-demo。 </p>
 <p><strong>注意！！！</strong></p>
 <p>这里创建的不是spring boot ，也不是 maven web。因为试过，即使 maven install 成功生成了一个starter的 jar 包，但在spring boot 项目中却不能正常注入。经查多篇博客发现这里创建的是maven quick start 项目<a id="more"></a>（有的说是 j2ee - simple 我还没检验 ）。</p>
-<img data-src="/myblog/%E8%87%AA%E5%AE%9A%E4%B9%89Starter/image-20200427161948084.png" class="">
+<img data-src="/blog/%E8%87%AA%E5%AE%9A%E4%B9%89Starter/image-20200427161948084.png" class="">
 
 <p>项目最终目录结构如下：</p>
-<img data-src="/myblog/%E8%87%AA%E5%AE%9A%E4%B9%89Starter/image-20200427163018487.png" class="">
+<img data-src="/blog/%E8%87%AA%E5%AE%9A%E4%B9%89Starter/image-20200427163018487.png" class="">
 
 <p>创建好后包（自定义的包名）com.study 下面原本只有一个 App类（这个App.class 在这个starter 项目中没有任何作用，可以删除掉，不删掉也不影响）。</p>
 <p>其它类是后面添加的。resources 资源文件夹也是后面自己添加的,创建完是没有的。</p>
@@ -333,7 +333,7 @@
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.study<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-starter-demo<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 <p>我这里引入是提示没找到。没有关系，</p>
-<img data-src="/myblog/%E8%87%AA%E5%AE%9A%E4%B9%89Starter/image-20200427163601006.png" class="">
+<img data-src="/blog/%E8%87%AA%E5%AE%9A%E4%B9%89Starter/image-20200427163601006.png" class="">
 
 <p>只要这里注入时没有提示错误就可以</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Autowired</span></span><br><span class="line"><span class="keyword">private</span> UserClient userClient;</span><br><span class="line"></span><br><span class="line"><span class="meta">@GetMapping</span>(<span class="string">"/user/name"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">getUserName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    logger.info(<span class="string">"lalalalalalallalala"</span> + userClient.toString());</span><br><span class="line">    <span class="keyword">return</span> userClient.getName();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -342,7 +342,7 @@
 <figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">spring.user.username</span>=<span class="string">WuZhiYong</span></span><br><span class="line"><span class="meta">spring.user.pwd</span>=<span class="string">123456</span></span><br><span class="line"><span class="meta">spring.user.enabled</span>=<span class="string">true</span></span><br></pre></td></tr></table></figure>
 
 <p>启动项目，请求测试地址得到返回：</p>
-<img data-src="/myblog/%E8%87%AA%E5%AE%9A%E4%B9%89Starter/image-20200427164403776.png" class="">
+<img data-src="/blog/%E8%87%AA%E5%AE%9A%E4%B9%89Starter/image-20200427164403776.png" class="">
 
 <h3 id="使用注解开启自动构建"><a href="#使用注解开启自动构建" class="headerlink" title="使用注解开启自动构建"></a>使用注解开启自动构建</h3><p>starter项目里建立一个类（我是放在同包下，这个位置应该没什么关系）</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target</span>(&#123;ElementType.TYPE&#125;)</span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Inherited</span></span><br><span class="line"><span class="meta">@Import</span>(UserAutoConfigure<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class"><span class="title">public</span> @<span class="title">interface</span> <span class="title">EnableUserClient</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -367,7 +367,7 @@
 
 <p>重新 clean install</p>
 <p>在spring boot 项目里我们配置spring.user.  会有自动提示 ：</p>
-<img data-src="/myblog/%E8%87%AA%E5%AE%9A%E4%B9%89Starter/image-20200428102410838.png" class="">
+<img data-src="/blog/%E8%87%AA%E5%AE%9A%E4%B9%89Starter/image-20200428102410838.png" class="">
 
 <h3 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h3><p>spring 自定义 starter 还有很多值得深究的地方。我在抄写代码时抄错了（抄都能抄错 哎 以后只能 CV了） 后来造成不能配置使用starter 。在网上看了很多博客。虽然最后发现了是自己的问题（抄错了）。但也发现了很不错的文章 这里分享下:</p>
 <p><a href="https://blog.csdn.net/qq_31445987/article/details/105152837?utm_source=distribute.pc_relevant.none-task-blog-baidujs-2" target="_blank" rel="noopener">https://blog.csdn.net/qq_31445987/article/details/105152837?utm_source=distribute.pc_relevant.none-task-blog-baidujs-2</a></p>
@@ -405,8 +405,8 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/myblog/tags/springboot/" rel="tag"># springboot</a>
-              <a href="/myblog/tags/java/" rel="tag"># java</a>
+              <a href="/blog/tags/springboot/" rel="tag"># springboot</a>
+              <a href="/blog/tags/java/" rel="tag"># java</a>
           </div>
 
         
@@ -415,11 +415,11 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/myblog/%E9%9A%8F%E6%9C%BA%E7%AB%AF%E5%8F%A3/" rel="prev" title="随机端口">
+    <a href="/blog/%E9%9A%8F%E6%9C%BA%E7%AB%AF%E5%8F%A3/" rel="prev" title="随机端口">
       <i class="fa fa-chevron-left"></i> 随机端口
     </a></div>
       <div class="post-nav-item">
-    <a href="/myblog/%E4%BD%BF%E7%94%A8Eureka%E7%BC%96%E5%86%99%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83%E6%9C%8D%E5%8A%A1/" rel="next" title="使用Eureka编写注册中心服务">
+    <a href="/blog/%E4%BD%BF%E7%94%A8Eureka%E7%BC%96%E5%86%99%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83%E6%9C%8D%E5%8A%A1/" rel="next" title="使用Eureka编写注册中心服务">
       使用Eureka编写注册中心服务 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
@@ -493,22 +493,22 @@
 <div class="site-state-wrap motion-element">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
-          <a href="/myblog/archives/">
+          <a href="/blog/archives/">
         
-          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-count">40</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
-            <a href="/myblog/categories/">
+            <a href="/blog/categories/">
           
-        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-            <a href="/myblog/tags/">
+            <a href="/blog/tags/">
           
-        <span class="site-state-item-count">33</span>
+        <span class="site-state-item-count">34</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -540,7 +540,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
@@ -549,12 +549,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">246k</span>
+    <span title="站点总字数">260k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:44</span>
+    <span title="站点阅读时长">3:56</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
   </div>
@@ -667,33 +667,33 @@
   </div>
 
   
-  <script src="/myblog/lib/anime.min.js"></script>
+  <script src="/blog/lib/anime.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
   <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
-  <script src="/myblog/lib/velocity/velocity.min.js"></script>
-  <script src="/myblog/lib/velocity/velocity.ui.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
 
-<script src="/myblog/js/utils.js"></script>
+<script src="/blog/js/utils.js"></script>
 
-<script src="/myblog/js/motion.js"></script>
-
-
-<script src="/myblog/js/schemes/muse.js"></script>
+<script src="/blog/js/motion.js"></script>
 
 
-<script src="/myblog/js/next-boot.js"></script>
+<script src="/blog/js/schemes/muse.js"></script>
 
 
-
-
-  
+<script src="/blog/js/next-boot.js"></script>
 
 
 
 
   
-<script src="/myblog/js/local-search.js"></script>
+
+
+
+
+  
+<script src="/blog/js/local-search.js"></script>
 
 
 

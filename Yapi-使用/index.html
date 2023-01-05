@@ -5,38 +5,38 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 4.2.1">
-  <link rel="apple-touch-icon" sizes="180x180" href="/myblog/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/myblog/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/myblog/images/favicon-16x16-next.png">
-  <link rel="mask-icon" href="/myblog/images/logo.svg" color="#222">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
 
-<link rel="stylesheet" href="/myblog/css/main.css">
+<link rel="stylesheet" href="/blog/css/main.css">
 
 
-<link rel="stylesheet" href="/myblog/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wu_zhiyong.gitee.io","root":"/myblog/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":false,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wuzhiyong1759.github.io","root":"/blog/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":false,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="启动服务Yapi server 12D:\Program Files\nodejs\node_modules\npm&gt;yapi server在浏览器打开 http:&#x2F;&#x2F;0.0.0.0:9090 访问。非本地服务器，请将 0.0.0.0 替换成指定的域名或ip  表示 yapi 初始化服务 访问 http:&#x2F;&#x2F;0.0.0.0:9090 后有一个表单填写完提交后会在指定的目录创建一个yapi 的">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Yapi 使用">
-<meta property="og:url" content="http://wu_zhiyong.gitee.io/myblog/Yapi-%E4%BD%BF%E7%94%A8/index.html">
+<meta property="og:url" content="https://wuzhiyong1759.github.io/blog/Yapi-%E4%BD%BF%E7%94%A8/index.html">
 <meta property="og:site_name" content="吴志勇的博客">
 <meta property="og:description" content="启动服务Yapi server 12D:\Program Files\nodejs\node_modules\npm&gt;yapi server在浏览器打开 http:&#x2F;&#x2F;0.0.0.0:9090 访问。非本地服务器，请将 0.0.0.0 替换成指定的域名或ip  表示 yapi 初始化服务 访问 http:&#x2F;&#x2F;0.0.0.0:9090 后有一个表单填写完提交后会在指定的目录创建一个yapi 的">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://wu_zhiyong.gitee.io/myblog/Yapi-%E4%BD%BF%E7%94%A8/image-20200422013510685.png">
+<meta property="og:image" content="https://wuzhiyong1759.github.io/blog/Yapi-%E4%BD%BF%E7%94%A8/image-20200422013510685.png">
 <meta property="article:published_time" content="2020-04-21T17:22:41.000Z">
 <meta property="article:modified_time" content="2020-04-24T07:39:25.686Z">
 <meta property="article:author" content="wuzhiyong">
 <meta property="article:tag" content="API">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://wu_zhiyong.gitee.io/myblog/Yapi-%E4%BD%BF%E7%94%A8/image-20200422013510685.png">
+<meta name="twitter:image" content="https://wuzhiyong1759.github.io/blog/Yapi-%E4%BD%BF%E7%94%A8/image-20200422013510685.png">
 
-<link rel="canonical" href="http://wu_zhiyong.gitee.io/myblog/Yapi-%E4%BD%BF%E7%94%A8/">
+<link rel="canonical" href="https://wuzhiyong1759.github.io/blog/Yapi-%E4%BD%BF%E7%94%A8/">
 
 
 <script id="page-configurations">
@@ -98,7 +98,7 @@
 
   <div class="site-meta">
 
-    <a href="/myblog/" class="brand" rel="start">
+    <a href="/blog/" class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <h1 class="site-title">吴志勇的博客</h1>
       <span class="logo-line-after"><i></i></span>
@@ -120,22 +120,22 @@
   <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/myblog/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/myblog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/myblog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/myblog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -193,10 +193,10 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://wu_zhiyong.gitee.io/myblog/Yapi-%E4%BD%BF%E7%94%A8/">
+    <link itemprop="mainEntityOfPage" href="https://wuzhiyong1759.github.io/blog/Yapi-%E4%BD%BF%E7%94%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/myblog/images/avatar.gif">
+      <meta itemprop="image" content="/blog/images/avatar.gif">
       <meta itemprop="name" content="wuzhiyong">
       <meta itemprop="description" content="吴志勇的博客">
     </span>
@@ -231,20 +231,20 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
+                  <a href="/blog/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
                 </span>
                   ，
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
+                  <a href="/blog/categories/%E7%BC%96%E7%A8%8B/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
                 </span>
                   ，
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/myblog/categories/%E7%BC%96%E7%A8%8B/%E5%89%8D%E7%AB%AF/API/" itemprop="url" rel="index"><span itemprop="name">API</span></a>
+                  <a href="/blog/categories/%E7%BC%96%E7%A8%8B/%E5%89%8D%E7%AB%AF/API/" itemprop="url" rel="index"><span itemprop="name">API</span></a>
                 </span>
             </span>
 
           
-            <span id="/myblog/Yapi-%E4%BD%BF%E7%94%A8/" class="post-meta-item leancloud_visitors" data-flag-title="Yapi 使用" title="阅读次数">
+            <span id="/blog/Yapi-%E4%BD%BF%E7%94%A8/" class="post-meta-item leancloud_visitors" data-flag-title="Yapi 使用" title="阅读次数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
@@ -259,8 +259,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/myblog/Yapi-%E4%BD%BF%E7%94%A8/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/myblog/Yapi-%E4%BD%BF%E7%94%A8/" itemprop="commentCount"></span>
+    <a title="valine" href="/blog/Yapi-%E4%BD%BF%E7%94%A8/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/blog/Yapi-%E4%BD%BF%E7%94%A8/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -301,7 +301,7 @@
 <p>我的yapi安装在D:\YApi\YApi目录下</p>
 <p>在当前配置文件目录执行命令 node vendors\server\app.js 发布yapi服务</p>
 <p>访问<a href="http://127.0.0.1:3000/得到如下界面：" target="_blank" rel="noopener">http://127.0.0.1:3000/得到如下界面：</a></p>
-<img data-src="/myblog/Yapi-%E4%BD%BF%E7%94%A8/image-20200422013510685.png" class="">
+<img data-src="/blog/Yapi-%E4%BD%BF%E7%94%A8/image-20200422013510685.png" class="">
 
 <p>点击登录</p>
 <p>用户名：<a href="mailto:admin@admin.com">admin@admin.com</a>（配置文件里的用户名）</p>
@@ -335,7 +335,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/myblog/tags/API/" rel="tag"># API</a>
+              <a href="/blog/tags/API/" rel="tag"># API</a>
           </div>
 
         
@@ -344,11 +344,11 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/myblog/IDEA%E5%B8%B8%E7%94%A8%E5%BF%AB%E6%8D%B7%E9%94%AE/" rel="prev" title="IDEA常用快捷键">
+    <a href="/blog/IDEA%E5%B8%B8%E7%94%A8%E5%BF%AB%E6%8D%B7%E9%94%AE/" rel="prev" title="IDEA常用快捷键">
       <i class="fa fa-chevron-left"></i> IDEA常用快捷键
     </a></div>
       <div class="post-nav-item">
-    <a href="/myblog/%E4%B8%80%E6%96%87%E5%A4%9A%E5%8F%91ArtiPub/" rel="next" title="一文多发ArtiPub">
+    <a href="/blog/%E4%B8%80%E6%96%87%E5%A4%9A%E5%8F%91ArtiPub/" rel="next" title="一文多发ArtiPub">
       一文多发ArtiPub <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
@@ -422,22 +422,22 @@
 <div class="site-state-wrap motion-element">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
-          <a href="/myblog/archives/">
+          <a href="/blog/archives/">
         
-          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-count">40</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
-            <a href="/myblog/categories/">
+            <a href="/blog/categories/">
           
-        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-            <a href="/myblog/tags/">
+            <a href="/blog/tags/">
           
-        <span class="site-state-item-count">33</span>
+        <span class="site-state-item-count">34</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -469,7 +469,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
@@ -478,12 +478,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">246k</span>
+    <span title="站点总字数">260k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:44</span>
+    <span title="站点阅读时长">3:56</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
   </div>
@@ -596,33 +596,33 @@
   </div>
 
   
-  <script src="/myblog/lib/anime.min.js"></script>
+  <script src="/blog/lib/anime.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
   <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
-  <script src="/myblog/lib/velocity/velocity.min.js"></script>
-  <script src="/myblog/lib/velocity/velocity.ui.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
 
-<script src="/myblog/js/utils.js"></script>
+<script src="/blog/js/utils.js"></script>
 
-<script src="/myblog/js/motion.js"></script>
-
-
-<script src="/myblog/js/schemes/muse.js"></script>
+<script src="/blog/js/motion.js"></script>
 
 
-<script src="/myblog/js/next-boot.js"></script>
+<script src="/blog/js/schemes/muse.js"></script>
 
 
-
-
-  
+<script src="/blog/js/next-boot.js"></script>
 
 
 
 
   
-<script src="/myblog/js/local-search.js"></script>
+
+
+
+
+  
+<script src="/blog/js/local-search.js"></script>
 
 
 
