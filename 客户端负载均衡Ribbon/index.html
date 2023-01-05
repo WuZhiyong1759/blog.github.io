@@ -5,33 +5,33 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 4.2.1">
-  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png">
-  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog.github.io/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog.github.io/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog.github.io/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/blog.github.io/images/logo.svg" color="#222">
 
-<link rel="stylesheet" href="/blog/css/main.css">
+<link rel="stylesheet" href="/blog.github.io/css/main.css">
 
 
-<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/blog.github.io/lib/font-awesome/css/all.min.css">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wuzhiyong1759.github.io","root":"/blog/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":false,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wuzhiyong1759.github.io","root":"/blog.github.io/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":false,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="引言 目前主流的负载方案分为两种：一种是集中式负载均衡，在消费者和服务提供方中间使用独立的代理方式进行负载，有硬件的（比如F5），也有软件的（比如 Nginx）。另一种则是客户端自己做负载均衡，根据自己的请求情况做负载， Ribbon就属于客户端自己量负载。如果用一句话介绍，那就是： Ribbon是 Netflix开源的一款用于客户端负载均衡的工具软件。 ——《spring cloud 微服务 入">
 <meta property="og:type" content="article">
 <meta property="og:title" content="客户端负载均衡Ribbon">
-<meta property="og:url" content="https://wuzhiyong1759.github.io/blog/%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1Ribbon/index.html">
+<meta property="og:url" content="https://wuzhiyong1759.github.io/%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1Ribbon/index.html">
 <meta property="og:site_name" content="吴志勇的博客">
 <meta property="og:description" content="引言 目前主流的负载方案分为两种：一种是集中式负载均衡，在消费者和服务提供方中间使用独立的代理方式进行负载，有硬件的（比如F5），也有软件的（比如 Nginx）。另一种则是客户端自己做负载均衡，根据自己的请求情况做负载， Ribbon就属于客户端自己量负载。如果用一句话介绍，那就是： Ribbon是 Netflix开源的一款用于客户端负载均衡的工具软件。 ——《spring cloud 微服务 入">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://wuzhiyong1759.github.io/blog/%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1Ribbon/image-20200502112502789.png">
-<meta property="og:image" content="https://wuzhiyong1759.github.io/blog/%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1Ribbon/image-20200502124238291.png">
-<meta property="og:image" content="https://wuzhiyong1759.github.io/blog/%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1Ribbon/image-20200502143706413.png">
-<meta property="og:image" content="https://wuzhiyong1759.github.io/blog/%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1Ribbon/image-20200502151313128.png">
+<meta property="og:image" content="https://wuzhiyong1759.github.io/blog.github.io/%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1Ribbon/image-20200502112502789.png">
+<meta property="og:image" content="https://wuzhiyong1759.github.io/blog.github.io/%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1Ribbon/image-20200502124238291.png">
+<meta property="og:image" content="https://wuzhiyong1759.github.io/blog.github.io/%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1Ribbon/image-20200502143706413.png">
+<meta property="og:image" content="https://wuzhiyong1759.github.io/blog.github.io/%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1Ribbon/image-20200502151313128.png">
 <meta property="article:published_time" content="2020-05-02T01:46:51.000Z">
 <meta property="article:modified_time" content="2020-05-02T11:56:44.677Z">
 <meta property="article:author" content="wuzhiyong">
@@ -40,9 +40,9 @@
 <meta property="article:tag" content="spring cloud">
 <meta property="article:tag" content="Ribbon">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://wuzhiyong1759.github.io/blog/%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1Ribbon/image-20200502112502789.png">
+<meta name="twitter:image" content="https://wuzhiyong1759.github.io/blog.github.io/%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1Ribbon/image-20200502112502789.png">
 
-<link rel="canonical" href="https://wuzhiyong1759.github.io/blog/%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1Ribbon/">
+<link rel="canonical" href="https://wuzhiyong1759.github.io/%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1Ribbon/">
 
 
 <script id="page-configurations">
@@ -104,7 +104,7 @@
 
   <div class="site-meta">
 
-    <a href="/blog/" class="brand" rel="start">
+    <a href="/blog.github.io/" class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <h1 class="site-title">吴志勇的博客</h1>
       <span class="logo-line-after"><i></i></span>
@@ -126,22 +126,22 @@
   <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+    <a href="/blog.github.io/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+    <a href="/blog.github.io/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+    <a href="/blog.github.io/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+    <a href="/blog.github.io/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -199,10 +199,10 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://wuzhiyong1759.github.io/blog/%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1Ribbon/">
+    <link itemprop="mainEntityOfPage" href="https://wuzhiyong1759.github.io/%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1Ribbon/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/images/avatar.gif">
+      <meta itemprop="image" content="/blog.github.io/images/avatar.gif">
       <meta itemprop="name" content="wuzhiyong">
       <meta itemprop="description" content="吴志勇的博客">
     </span>
@@ -231,20 +231,20 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
+                  <a href="/blog.github.io/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
                 </span>
                   ，
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">后端</span></a>
+                  <a href="/blog.github.io/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">后端</span></a>
                 </span>
                   ，
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                  <a href="/blog.github.io/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
                 </span>
             </span>
 
           
-            <span id="/blog/%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1Ribbon/" class="post-meta-item leancloud_visitors" data-flag-title="客户端负载均衡Ribbon" title="阅读次数">
+            <span id="/blog.github.io/%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1Ribbon/" class="post-meta-item leancloud_visitors" data-flag-title="客户端负载均衡Ribbon" title="阅读次数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
@@ -259,8 +259,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/blog/%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1Ribbon/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/blog/%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1Ribbon/" itemprop="commentCount"></span>
+    <a title="valine" href="/blog.github.io/%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1Ribbon/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/blog.github.io/%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1Ribbon/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -306,7 +306,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RibbonController</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> RestTemplate restTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/ribbon/hello"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">callHello</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> restTemplate.getForObject(<span class="string">"http://eureka-client-service/user/hello"</span>,String<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>restTemplate 在这里通过服务实例的名字调用的时候，当注册在注册中心的多个服务都叫eureka-client-service名字的时候。就会自动做负载均衡（默认轮询策略）。</p>
-<img data-src="/blog/%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1Ribbon/image-20200502112502789.png" class="">
+<img data-src="/blog.github.io/%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1Ribbon/image-20200502112502789.png" class="">
 
 <h3 id="RestTemplate注解原理"><a href="#RestTemplate注解原理" class="headerlink" title="@RestTemplate注解原理"></a>@RestTemplate注解原理</h3><blockquote>
 <p>相信大家一定有一个疑问：为什么在 Rest Template上加了一个@LoadBalanced之后Resttemplate就能够跟 Eureka结合了，不但可以使用服务名称去调用接口，还可以负载均衡应该归功于 Spring Cloud给我们做了大量的底层工作，因为它将这些都封装好了，我们用起来才会那么简单。框架就是为了简化代码，提高效率而产生的。</p>
@@ -324,7 +324,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">    <span class="meta">@Bean</span></span><br><span class="line"><span class="comment">//    @LoadBalanced</span></span><br><span class="line">    <span class="meta">@MyLoadBalanced</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> RestTemplate <span class="title">getRestTemplate</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> RestTemplate();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
 <p>重启再访问测试接口地址 /ribbon/hello  控制台如下：</p>
-<img data-src="/blog/%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1Ribbon/image-20200502124238291.png" class="">
+<img data-src="/blog.github.io/%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1Ribbon/image-20200502124238291.png" class="">
 
 <p>具体逻辑可参看源代码：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// @Loadbalancer注解相关源代码</span></span><br><span class="line">org.springframework.cloud.client.loadbalancer.LoadBalanced</span><br><span class="line"></span><br><span class="line">org.springframework.cloud.client.loadbalancer.LoadBalancerEurekaAutoConfiguration</span><br><span class="line"></span><br><span class="line">org.springframework.cloud.client.loadbalancer.LoadBalancerInterceptorConfig</span><br><span class="line"></span><br><span class="line">org.springframework.cloud.client.loadbalancer.LoadBalancerInterceptor</span><br></pre></td></tr></table></figure>
@@ -336,9 +336,9 @@
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"serviceId"</span>: <span class="string">"eureka-client-service"</span>,</span><br><span class="line">  <span class="attr">"server"</span>: &#123;</span><br><span class="line">    <span class="attr">"host"</span>: <span class="string">"localhost"</span>,</span><br><span class="line">    <span class="attr">"port"</span>: <span class="number">8081</span>,</span><br><span class="line">    <span class="attr">"id"</span>: <span class="string">"localhost:8081"</span>,</span><br><span class="line">    <span class="attr">"zone"</span>: <span class="string">"defaultZone"</span>,</span><br><span class="line">    <span class="attr">"readyToServe"</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">"instanceInfo"</span>: &#123;</span><br><span class="line">      <span class="attr">"instanceId"</span>: <span class="string">"eureka-client-service:localhost:8081"</span>,</span><br><span class="line">      <span class="attr">"app"</span>: <span class="string">"EUREKA-CLIENT-SERVICE"</span>,</span><br><span class="line">      <span class="attr">"ipAddr"</span>: <span class="string">"localhost"</span>,</span><br><span class="line">      <span class="attr">"sid"</span>: <span class="string">"na"</span>,</span><br><span class="line">      <span class="attr">"homePageUrl"</span>: <span class="string">"http://localhost:8081/"</span>,</span><br><span class="line">      <span class="attr">"statusPageUrl"</span>: <span class="string">"https://wu_zhiyong.gitee.io/myblog/"</span>,</span><br><span class="line">      <span class="attr">"healthCheckUrl"</span>: <span class="string">"http://localhost:8081/actuator/health"</span>,</span><br><span class="line">      <span class="attr">"vipAddress"</span>: <span class="string">"eureka-client-service"</span>,</span><br><span class="line">      <span class="attr">"secureVipAddress"</span>: <span class="string">"eureka-client-service"</span>,</span><br><span class="line">      <span class="attr">"countryId"</span>: <span class="number">1</span>,</span><br><span class="line">      <span class="attr">"dataCenterInfo"</span>: &#123;</span><br><span class="line">        <span class="attr">"@class"</span>: <span class="string">"com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo"</span>,</span><br><span class="line">        <span class="attr">"name"</span>: <span class="string">"MyOwn"</span></span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="attr">"hostName"</span>: <span class="string">"localhost"</span>,</span><br><span class="line">      <span class="attr">"status"</span>: <span class="string">"UP"</span>,</span><br><span class="line">      <span class="attr">"overriddenStatus"</span>: <span class="string">"UNKNOWN"</span>,</span><br><span class="line">      <span class="attr">"leaseInfo"</span>: &#123;</span><br><span class="line">        <span class="attr">"renewalIntervalInSecs"</span>: <span class="number">5</span>,</span><br><span class="line">        <span class="attr">"durationInSecs"</span>: <span class="number">5</span>,</span><br><span class="line">        <span class="attr">"registrationTimestamp"</span>: <span class="number">1588387730005</span>,</span><br><span class="line">        <span class="attr">"lastRenewalTimestamp"</span>: <span class="number">1588400582649</span>,</span><br><span class="line">        <span class="attr">"evictionTimestamp"</span>: <span class="number">0</span>,</span><br><span class="line">        <span class="attr">"serviceUpTimestamp"</span>: <span class="number">1588387730005</span></span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="attr">"isCoordinatingDiscoveryServer"</span>: <span class="literal">false</span>,</span><br><span class="line">      <span class="attr">"metadata"</span>: &#123;</span><br><span class="line">        <span class="attr">"create-user"</span>: <span class="string">"WuZhiYong"</span>,</span><br><span class="line">        <span class="attr">"management.port"</span>: <span class="string">"8081"</span></span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="attr">"lastUpdatedTimestamp"</span>: <span class="number">1588387730005</span>,</span><br><span class="line">      <span class="attr">"lastDirtyTimestamp"</span>: <span class="number">1588387730000</span>,</span><br><span class="line">      <span class="attr">"actionType"</span>: <span class="string">"ADDED"</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">"metaInfo"</span>: &#123;</span><br><span class="line">      <span class="attr">"instanceId"</span>: <span class="string">"eureka-client-service:localhost:8081"</span>,</span><br><span class="line">      <span class="attr">"appName"</span>: <span class="string">"EUREKA-CLIENT-SERVICE"</span>,</span><br><span class="line">      <span class="attr">"serviceIdForDiscovery"</span>: <span class="string">"eureka-client-service"</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">"alive"</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">"hostPort"</span>: <span class="string">"localhost:8081"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"secure"</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">"metadata"</span>: &#123;</span><br><span class="line">    <span class="attr">"create-user"</span>: <span class="string">"WuZhiYong"</span>,</span><br><span class="line">    <span class="attr">"management.port"</span>: <span class="string">"8081"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"host"</span>: <span class="string">"localhost"</span>,</span><br><span class="line">  <span class="attr">"port"</span>: <span class="number">8081</span>,</span><br><span class="line">  <span class="attr">"uri"</span>: <span class="string">"http://localhost:8081"</span>,</span><br><span class="line">  <span class="attr">"instanceId"</span>: <span class="string">"localhost:8081"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h3 id="负载均衡策略介绍"><a href="#负载均衡策略介绍" class="headerlink" title="负载均衡策略介绍"></a>负载均衡策略介绍</h3><p>负载策略代码整体如下，默认继承AbstractLoadBalancerRule</p>
-<img data-src="/blog/%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1Ribbon/image-20200502143706413.png" class="">
+<img data-src="/blog.github.io/%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1Ribbon/image-20200502143706413.png" class="">
 
-<img data-src="/blog/%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1Ribbon/image-20200502151313128.png" class="">
+<img data-src="/blog.github.io/%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1Ribbon/image-20200502151313128.png" class="">
 
 <ul>
 <li><p>BestAvailabl：选择一个最小的并发请求的 Server，逐个考察 Server，如果 Server被标记为错误，则跳过，然后再选择 ActiveRequestCount 中最小的 Server</p>
@@ -444,10 +444,10 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/blog/tags/springboot/" rel="tag"># springboot</a>
-              <a href="/blog/tags/java/" rel="tag"># java</a>
-              <a href="/blog/tags/spring-cloud/" rel="tag"># spring cloud</a>
-              <a href="/blog/tags/Ribbon/" rel="tag"># Ribbon</a>
+              <a href="/blog.github.io/tags/springboot/" rel="tag"># springboot</a>
+              <a href="/blog.github.io/tags/java/" rel="tag"># java</a>
+              <a href="/blog.github.io/tags/spring-cloud/" rel="tag"># spring cloud</a>
+              <a href="/blog.github.io/tags/Ribbon/" rel="tag"># Ribbon</a>
           </div>
 
         
@@ -456,11 +456,11 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/blog/%E4%BD%BF%E7%94%A8Eureka%E7%BC%96%E5%86%99%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83%E6%9C%8D%E5%8A%A1/" rel="prev" title="使用Eureka编写注册中心服务">
+    <a href="/blog.github.io/%E4%BD%BF%E7%94%A8Eureka%E7%BC%96%E5%86%99%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83%E6%9C%8D%E5%8A%A1/" rel="prev" title="使用Eureka编写注册中心服务">
       <i class="fa fa-chevron-left"></i> 使用Eureka编写注册中心服务
     </a></div>
       <div class="post-nav-item">
-    <a href="/blog/%E5%A3%B0%E6%98%8E%E5%BC%8FREST%E5%AE%A2%E6%88%B7%E7%AB%AFFeign/" rel="next" title="声明式REST客户端Feign">
+    <a href="/blog.github.io/%E5%A3%B0%E6%98%8E%E5%BC%8FREST%E5%AE%A2%E6%88%B7%E7%AB%AFFeign/" rel="next" title="声明式REST客户端Feign">
       声明式REST客户端Feign <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
@@ -534,20 +534,20 @@
 <div class="site-state-wrap motion-element">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
-          <a href="/blog/archives/">
+          <a href="/blog.github.io/archives/">
         
           <span class="site-state-item-count">40</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
-            <a href="/blog/categories/">
+            <a href="/blog.github.io/categories/">
           
         <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-            <a href="/blog/tags/">
+            <a href="/blog.github.io/tags/">
           
         <span class="site-state-item-count">34</span>
         <span class="site-state-item-name">标签</span></a>
@@ -708,33 +708,33 @@
   </div>
 
   
-  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog.github.io/lib/anime.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
   <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
-  <script src="/blog/lib/velocity/velocity.min.js"></script>
-  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+  <script src="/blog.github.io/lib/velocity/velocity.min.js"></script>
+  <script src="/blog.github.io/lib/velocity/velocity.ui.min.js"></script>
 
-<script src="/blog/js/utils.js"></script>
+<script src="/blog.github.io/js/utils.js"></script>
 
-<script src="/blog/js/motion.js"></script>
-
-
-<script src="/blog/js/schemes/muse.js"></script>
+<script src="/blog.github.io/js/motion.js"></script>
 
 
-<script src="/blog/js/next-boot.js"></script>
+<script src="/blog.github.io/js/schemes/muse.js"></script>
 
 
-
-
-  
+<script src="/blog.github.io/js/next-boot.js"></script>
 
 
 
 
   
-<script src="/blog/js/local-search.js"></script>
+
+
+
+
+  
+<script src="/blog.github.io/js/local-search.js"></script>
 
 
 

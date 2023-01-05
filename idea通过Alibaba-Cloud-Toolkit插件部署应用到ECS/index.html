@@ -5,26 +5,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 4.2.1">
-  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png">
-  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog.github.io/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog.github.io/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog.github.io/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/blog.github.io/images/logo.svg" color="#222">
 
-<link rel="stylesheet" href="/blog/css/main.css">
+<link rel="stylesheet" href="/blog.github.io/css/main.css">
 
 
-<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/blog.github.io/lib/font-awesome/css/all.min.css">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wuzhiyong1759.github.io","root":"/blog/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":false,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wuzhiyong1759.github.io","root":"/blog.github.io/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":false,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="设置 AccessKey  没有就创建一个  打开 alibaba cloud toolkit 插件。（没有的话自己去插件库搜索安装） 创建一个实例 填写好 前面创建的 access key ID 和  access key Secret 并保存  上传">
 <meta property="og:type" content="article">
 <meta property="og:title" content="idea通过Alibaba-Cloud-Toolkit插件部署应用到ECS">
-<meta property="og:url" content="https://wuzhiyong1759.github.io/blog/idea%E9%80%9A%E8%BF%87Alibaba-Cloud-Toolkit%E6%8F%92%E4%BB%B6%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8%E5%88%B0ECS/index.html">
+<meta property="og:url" content="https://wuzhiyong1759.github.io/idea%E9%80%9A%E8%BF%87Alibaba-Cloud-Toolkit%E6%8F%92%E4%BB%B6%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8%E5%88%B0ECS/index.html">
 <meta property="og:site_name" content="吴志勇的博客">
 <meta property="og:description" content="设置 AccessKey  没有就创建一个  打开 alibaba cloud toolkit 插件。（没有的话自己去插件库搜索安装） 创建一个实例 填写好 前面创建的 access key ID 和  access key Secret 并保存  上传">
 <meta property="og:locale" content="zh_CN">
@@ -32,8 +32,8 @@
 <meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20210326135714281.png">
 <meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20210326135950668.png">
 <meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20210326140301787.png">
-<meta property="og:image" content="https://wuzhiyong1759.github.io/blog/idea%E9%80%9A%E8%BF%87Alibaba-Cloud-Toolkit%E6%8F%92%E4%BB%B6%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8%E5%88%B0ECS/idea%E9%80%9A%E8%BF%87Alibaba-Cloud-Toolkit%E6%8F%92%E4%BB%B6%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8%E5%88%B0ECS/image-20210326140201524.png">
-<meta property="og:image" content="https://wuzhiyong1759.github.io/blog/idea%E9%80%9A%E8%BF%87Alibaba-Cloud-Toolkit%E6%8F%92%E4%BB%B6%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8%E5%88%B0ECS/idea%E9%80%9A%E8%BF%87Alibaba-Cloud-Toolkit%E6%8F%92%E4%BB%B6%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8%E5%88%B0ECS/image-20210326141339275.png">
+<meta property="og:image" content="https://wuzhiyong1759.github.io/idea%E9%80%9A%E8%BF%87Alibaba-Cloud-Toolkit%E6%8F%92%E4%BB%B6%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8%E5%88%B0ECS/idea%E9%80%9A%E8%BF%87Alibaba-Cloud-Toolkit%E6%8F%92%E4%BB%B6%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8%E5%88%B0ECS/image-20210326140201524.png">
+<meta property="og:image" content="https://wuzhiyong1759.github.io/idea%E9%80%9A%E8%BF%87Alibaba-Cloud-Toolkit%E6%8F%92%E4%BB%B6%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8%E5%88%B0ECS/idea%E9%80%9A%E8%BF%87Alibaba-Cloud-Toolkit%E6%8F%92%E4%BB%B6%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8%E5%88%B0ECS/image-20210326141339275.png">
 <meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20210326141439165.png">
 <meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20210326213010298.png">
 <meta property="og:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20210326193706700.png">
@@ -46,7 +46,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20210326135640568.png">
 
-<link rel="canonical" href="https://wuzhiyong1759.github.io/blog/idea%E9%80%9A%E8%BF%87Alibaba-Cloud-Toolkit%E6%8F%92%E4%BB%B6%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8%E5%88%B0ECS/">
+<link rel="canonical" href="https://wuzhiyong1759.github.io/idea%E9%80%9A%E8%BF%87Alibaba-Cloud-Toolkit%E6%8F%92%E4%BB%B6%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8%E5%88%B0ECS/">
 
 
 <script id="page-configurations">
@@ -108,7 +108,7 @@
 
   <div class="site-meta">
 
-    <a href="/blog/" class="brand" rel="start">
+    <a href="/blog.github.io/" class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <h1 class="site-title">吴志勇的博客</h1>
       <span class="logo-line-after"><i></i></span>
@@ -130,22 +130,22 @@
   <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+    <a href="/blog.github.io/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+    <a href="/blog.github.io/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+    <a href="/blog.github.io/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+    <a href="/blog.github.io/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -203,10 +203,10 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://wuzhiyong1759.github.io/blog/idea%E9%80%9A%E8%BF%87Alibaba-Cloud-Toolkit%E6%8F%92%E4%BB%B6%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8%E5%88%B0ECS/">
+    <link itemprop="mainEntityOfPage" href="https://wuzhiyong1759.github.io/idea%E9%80%9A%E8%BF%87Alibaba-Cloud-Toolkit%E6%8F%92%E4%BB%B6%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8%E5%88%B0ECS/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/images/avatar.gif">
+      <meta itemprop="image" content="/blog.github.io/images/avatar.gif">
       <meta itemprop="name" content="wuzhiyong">
       <meta itemprop="description" content="吴志勇的博客">
     </span>
@@ -241,20 +241,20 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
+                  <a href="/blog.github.io/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
                 </span>
                   ，
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">后端</span></a>
+                  <a href="/blog.github.io/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">后端</span></a>
                 </span>
                   ，
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                  <a href="/blog.github.io/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
                 </span>
             </span>
 
           
-            <span id="/blog/idea%E9%80%9A%E8%BF%87Alibaba-Cloud-Toolkit%E6%8F%92%E4%BB%B6%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8%E5%88%B0ECS/" class="post-meta-item leancloud_visitors" data-flag-title="idea通过Alibaba-Cloud-Toolkit插件部署应用到ECS" title="阅读次数">
+            <span id="/blog.github.io/idea%E9%80%9A%E8%BF%87Alibaba-Cloud-Toolkit%E6%8F%92%E4%BB%B6%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8%E5%88%B0ECS/" class="post-meta-item leancloud_visitors" data-flag-title="idea通过Alibaba-Cloud-Toolkit插件部署应用到ECS" title="阅读次数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
@@ -269,8 +269,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/blog/idea%E9%80%9A%E8%BF%87Alibaba-Cloud-Toolkit%E6%8F%92%E4%BB%B6%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8%E5%88%B0ECS/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/blog/idea%E9%80%9A%E8%BF%87Alibaba-Cloud-Toolkit%E6%8F%92%E4%BB%B6%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8%E5%88%B0ECS/" itemprop="commentCount"></span>
+    <a title="valine" href="/blog.github.io/idea%E9%80%9A%E8%BF%87Alibaba-Cloud-Toolkit%E6%8F%92%E4%BB%B6%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8%E5%88%B0ECS/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/blog.github.io/idea%E9%80%9A%E8%BF%87Alibaba-Cloud-Toolkit%E6%8F%92%E4%BB%B6%E9%83%A8%E7%BD%B2%E5%BA%94%E7%94%A8%E5%88%B0ECS/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -386,9 +386,9 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/blog/tags/springboot/" rel="tag"># springboot</a>
-              <a href="/blog/tags/java/" rel="tag"># java</a>
-              <a href="/blog/tags/linux/" rel="tag"># linux</a>
+              <a href="/blog.github.io/tags/springboot/" rel="tag"># springboot</a>
+              <a href="/blog.github.io/tags/java/" rel="tag"># java</a>
+              <a href="/blog.github.io/tags/linux/" rel="tag"># linux</a>
           </div>
 
         
@@ -397,11 +397,11 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/blog/springboot-cxf%E6%A1%86%E6%9E%B6%E9%9B%86%E6%88%90webService/" rel="prev" title="springboot-cxf框架集成webService">
+    <a href="/blog.github.io/springboot-cxf%E6%A1%86%E6%9E%B6%E9%9B%86%E6%88%90webService/" rel="prev" title="springboot-cxf框架集成webService">
       <i class="fa fa-chevron-left"></i> springboot-cxf框架集成webService
     </a></div>
       <div class="post-nav-item">
-    <a href="/blog/centos7%E5%AE%89%E8%A3%85oracle%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="next" title="centos7安装oracle数据库">
+    <a href="/blog.github.io/centos7%E5%AE%89%E8%A3%85oracle%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="next" title="centos7安装oracle数据库">
       centos7安装oracle数据库 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
@@ -475,20 +475,20 @@
 <div class="site-state-wrap motion-element">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
-          <a href="/blog/archives/">
+          <a href="/blog.github.io/archives/">
         
           <span class="site-state-item-count">40</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
-            <a href="/blog/categories/">
+            <a href="/blog.github.io/categories/">
           
         <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-            <a href="/blog/tags/">
+            <a href="/blog.github.io/tags/">
           
         <span class="site-state-item-count">34</span>
         <span class="site-state-item-name">标签</span></a>
@@ -649,33 +649,33 @@
   </div>
 
   
-  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog.github.io/lib/anime.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
   <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
-  <script src="/blog/lib/velocity/velocity.min.js"></script>
-  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+  <script src="/blog.github.io/lib/velocity/velocity.min.js"></script>
+  <script src="/blog.github.io/lib/velocity/velocity.ui.min.js"></script>
 
-<script src="/blog/js/utils.js"></script>
+<script src="/blog.github.io/js/utils.js"></script>
 
-<script src="/blog/js/motion.js"></script>
-
-
-<script src="/blog/js/schemes/muse.js"></script>
+<script src="/blog.github.io/js/motion.js"></script>
 
 
-<script src="/blog/js/next-boot.js"></script>
+<script src="/blog.github.io/js/schemes/muse.js"></script>
 
 
-
-
-  
+<script src="/blog.github.io/js/next-boot.js"></script>
 
 
 
 
   
-<script src="/blog/js/local-search.js"></script>
+
+
+
+
+  
+<script src="/blog.github.io/js/local-search.js"></script>
 
 
 

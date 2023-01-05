@@ -5,26 +5,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 4.2.1">
-  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png">
-  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog.github.io/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog.github.io/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog.github.io/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/blog.github.io/images/logo.svg" color="#222">
 
-<link rel="stylesheet" href="/blog/css/main.css">
+<link rel="stylesheet" href="/blog.github.io/css/main.css">
 
 
-<link rel="stylesheet" href="/blog/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/blog.github.io/lib/font-awesome/css/all.min.css">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"wuzhiyong1759.github.io","root":"/blog/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":false,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"wuzhiyong1759.github.io","root":"/blog.github.io/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":false,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="引言 Hystrix is a latency and fault tolerance library designed to isolate points of access to remote systems, services and 3rd party libraries, stop cascading failure and enable resilience in complex di">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hystrix服务容错">
-<meta property="og:url" content="https://wuzhiyong1759.github.io/blog/Hystrix%E6%9C%8D%E5%8A%A1%E5%AE%B9%E9%94%99/index.html">
+<meta property="og:url" content="https://wuzhiyong1759.github.io/Hystrix%E6%9C%8D%E5%8A%A1%E5%AE%B9%E9%94%99/index.html">
 <meta property="og:site_name" content="吴志勇的博客">
 <meta property="og:description" content="引言 Hystrix is a latency and fault tolerance library designed to isolate points of access to remote systems, services and 3rd party libraries, stop cascading failure and enable resilience in complex di">
 <meta property="og:locale" content="zh_CN">
@@ -42,7 +42,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://gitee.com/wu_zhiyong/pic-bed/raw/master/img/image-20200509173423944.png">
 
-<link rel="canonical" href="https://wuzhiyong1759.github.io/blog/Hystrix%E6%9C%8D%E5%8A%A1%E5%AE%B9%E9%94%99/">
+<link rel="canonical" href="https://wuzhiyong1759.github.io/Hystrix%E6%9C%8D%E5%8A%A1%E5%AE%B9%E9%94%99/">
 
 
 <script id="page-configurations">
@@ -104,7 +104,7 @@
 
   <div class="site-meta">
 
-    <a href="/blog/" class="brand" rel="start">
+    <a href="/blog.github.io/" class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <h1 class="site-title">吴志勇的博客</h1>
       <span class="logo-line-after"><i></i></span>
@@ -126,22 +126,22 @@
   <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+    <a href="/blog.github.io/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+    <a href="/blog.github.io/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+    <a href="/blog.github.io/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+    <a href="/blog.github.io/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -199,10 +199,10 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://wuzhiyong1759.github.io/blog/Hystrix%E6%9C%8D%E5%8A%A1%E5%AE%B9%E9%94%99/">
+    <link itemprop="mainEntityOfPage" href="https://wuzhiyong1759.github.io/Hystrix%E6%9C%8D%E5%8A%A1%E5%AE%B9%E9%94%99/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/images/avatar.gif">
+      <meta itemprop="image" content="/blog.github.io/images/avatar.gif">
       <meta itemprop="name" content="wuzhiyong">
       <meta itemprop="description" content="吴志勇的博客">
     </span>
@@ -237,20 +237,20 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
+                  <a href="/blog.github.io/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
                 </span>
                   ，
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">后端</span></a>
+                  <a href="/blog.github.io/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">后端</span></a>
                 </span>
                   ，
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                  <a href="/blog.github.io/categories/%E7%BC%96%E7%A8%8B/%E5%90%8E%E7%AB%AF/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
                 </span>
             </span>
 
           
-            <span id="/blog/Hystrix%E6%9C%8D%E5%8A%A1%E5%AE%B9%E9%94%99/" class="post-meta-item leancloud_visitors" data-flag-title="Hystrix服务容错" title="阅读次数">
+            <span id="/blog.github.io/Hystrix%E6%9C%8D%E5%8A%A1%E5%AE%B9%E9%94%99/" class="post-meta-item leancloud_visitors" data-flag-title="Hystrix服务容错" title="阅读次数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
@@ -265,8 +265,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/blog/Hystrix%E6%9C%8D%E5%8A%A1%E5%AE%B9%E9%94%99/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/blog/Hystrix%E6%9C%8D%E5%8A%A1%E5%AE%B9%E9%94%99/" itemprop="commentCount"></span>
+    <a title="valine" href="/blog.github.io/Hystrix%E6%9C%8D%E5%8A%A1%E5%AE%B9%E9%94%99/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/blog.github.io/Hystrix%E6%9C%8D%E5%8A%A1%E5%AE%B9%E9%94%99/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -565,10 +565,10 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/blog/tags/springboot/" rel="tag"># springboot</a>
-              <a href="/blog/tags/java/" rel="tag"># java</a>
-              <a href="/blog/tags/spring-cloud/" rel="tag"># spring cloud</a>
-              <a href="/blog/tags/Hystrix/" rel="tag"># Hystrix</a>
+              <a href="/blog.github.io/tags/springboot/" rel="tag"># springboot</a>
+              <a href="/blog.github.io/tags/java/" rel="tag"># java</a>
+              <a href="/blog.github.io/tags/spring-cloud/" rel="tag"># spring cloud</a>
+              <a href="/blog.github.io/tags/Hystrix/" rel="tag"># Hystrix</a>
           </div>
 
         
@@ -577,11 +577,11 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/blog/gitee-page%E9%85%8D%E7%BD%AE%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D/" rel="prev" title="gitee-page配置自定义域名">
+    <a href="/blog.github.io/gitee-page%E9%85%8D%E7%BD%AE%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D/" rel="prev" title="gitee-page配置自定义域名">
       <i class="fa fa-chevron-left"></i> gitee-page配置自定义域名
     </a></div>
       <div class="post-nav-item">
-    <a href="/blog/API%E7%BD%91%E5%85%B3%E4%B9%8BZuul/" rel="next" title="API网关之Zuul">
+    <a href="/blog.github.io/API%E7%BD%91%E5%85%B3%E4%B9%8BZuul/" rel="next" title="API网关之Zuul">
       API网关之Zuul <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
@@ -655,20 +655,20 @@
 <div class="site-state-wrap motion-element">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
-          <a href="/blog/archives/">
+          <a href="/blog.github.io/archives/">
         
           <span class="site-state-item-count">40</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
-            <a href="/blog/categories/">
+            <a href="/blog.github.io/categories/">
           
         <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-            <a href="/blog/tags/">
+            <a href="/blog.github.io/tags/">
           
         <span class="site-state-item-count">34</span>
         <span class="site-state-item-name">标签</span></a>
@@ -829,33 +829,33 @@
   </div>
 
   
-  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog.github.io/lib/anime.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
   <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
-  <script src="/blog/lib/velocity/velocity.min.js"></script>
-  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+  <script src="/blog.github.io/lib/velocity/velocity.min.js"></script>
+  <script src="/blog.github.io/lib/velocity/velocity.ui.min.js"></script>
 
-<script src="/blog/js/utils.js"></script>
+<script src="/blog.github.io/js/utils.js"></script>
 
-<script src="/blog/js/motion.js"></script>
-
-
-<script src="/blog/js/schemes/muse.js"></script>
+<script src="/blog.github.io/js/motion.js"></script>
 
 
-<script src="/blog/js/next-boot.js"></script>
+<script src="/blog.github.io/js/schemes/muse.js"></script>
 
 
-
-
-  
+<script src="/blog.github.io/js/next-boot.js"></script>
 
 
 
 
   
-<script src="/blog/js/local-search.js"></script>
+
+
+
+
+  
+<script src="/blog.github.io/js/local-search.js"></script>
 
 
 
